@@ -16,20 +16,30 @@ const routes: RouteRecordRaw[] = [
     component: BasicLayout,
     meta: {
       badgeType: 'dot',
-      icon: VBEN_LOGO_URL,
+      icon: 'ph:file-doc-light',
       order: 9999,
       title: $t('demos.vben.title'),
     },
     name: 'VbenProject',
     path: '/vben-admin',
     children: [
+      // {
+      //   name: 'VbenAbout',
+      //   path: '/vben-admin/about',
+      //   component: () => import('#/views/_core/about/index.vue'),
+      //   meta: {
+      //     icon: 'lucide:copyright',
+      //     title: $t('demos.vben.about'),
+      //   },
+      // },
       {
-        name: 'VbenAbout',
-        path: '/vben-admin/about',
-        component: () => import('#/views/_core/about/index.vue'),
+        name: 'VbenDocument',
+        path: '/vben-admin/document',
+        component: IFrameView,
         meta: {
-          icon: 'lucide:copyright',
-          title: $t('demos.vben.about'),
+          icon: 'lucide:book-open-text',
+          link: 'https://doc.cncore.club/',
+          title: 'ABPPro文档',
         },
       },
       {
@@ -38,8 +48,8 @@ const routes: RouteRecordRaw[] = [
         component: IFrameView,
         meta: {
           icon: 'lucide:book-open-text',
-          link: VBEN_DOC_URL,
-          title: $t('demos.vben.document'),
+          link: 'https://abp.io/docs/latest/',
+          title: 'ABP官方文档',
         },
       },
       {
@@ -48,32 +58,10 @@ const routes: RouteRecordRaw[] = [
         component: IFrameView,
         meta: {
           icon: 'mdi:github',
-          link: VBEN_GITHUB_URL,
+          link: 'https://github.com/WangJunZzz/abp-vnext-pro',
           title: 'Github',
         },
-      },
-      {
-        name: 'VbenNaive',
-        path: '/vben-admin/naive',
-        component: IFrameView,
-        meta: {
-          badgeType: 'dot',
-          icon: 'logos:naiveui',
-          link: VBEN_NAIVE_PREVIEW_URL,
-          title: $t('demos.vben.naive-ui'),
-        },
-      },
-      {
-        name: 'VbenElementPlus',
-        path: '/vben-admin/ele',
-        component: IFrameView,
-        meta: {
-          badgeType: 'dot',
-          icon: 'logos:element',
-          link: VBEN_ELE_PREVIEW_URL,
-          title: $t('demos.vben.element-plus'),
-        },
-      },
+      }
     ],
   },
 ];

@@ -16,6 +16,7 @@
   },
   "type": "module",
   "scripts": {
+    "openapi": "openapi-ts -f ./openapi-config.ts",
     "build": "pnpm vite build --mode production",
     "build:analyze": "pnpm vite build --mode analyze",
     "dev": "pnpm vite --mode development",
@@ -45,6 +46,12 @@
     "dayjs": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "axios": "^1.7.7",
+    "vue-request": "^2.0.4"
+  },
+  "devDependencies": {
+    "@hey-api/client-axios": "^0.2.10",
+    "@hey-api/openapi-ts": "^0.55.3"
   }
 }

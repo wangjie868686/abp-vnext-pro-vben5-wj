@@ -31,43 +31,37 @@ const MOCK_USER_OPTIONS: BasicOption[] = [
 const formSchema = computed((): VbenFormSchema[] => {
   return [
     {
-      component: 'VbenSelect',
+      component: 'VbenInput',
       componentProps: {
-        options: MOCK_USER_OPTIONS,
-        placeholder: $t('authentication.selectAccount'),
+        placeholder: '请选择租户,非租户模式请忽略',
       },
-      fieldName: 'selectAccount',
-      label: $t('authentication.selectAccount'),
-      rules: z
-        .string()
-        .min(1, { message: $t('authentication.selectAccount') })
-        .optional()
-        .default('vben'),
+      fieldName: 'tenant',
+      label: '租户',
     },
     {
       component: 'VbenInput',
       componentProps: {
         placeholder: $t('authentication.usernameTip'),
       },
-      dependencies: {
-        trigger(values, form) {
-          if (values.selectAccount) {
-            const findUser = MOCK_USER_OPTIONS.find(
-              (item) => item.value === values.selectAccount,
-            );
-            if (findUser) {
-              form.setValues({
-                password: '123456',
-                username: findUser.value,
-              });
-            }
-          }
-        },
-        triggerFields: ['selectAccount'],
-      },
-      fieldName: 'username',
+      // dependencies: {
+      //   trigger(values, form) {
+      //     if (values.selectAccount) {
+      //       const findUser = MOCK_USER_OPTIONS.find(
+      //         (item) => item.value === values.selectAccount,
+      //       );
+      //       if (findUser) {
+      //         form.setValues({
+      //           password: '123456',
+      //           username: findUser.value,
+      //         });
+      //       }
+      //     }
+      //   },
+      //   triggerFields: ['selectAccount'],
+      // },
+      fieldName: 'name',
       label: $t('authentication.username'),
-      rules: z.string().min(1, { message: $t('authentication.usernameTip') }),
+      rules: z.string().min(1, { message: $t('authentication.usernameTip') }).default('admin'),
     },
     {
       component: 'VbenInputPassword',
@@ -76,7 +70,7 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'password',
       label: $t('authentication.password'),
-      rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
+      rules: z.string().min(1, { message: $t('authentication.passwordTip') }).default('1q2w3E*'),
     },
     {
       component: markRaw(SliderCaptcha),

@@ -95,6 +95,9 @@
     "vue": "catalog:",
     "vue-tsc": "catalog:"
   },
+  "dependencies": {
+    "jwt-decode": "^4.0.0"
+  },
   "engines": {
     "node": ">=20.10.0",
     "pnpm": ">=9.12.0"

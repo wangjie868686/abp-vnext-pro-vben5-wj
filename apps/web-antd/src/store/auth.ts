@@ -3,14 +3,15 @@ import type { Recordable, UserInfo } from '@vben/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import {message as Message} from 'ant-design-vue';
 import { DEFAULT_HOME_PATH, LOGIN_PATH } from '@vben/constants';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+import { postApiAppAccountLogin, getApiAbpApplicationConfiguration,postTenantsFind, type ApplicationConfigurationDto, type ApplicationAuthConfigurationDto } from '#/api-client';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -31,22 +32,36 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
+      //  判断是否租户登录
+      if (params.tenant) {
+        const tenantResult = await postTenantsFind({
+          body: {
+            'name': params.tenant,
+          }
+        });
+        if(!tenantResult.data?.success){
+          Message.error(params.tenant+"租户不存在")
+          return;
+        }else{
+          userStore.setTenantInfo(tenantResult.data as any)
+        }
+      }
+
+
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
-
+      const { data = {} } = await postApiAppAccountLogin({
+        body: {
+          ...params,
+        }
+      });
       // 如果成功获取到 accessToken
-      if (accessToken) {
-        accessStore.setAccessToken(accessToken);
-
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
-          fetchUserInfo(),
-          getAccessCodesApi(),
-        ]);
-
-        userInfo = fetchUserInfoResult;
-
-        userStore.setUserInfo(userInfo);
+      if (data.token) {
+        accessStore.setAccessToken(data.token);
+        userInfo = data as any;
+        userStore.setUserInfo(userInfo as any);
+        const { data: authData } = await getApiAbpApplicationConfiguration({ query: { IncludeLocalizationResources: false } })
+        const { auth } = authData as ApplicationConfigurationDto;
+        const accessCodes =  Object.keys((auth as ApplicationAuthConfigurationDto).grantedPolicies as unknown as Record<string, any>)
         accessStore.setAccessCodes(accessCodes);
 
         if (accessStore.loginExpired) {
@@ -54,7 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
         } else {
           onSuccess
             ? await onSuccess?.()
-            : await router.push(userInfo.homePath || DEFAULT_HOME_PATH);
+            : await router.push(DEFAULT_HOME_PATH);
         }
 
         if (userInfo?.realName) {
@@ -76,7 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout(redirect: boolean = true) {
     try {
-      await logoutApi();
+      //await logoutApi();
     } catch {
       // 不做任何处理
     }
@@ -88,16 +103,16 @@ export const useAuthStore = defineStore('auth', () => {
       path: LOGIN_PATH,
       query: redirect
         ? {
-            redirect: encodeURIComponent(router.currentRoute.value.fullPath),
-          }
+          redirect: encodeURIComponent(router.currentRoute.value.fullPath),
+        }
         : {},
     });
   }
 
   async function fetchUserInfo() {
     let userInfo: null | UserInfo = null;
-    userInfo = await getUserInfoApi();
-    userStore.setUserInfo(userInfo);
+    // userInfo = await getUserInfoApi();
+    // userStore.setUserInfo(userInfo);
     return userInfo;
   }
 
