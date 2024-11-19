@@ -25,7 +25,8 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: async () => {
     try {
       modalApi.setState({ loading: true, confirmLoading: true });
-      await formApi.validate();
+      const { valid } = await formApi.validate();
+      if (!valid) return;
       const values = await formApi.getValues();
       if (data.value.isEdit) {
         await postDataDictionaryUpdateDetail({
