@@ -11,7 +11,7 @@ setupVbenVxeTable({
     vxeUI.setConfig({
       grid: {
         align: 'center',
-        border: false,
+        border: true,
         columnConfig: {
           resizable: true,
         },
@@ -32,7 +32,7 @@ setupVbenVxeTable({
         },
         round: true,
         showOverflow: true,
-        size: 'small',
+        size: 'small', // medium / small / mini
       },
     });
 
