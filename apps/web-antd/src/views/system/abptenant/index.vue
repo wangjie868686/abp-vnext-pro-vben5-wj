@@ -100,7 +100,7 @@ const [AddForm, addFormApi] = useVbenForm({
   schema: addTenantFormSchema,
   showCollapseButton: false,
   showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+  wrapperClass: 'grid-cols-1',
 });
 
 const [EditForm, editFormApi] = useVbenForm({
@@ -118,7 +118,7 @@ const [EditForm, editFormApi] = useVbenForm({
   schema: editTenantFormSchemaEdit,
   showCollapseButton: false,
   showDefaultActions: false,
-  wrapperClass: 'grid-cols-2',
+  wrapperClass: 'grid-cols-1',
 });
 
 // 新增和编辑提交的逻辑
