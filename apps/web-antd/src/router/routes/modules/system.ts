@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     component: BasicLayout,
     meta: {
       icon: 'lucide:layout-dashboard',
-      order: -1,
+      order: 1,
       title: '系统管理',
       authority: ['AbpIdentity'],
     },
