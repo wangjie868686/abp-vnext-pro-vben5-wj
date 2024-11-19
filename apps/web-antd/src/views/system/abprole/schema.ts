@@ -1,6 +1,6 @@
 import { z } from '@vben/common-ui';
 
-export const querySchema = [
+export const querySchema: any = [
   {
     component: 'Input',
     fieldName: 'filter',
@@ -8,10 +8,15 @@ export const querySchema = [
   },
 ];
 
-export const tableSchema =[
+export const tableSchema: any = [
   { title: '序号', type: 'seq', width: 50 },
-  { field: 'name', title: '角色名称', minWidth: '150', },
-  { field: 'isDefault', title: '是否默认', minWidth: '75', slots: { default: 'isDefault' }, },
+  { field: 'name', title: '角色名称', minWidth: '150' },
+  {
+    field: 'isDefault',
+    title: '是否默认',
+    minWidth: '75',
+    slots: { default: 'isDefault' },
+  },
   {
     title: '操作',
     field: 'action',
@@ -21,9 +26,7 @@ export const tableSchema =[
   },
 ];
 
-
-
-export const addRoleFormSchema = [
+export const addRoleFormSchema: any = [
   {
     component: 'Input',
     componentProps: {
@@ -52,5 +55,4 @@ export const addRoleFormSchema = [
     label: '是否默认',
     rules: 'required',
   },
-]
-
+];

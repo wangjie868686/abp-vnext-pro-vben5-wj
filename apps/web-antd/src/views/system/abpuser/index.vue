@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { VbenFormProps, VxeGridProps } from '#/adapter';
+import type { VbenFormProps } from '#/adapter/form';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { h, ref } from 'vue';
 
@@ -19,9 +20,8 @@ import {
   Tag,
 } from 'ant-design-vue';
 
-import { useVbenForm} from '#/adapter/form.ts';
-import { useVbenVxeGrid } from '#/adapter/vxe-table.ts';
-import fileRequest from '#/api-client-config/index-blob';
+import { useVbenForm } from '#/adapter/form';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   postRolesAll,
   postUsersCreate,
@@ -31,15 +31,21 @@ import {
   postUsersRole,
   postUsersUpdate,
 } from '#/api-client';
+import fileRequest from '#/api-client-config/index-blob';
 
-import {querySchema,tableSchema, addUserFormSchema, editUserFormSchemaEdit } from './schema';
+import {
+  addUserFormSchema,
+  editUserFormSchemaEdit,
+  querySchema,
+  tableSchema,
+} from './schema';
 
 defineOptions({
   name: 'AbpUser',
 });
 
 const formOptions: VbenFormProps = {
-  schema: querySchema
+  schema: querySchema,
 };
 
 const gridOptions: VxeGridProps<any> = {

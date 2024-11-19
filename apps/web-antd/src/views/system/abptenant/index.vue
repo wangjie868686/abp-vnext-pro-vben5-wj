@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { VbenFormProps, VxeGridProps } from '#/adapter';
+import type { VbenFormProps } from '#/adapter/form';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { ref } from 'vue';
 
@@ -7,8 +8,8 @@ import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Button, message as Message, Modal, Space } from 'ant-design-vue';
 
-import { useVbenForm } from '#/adapter/form.ts';
-import { useVbenVxeGrid } from '#/adapter/vxe-table.ts';
+import { useVbenForm } from '#/adapter/form';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   postTenantsCreate,
   postTenantsDelete,
@@ -144,12 +145,8 @@ function onDel(row: any) {
     },
   });
 }
-
-const rolesList = ref([] as any);
-const checkedRoles = ref([]);
 const openAddModal = async () => {
   editRow.value = {};
-  checkedRoles.value = [];
   tenantModalApi.open();
 };
 </script>

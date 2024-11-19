@@ -1,61 +1,62 @@
 <script setup lang="ts">
-	import { Page } from '@vben/common-ui';
-  import { useVbenVxeGrid } from '#/adapter/vxe-table.ts';
-	import { postAuditLogsPage} from '#/api-client'
-	import type { VbenFormProps, VxeGridProps } from '#/adapter';
-  import {auditLogQuerySchema,auditLogTableSchema } from './schema';
-	defineOptions({
-		name: 'AbpAuditLog',
-	})
+import type { VbenFormProps } from '#/adapter/form';
+import type { VxeGridProps } from '#/adapter/vxe-table';
 
-	const formOptions : VbenFormProps = {
-		schema: auditLogQuerySchema
-	};
+import { Page } from '@vben/common-ui';
 
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { postAuditLogsPage } from '#/api-client';
 
-	const gridOptions : VxeGridProps<any> = {
-		columns: auditLogTableSchema,
-		toolbarConfig: {
-			custom: true
-		},
-		customConfig: {
-			storage: true
-		},
-		height: 'auto',
-		keepSource: true,
-		pagerConfig: {},
-		proxyConfig: {
-			ajax: {
-				query: async ({ page }, formValues) => {
-          if (formValues?.time?.length == 2) {
+import { auditLogQuerySchema, auditLogTableSchema } from './schema';
+
+defineOptions({
+  name: 'AbpAuditLog',
+});
+
+const formOptions: VbenFormProps = {
+  schema: auditLogQuerySchema,
+};
+
+const gridOptions: VxeGridProps<any> = {
+  columns: auditLogTableSchema,
+  toolbarConfig: {
+    custom: true,
+  },
+  customConfig: {
+    storage: true,
+  },
+  height: 'auto',
+  keepSource: true,
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        if (formValues?.time?.length == 2) {
           formValues = {
             ...formValues,
             startCreationTime: formValues.time[0],
             endCreationTime: formValues.time[1],
           };
         }
-					const { data } = await postAuditLogsPage({
-						body: {
-							pageIndex: page.currentPage,
-							pageSize: page.pageSize,
-							...formValues,
-						}
-					});
-					return data;
-				},
-			},
-		},
-	};
+        const { data } = await postAuditLogsPage({
+          body: {
+            pageIndex: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          },
+        });
+        return data;
+      },
+    },
+  },
+};
 
-	const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
-
-
-	
+const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 
-<style scoped></style>
 <template>
-	<Page auto-content-height title="审计日志">
-		<Grid/>
-	</Page>
+  <Page auto-content-height title="审计日志">
+    <Grid />
+  </Page>
 </template>
+<style scoped></style>

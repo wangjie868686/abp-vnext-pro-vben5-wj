@@ -1,6 +1,6 @@
 import { z } from '@vben/common-ui';
 
-export const querySchema = [
+export const querySchema: any = [
   {
     component: 'Input',
     fieldName: 'filter',
@@ -8,7 +8,7 @@ export const querySchema = [
   },
 ];
 
-export const tableSchema = [
+export const tableSchema: any = [
   { title: '序号', type: 'seq', width: 50 },
   { field: 'name', title: '租户名称', minWidth: '150' },
   {
@@ -20,7 +20,7 @@ export const tableSchema = [
   },
 ];
 
-export const addTenantFormSchema = [
+export const addTenantFormSchema: any = [
   {
     component: 'Input',
     componentProps: {},
@@ -44,7 +44,7 @@ export const addTenantFormSchema = [
   },
 ];
 
-export const editTenantFormSchemaEdit = [
+export const editTenantFormSchemaEdit: any = [
   {
     component: 'Input',
     fieldName: 'id',

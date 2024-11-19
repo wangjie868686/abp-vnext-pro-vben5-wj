@@ -1,5 +1,5 @@
-
 import { z } from '@vben/common-ui';
+
 import dayjs from 'dayjs';
 
 export const querySchema = [
@@ -10,12 +10,17 @@ export const querySchema = [
   },
 ];
 
-export const tableSchema =[
+export const tableSchema: any = [
   { title: '序号', type: 'seq', width: 50 },
   { field: 'userName', title: '用户名', minWidth: '150' },
   { field: 'name', title: '真实名称', minWidth: '150' },
   { field: 'email', title: '邮箱', minWidth: '150' },
-  { field: 'isActive', title: '状态', minWidth: '150' , slots: { default: 'isActive' }},
+  {
+    field: 'isActive',
+    title: '状态',
+    minWidth: '150',
+    slots: { default: 'isActive' },
+  },
   { field: 'phoneNumber', title: '手机号码', minWidth: '150' },
   {
     field: 'creationTime',
@@ -32,9 +37,9 @@ export const tableSchema =[
     minWidth: '150',
     slots: { default: 'action' },
   },
-]
+];
 
-export const addUserFormSchema = [
+export const addUserFormSchema: any = [
   {
     component: 'Input',
     componentProps: {},
@@ -44,49 +49,42 @@ export const addUserFormSchema = [
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'name',
     label: '名称',
     rules: z.string().min(1, { message: '请输入名称' }),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'email',
     label: '邮箱',
     rules: z.string().email('请输入正确的邮箱'),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'phoneNumber',
     label: '手机号码',
     rules: z.string().min(3, { message: '请输入手机号码' }),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'password',
     label: '密码',
     rules: z.string().min(1, { message: '请输入密码' }),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'confirmPassword',
     label: '密码(再次确认)',
     rules: 'required',
   },
-]
+];
 
-
-
-export const editUserFormSchemaEdit = [
+export const editUserFormSchemaEdit: any = [
   {
     component: 'Input',
     componentProps: {},
@@ -96,39 +94,34 @@ export const editUserFormSchemaEdit = [
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'name',
     label: '名称',
     rules: z.string().min(1, { message: '请输入名称' }),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'email',
     label: '邮箱',
     rules: z.string().email('请输入正确的邮箱'),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'phoneNumber',
     label: '手机号码',
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'password',
     label: '密码',
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'confirmPassword',
     label: '密码(再次确认)',
   },
-]
+];
