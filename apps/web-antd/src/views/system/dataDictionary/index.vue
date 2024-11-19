@@ -1,83 +1,100 @@
 <template>
-  <Page >
-    <a-row :gutter="16">
-      <a-col :span="8">
+  <Page>
+    <Row :gutter="16">
+      <Col :span="8">
+      <Grid>
+        <template #toolbar-actions>
+          <Button type="primary" @click="openDataDictionaryModal">新增</Button>
+        </template>
 
-        <div class="px-2 py-5 mb-3 bg-white">
-          <div class="flex justify-between items-center">
-            <a-input v-model:value="filter" placeholder="请输入" @pressEnter="search" allowClear />
-            <a-button class="ml-3" type="primary" @click="search">查询</a-button>
-          </div>
-        </div>
+        <template #codeName="{ row }">
+          <div>{{ row.code + '|' + row.displayText }}</div>
+        </template>
 
-        <Grid>
-          <template #toolbar-actions>
-            <Button type="primary" @click="">新增</Button>
-          </template>
+        <template #action="{ row }">
+          <Space>
+            <Dropdown>
+              <Button size="small">
+                ...
+              </Button>
+              <template #overlay>
+                <Menu>
+                  <MenuItem @click="">
+                  <Button type="link" size="small" @click="editDataDictionary(row)">编辑</Button>
+                  </MenuItem>
+                  <MenuItem @click="">
+                  <Button type="link" danger size="small" @click="deleteDataDictionary(row)">删除</Button>
+                  </MenuItem>
+                </Menu>
+              </template>
+            </Dropdown>
+          </Space>
+        </template>
+      </Grid>
+      </Col>
+      <Col :span="16">
+      <GridTable>
+        <template #toolbar-actions>
+          <Button type="primary" :disabled="!current.row" @click="openDataDictionaryDetailModal">新增</Button>
+        </template>
 
-          <template #codeName="{row}">
-           <div>{{row.code + '|' + row.displayText}}</div>
-          </template>
+        <template #isEnabled="{ row }">
+          <Switch v-model:checked="row.isEnabled" @change="handleItemStausChange($event, row)" />
+        </template>
 
-          <template #action="{ row }">
-            <Space>
-              <Dropdown>
-                <Button size="small">
-                  ...
-                </Button>
-                <template #overlay>
-                  <Menu>
-                    <MenuItem @click="">
-                    <Button type="link" size="small">编辑</Button>
-                    </MenuItem>
-                    <MenuItem @click="">
-                    <Button type="link" danger size="small" v-access:code="'AbpIdentity.Roles.Delete'">删除</Button>
-                    </MenuItem>
-                  </Menu>
-                </template>
-              </Dropdown>
-            </Space>
-          </template>
-        </Grid>
-      </a-col>
-      <a-col :span="16">
-        <GridTable>
-          <template #toolbar-actions>
-            <Button type="primary" @click="">新增</Button>
-          </template>
-        </GridTable>
-      </a-col>
-    </a-row>
+        <template #action="{ row }">
+          <Space>
+            <Button type="link" @click="editDetailRow(row)">编辑</Button>
+            <Button type="link" @click="removeDetailRow(row)">删除</Button>
+          </Space>
+        </template>
+      </GridTable>
+      </Col>
+    </Row>
+    <DataDictionaryModalComponent @reload="gridApi.reload" />
+    <DataDictionaryDetailComponent @reload="gridTableApi.reload" />
   </Page>
 </template>
 
 <script setup lang="ts">
-import { Space, Button, Dropdown, Menu, MenuItem, Input } from 'ant-design-vue';
+import { Row, Col, Space, Button, Dropdown, Menu, MenuItem, Modal, Switch, message } from 'ant-design-vue';
 import { Page, type VbenFormProps } from '@vben/common-ui';
-import { useVbenForm } from '#/adapter/form.ts';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
-import { postDataDictionaryPage } from '#/api-client/index';
-import { ref, watch } from 'vue';
+import {
+  postDataDictionaryPage, postDataDictionaryDeleteDataDictionaryType, postDataDictionaryPageDetail,
+  postDataDictionaryStatus,
+  postDataDictionaryDelete,
+} from '#/api-client/index';
+import { useVbenModal, } from '@vben/common-ui';
+import DataDictionaryModal from './DataDictionaryModal.vue';
+import DataDictionaryDetail from './DataDictionaryDetailModal.vue';
+import { ref } from 'vue';
 
 defineOptions({
   name: 'DataDictionary',
 })
 
-
-
-const filter = ref('');
-watch(() => filter.value, (val) => {
-  if (val === '') {
-    search();
+/**  ============左侧表格相关逻辑 start ============== */
+const formOptions: VbenFormProps = {
+  schema: [
+    {
+      component: 'Input',
+      fieldName: 'filter',
+      label: '',
+      componentProps: {
+        allowClear: true,
+      }
+    }],
+  wrapperClass: 'grid-cols-2',
+  showDefaultActions: true,
+  submitOnEnter: true,
+  showCollapseButton: false,
+  commonConfig: {
+    hideLabel: true,
   }
-})
-
+};
 
 const gridOptions: VxeGridProps<any> = {
-  checkboxConfig: {
-    highlight: true,
-    labelField: 'name',
-  },
   columns: [
     { type: 'radio', width: '50', },
     { field: 'codeName', title: '编码|名称', minWidth: '75', slots: { default: 'codeName' }, },
@@ -89,12 +106,6 @@ const gridOptions: VxeGridProps<any> = {
       slots: { default: 'action' },
     },
   ],
-  // toolbarConfig: {
-  //   custom: true
-  // },
-  // customConfig: {
-  //   storage: true
-  // },
   minHeight: '500',
   keepSource: true,
   pagerConfig: {},
@@ -106,12 +117,12 @@ const gridOptions: VxeGridProps<any> = {
       total: 'totalCount'
     },
     ajax: {
-      query: async ({ page },) => {
+      query: async ({ page }, formValues) => {
         const { data } = await postDataDictionaryPage({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
-            filter: filter.value,
+            ...formValues,
           }
         });
         return data;
@@ -120,47 +131,92 @@ const gridOptions: VxeGridProps<any> = {
   },
 };
 
-const [Grid, gridApi] = useVbenVxeGrid({ gridOptions });
+const gridEvents = {
+  radioChange: handleDataDictionaryItemChange,
+}
+const [Grid, gridApi] = useVbenVxeGrid({ gridOptions, formOptions, gridEvents });
 
+const [DataDictionaryModalComponent, dataDictionaryModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: DataDictionaryModal,
+});
 
-const search = () => {
-  gridApi.query({ filter: filter.value })
+const openDataDictionaryModal = () => {
+  dataDictionaryModalApi.setData({
+    isEdit: false,
+  });
+  dataDictionaryModalApi.open();
+};
+
+const editDataDictionary = (row: Record<string, any>) => {
+  dataDictionaryModalApi.setData({
+    isEdit: true,
+    row,
+  });
+  dataDictionaryModalApi.open();
+};
+
+const deleteDataDictionary = async (row: Record<string, any>) => {
+  Modal.confirm({
+    title: '提示',
+    content: '确认删除吗？',
+    async onOk() {
+      await postDataDictionaryDeleteDataDictionaryType({
+        body: { id: row.id }
+      });
+      message.success('删除成功')
+      gridApi.reload();
+    },
+  });
+
 }
 
+const current = ref<Record<string, any>>({});
+async function handleDataDictionaryItemChange(item: Record<string, any>) {
+  current.value = item;
+  console.log({
+    dataDictionaryId: current.value?.row?.id,
+  })
+  gridTableApi.reload({
+    dataDictionaryId: 'current.value?.row?.id',
+  });
+};
 
+/**  ============>左侧表格相关逻辑 end ============== */
+
+
+
+/** ============>右侧表格相关逻辑 start ============== */
 const rightFormOptions: VbenFormProps = {
   schema: [
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '',
+      componentProps: {
+        allowClear: true,
+      }
     }],
-    wrapperClass: 'grid-cols-2',
-    showDefaultActions: true,
-    submitOnEnter: true,
-    showCollapseButton: false,
-    commonConfig: {
-      hideLabel: true,
-    }
+  wrapperClass: 'grid-cols-2',
+  showDefaultActions: true,
+  submitOnEnter: true,
+  showCollapseButton: false,
+  commonConfig: {
+    hideLabel: true,
+  }
 };
 
 const rightGridOptions: VxeGridProps<any> = {
-  checkboxConfig: {
-    highlight: true,
-    labelField: 'name',
-  },
   columns: [
-    // { type: 'radio', width: '50', },
-    { field: 'codeName', title: '编码|名称', minWidth: '75', slots: { default: 'codeName' }, },
-    { field: 'name', title: '名称', minWidth: '150',},
-    { field: 'name', title: '名称', minWidth: '150',},
-    { field: 'name', title: '名称', minWidth: '150',},
-    { field: 'name', title: '名称', minWidth: '150',},
+    { field: 'code', title: '编码', minWidth: '75', },
+    { field: 'displayText', title: '名称', minWidth: '150', },
+    { field: 'order', title: '排序', minWidth: '150', },
+    { field: 'isEnabled', title: '状态', minWidth: '150', slots: { default: 'isEnabled' }, },
+    { field: 'description', title: '描述', minWidth: '150', },
     {
       title: '操作',
       field: 'action',
       fixed: 'right',
-      width: '70',
+      width: '180',
       slots: { default: 'action' },
     },
   ],
@@ -170,23 +226,20 @@ const rightGridOptions: VxeGridProps<any> = {
   customConfig: {
     storage: true
   },
-  // minHeight: '500',
+  minHeight: '500',
   keepSource: true,
-  pagerConfig: {},
-  radioConfig: {
-    highlight: true,
-  },
   proxyConfig: {
     response: {
       total: 'totalCount'
     },
     ajax: {
-      query: async ({ page },) => {
-        const { data } = await postDataDictionaryPage({
+      query: async ({ page }, formValues ) => {
+        const { data } = await postDataDictionaryPageDetail({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
-            filter: filter.value,
+            ...formValues,
+            dataDictionaryId: current.value?.row?.id,
           }
         });
         return data;
@@ -196,6 +249,56 @@ const rightGridOptions: VxeGridProps<any> = {
 };
 
 const [GridTable, gridTableApi] = useVbenVxeGrid({ gridOptions: rightGridOptions, formOptions: rightFormOptions });
+
+const handleItemStausChange = async (enabled: any, row: Record<string, any>) => {
+  await postDataDictionaryStatus({
+    body: {
+      dataDictionaryId: current.value?.row?.id,
+      dataDictionayDetailId: row.id,
+      isEnabled: enabled,
+    }
+  });
+};
+
+const [DataDictionaryDetailComponent, dataDictionaryDetailModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: DataDictionaryDetail,
+});
+
+const openDataDictionaryDetailModal = () => {
+  dataDictionaryDetailModalApi.setData({
+    isEdit: false,
+    type: current.value?.row?.displayText,
+    id: current.value?.row?.id,
+  });
+  dataDictionaryDetailModalApi.open();
+};
+
+const editDetailRow = (row: Record<string, any>) => {
+  dataDictionaryDetailModalApi.setData({
+    isEdit: true,
+    type: current.value?.row?.displayText,
+    id: current.value?.row?.id,
+    row,
+  });
+  dataDictionaryDetailModalApi.open();
+};
+
+const removeDetailRow = async (row: Record<string, any>) => {
+  Modal.confirm({
+    title: '提示',
+    content: '确认删除吗？',
+    async onOk() {
+      await postDataDictionaryDelete({
+        body: { dataDictionaryId: current.value?.row?.id, dataDictionayDetailId: row.id  }
+      });
+      message.success('删除成功')
+      gridTableApi.reload();
+    },
+  });
+};
+
+/** ============>右侧表格相关逻辑 end ============== */
 </script>
 
 <style scoped></style>
