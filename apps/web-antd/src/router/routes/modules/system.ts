@@ -28,11 +28,21 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'abpRole',
         path: 'role',
-        component: () => import('#/views/system/abpRole/index.vue'),
+        component: () => import('#/views/system/abprole/index.vue'),
         meta: {
           icon: 'oui:app-users-roles',
           title: '角色管理',
           authority: ['AbpIdentity.Roles'],
+        },
+      },
+      {
+        name: 'OrganizationUnit',
+        path: 'organizationUnit',
+        component: () => import('#/views/system/organizationUnit/index.vue'),
+        meta: {
+          title:'组织机构管理',
+          // authority: ['AbpIdentity.LanguageTexts'],
+          icon: 'ant-design:team-outlined',
         },
       },
       {
@@ -91,8 +101,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/dataDictionary/index.vue'),
         meta: {
           title:'数据字典',
-          // authority: ['AbpIdentity.LanguageTexts'],
-          icon: 'ant-design:font-size-outlined',
+          // authority: ['AbpIdentity.LanguageTexts'], 
+          icon: 'ant-design:database-outlined', 
         },
       },
     ],
