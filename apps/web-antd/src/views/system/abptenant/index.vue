@@ -1,41 +1,26 @@
 <script setup lang="ts">
 import type { VbenFormProps, VxeGridProps } from '#/adapter';
 
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import {
-  Button,
-  CheckboxGroup,
-  Dropdown,
-  Menu,
-  MenuItem,
-  message as Message,
-  Modal,
-  Space,
-  TabPane,
-  Tabs,
-  Tag,
-} from 'ant-design-vue';
+import { Button, message as Message, Modal, Space } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form.ts';
 import { useVbenVxeGrid } from '#/adapter/vxe-table.ts';
 import {
-  postTenantsPage,
   postTenantsCreate,
-  postTenantsUpdate,
   postTenantsDelete,
-  postTenantsPageConnectionString,
-  postTenantsAddOrUpdateConnectionString,
-  postTenantsDeleteConnectionString,
+  postTenantsPage,
+  postTenantsUpdate,
 } from '#/api-client';
 
 import {
-  querySchema,
-  tableSchema,
   addTenantFormSchema,
   editTenantFormSchemaEdit,
+  querySchema,
+  tableSchema,
 } from './schema';
 
 defineOptions({
@@ -47,8 +32,7 @@ const formOptions: VbenFormProps = {
 };
 
 const gridOptions: VxeGridProps<any> = {
-  checkboxConfig: {
-  },
+  checkboxConfig: {},
   columns: tableSchema,
   height: 'auto',
   keepSource: true,
@@ -198,8 +182,8 @@ const openAddModal = async () => {
             danger
             size="small"
             type="primary"
-            @click="onDel(row)"
             v-access:code="'AbpTenantManagement.Tenants.Delete'"
+            @click="onDel(row)"
           >
             删除
           </Button>

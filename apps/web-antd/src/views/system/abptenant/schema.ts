@@ -1,6 +1,4 @@
-
 import { z } from '@vben/common-ui';
-import dayjs from 'dayjs';
 
 export const querySchema = [
   {
@@ -10,7 +8,7 @@ export const querySchema = [
   },
 ];
 
-export const tableSchema =[
+export const tableSchema = [
   { title: '序号', type: 'seq', width: 50 },
   { field: 'name', title: '租户名称', minWidth: '150' },
   {
@@ -20,7 +18,7 @@ export const tableSchema =[
     minWidth: '150',
     slots: { default: 'action' },
   },
-]
+];
 
 export const addTenantFormSchema = [
   {
@@ -32,33 +30,29 @@ export const addTenantFormSchema = [
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'adminEmailAddress',
     label: '管理员邮箱',
     rules: z.string().min(1, { message: '请输入管理员邮箱' }),
   },
   {
     component: 'Input',
-    componentProps: {
-    },
+    componentProps: {},
     fieldName: 'adminPassword',
     label: '管理员密码',
     rules: z.string().min(1, { message: '请输入管理员密码' }),
-  }
-]
-
-
+  },
+];
 
 export const editTenantFormSchemaEdit = [
   {
     component: 'Input',
     fieldName: 'id',
     label: 'id',
-    componentProps: {
-      show: false,
+    dependencies: {
+      show: () => false,
+      triggerFields: ['id'],
     },
-    
   },
   {
     component: 'Input',
@@ -66,5 +60,5 @@ export const editTenantFormSchemaEdit = [
     fieldName: 'name',
     label: '租户名称',
     rules: z.string().min(1, { message: '请输入租户名称' }),
-  }
-]
+  },
+];
