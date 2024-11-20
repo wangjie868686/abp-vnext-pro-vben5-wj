@@ -12,24 +12,28 @@ import { useVbenForm } from '#/adapter/form';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   postNotificationNotificationPage,
-  postNotificationSendBroadCastErrorMessage,
-  postNotificationSendBroadCastInformationMessage,
-  postNotificationSendBroadCastWarningMessage,
+  postNotificationSendCommonErrorMessage,
+  postNotificationSendCommonInformationMessage,
+  postNotificationSendCommonWarningMessage,
 } from '#/api-client';
 
-import { addFormSchema, querySchema, tableSchema } from './schema';
+import {
+  addMessageFormSchema,
+  queryMessageSchema,
+  tableMessageSchema,
+} from './schema';
 
 defineOptions({
-  name: 'AbpNotification',
+  name: 'AbpMessage',
 });
 
 const formOptions: VbenFormProps = {
-  schema: querySchema,
+  schema: queryMessageSchema,
 };
 
 const gridOptions: VxeGridProps<any> = {
   checkboxConfig: {},
-  columns: tableSchema,
+  columns: tableMessageSchema,
   height: 'auto',
   keepSource: true,
   pagerConfig: {},
@@ -77,7 +81,7 @@ const [AddForm, addFormApi] = useVbenForm({
     },
   },
   layout: 'horizontal',
-  schema: addFormSchema,
+  schema: addMessageFormSchema,
   showCollapseButton: false,
   showDefaultActions: false,
   wrapperClass: 'grid-cols-1',
@@ -94,17 +98,17 @@ async function submit() {
     addModalApi.setState({ loading: true, confirmLoading: true });
     const messageLevel = formValues.messageLevel;
     if (messageLevel === 10) {
-      await postNotificationSendBroadCastWarningMessage({
+      await postNotificationSendCommonWarningMessage({
         body: formValues,
       });
     }
     if (messageLevel === 20) {
-      await postNotificationSendBroadCastInformationMessage({
+      await postNotificationSendCommonInformationMessage({
         body: formValues,
       });
     }
     if (messageLevel === 30) {
-      await postNotificationSendBroadCastErrorMessage({
+      await postNotificationSendCommonErrorMessage({
         body: formValues,
       });
     }
@@ -123,11 +127,11 @@ const openAddModal = async () => {
 </script>
 
 <template>
-  <Page auto-content-height title="通告管理">
+  <Page auto-content-height title="消息管理">
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button type="primary" @click="openAddModal"> 发送通告 </Button>
+          <Button type="primary" @click="openAddModal"> 发送消息 </Button>
         </Space>
       </template>
 
@@ -142,9 +146,13 @@ const openAddModal = async () => {
           {{ row.messageLevelName }}
         </Tag>
       </template>
+      <template #read="{ row }">
+        <Tag v-if="row.read" color="green"> 已读 </Tag>
+        <Tag v-else color="red"> 未读 </Tag>
+      </template>
     </Grid>
 
-    <AddModal class="w-[600px]" title="发送通告">
+    <AddModal class="w-[600px]" title="发送消息">
       <AddForm />
     </AddModal>
   </Page>

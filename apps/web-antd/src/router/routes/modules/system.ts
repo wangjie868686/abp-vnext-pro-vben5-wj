@@ -112,8 +112,18 @@ const routes: RouteRecordRaw[] = [
           import('#/views/system/abpnotification/notification.vue'),
         meta: {
           title: '通告管理',
-          authority: ['AbpIdentity.NotificationManagement'],
+          authority: ['AbpIdentity.NotificationSubscriptionManagement'],
           icon: 'ant-design:comment-outlined',
+        },
+      },
+      {
+        name: 'AbpMessage',
+        path: 'message',
+        component: () => import('#/views/system/abpnotification/message.vue'),
+        meta: {
+          title: '消息管理',
+          authority: ['AbpIdentity.NotificationManagement'],
+          icon: 'ant-design:customer-service-twotone',
         },
       },
     ],
