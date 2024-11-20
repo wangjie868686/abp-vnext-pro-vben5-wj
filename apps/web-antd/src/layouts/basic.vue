@@ -20,46 +20,72 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 
 import { message as Message } from 'ant-design-vue/es/components';
+import dayjs from 'dayjs';
 
 import { useVbenForm } from '#/adapter/form';
-import { postUsersChangePassword } from '#/api-client';
+import {
+  postNotificationNotificationPage,
+  postUsersChangePassword,
+} from '#/api-client';
 import { useSignalR } from '#/hooks/useSignalR';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 const notifications = ref<NotificationItem[]>([
-  {
-    avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-    date: '3小时前',
-    isRead: true,
-    message: '描述信息描述信息描述信息',
-    title: '收到了 14 份新周报',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '刚刚',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '朱偏右 回复了你',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/1',
-    date: '2024-01-01',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '曲丽丽 评论了你',
-  },
-  {
-    avatar: 'https://avatar.vercel.sh/satori',
-    date: '1天前',
-    isRead: false,
-    message: '描述信息描述信息描述信息',
-    title: '代办提醒',
-  },
+  // {
+  //   avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
+  //   date: '3小时前',
+  //   isRead: true,
+  //   message: '描述信息描述信息描述信息',
+  //   title: '收到了 14 份新周报',
+  // },
+  // {
+  //   avatar: 'https://avatar.vercel.sh/1',
+  //   date: '刚刚',
+  //   isRead: false,
+  //   message: '描述信息描述信息描述信息',
+  //   title: '朱偏右 回复了你',
+  // },
+  // {
+  //   avatar: 'https://avatar.vercel.sh/1',
+  //   date: '2024-01-01',
+  //   isRead: false,
+  //   message: '描述信息描述信息描述信息',
+  //   title: '曲丽丽 评论了你',
+  // },
+  // {
+  //   avatar: 'https://avatar.vercel.sh/satori',
+  //   date: '1天前',
+  //   isRead: false,
+  //   message: '描述信息描述信息描述信息',
+  //   title: '代办提醒',
+  // },
 ]);
 const { startConnect } = useSignalR();
-onMounted(() => {
+function convertToNotificationItem(message: any): NotificationItem {
+  return {
+    avatar: '',
+    date: dayjs(message.creationTime).format('YYYY-MM-DD HH:mm:ss'),
+    isRead: message.read,
+    message: message.content,
+    title: message.title,
+  };
+}
+onMounted(async () => {
   startConnect();
+  const message = await postNotificationNotificationPage({
+    body: { pageIndex: 1, pageSize: 4 },
+  });
+  message.data?.items?.forEach((item) => {
+    notifications.value.push(convertToNotificationItem(item));
+    // 按照isRead属性进行排序
+    notifications.value.sort((a, b) => {
+      if (a.isRead === b.isRead) {
+        return 0;
+      }
+      return a.isRead ? 1 : -1;
+    });
+  });
 });
 const userStore = useUserStore();
 const authStore = useAuthStore();

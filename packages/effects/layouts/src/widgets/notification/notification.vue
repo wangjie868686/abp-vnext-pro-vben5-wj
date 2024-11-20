@@ -100,6 +100,7 @@ function handleClick(item: NotificationItem) {
                 class="bg-primary absolute right-2 top-2 h-2 w-2 rounded"
               ></span>
 
+              <!-- 
               <span
                 class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"
               >
@@ -109,6 +110,7 @@ function handleClick(item: NotificationItem) {
                   role="img"
                 />
               </span>
+              -->
               <div class="flex flex-col gap-1 leading-none">
                 <p class="font-semibold">{{ item.title }}</p>
                 <p class="text-muted-foreground my-1 line-clamp-2 text-xs">
@@ -132,14 +134,14 @@ function handleClick(item: NotificationItem) {
       <div
         class="border-border flex items-center justify-between border-t px-4 py-3"
       >
-        <VbenButton
+        <!-- <VbenButton
           :disabled="notifications.length <= 0"
           size="sm"
           variant="ghost"
           @click="handleClear"
         >
           {{ $t('ui.widgets.clearNotifications') }}
-        </VbenButton>
+        </VbenButton> -->
         <VbenButton size="sm" @click="handleViewAll">
           {{ $t('ui.widgets.viewAll') }}
         </VbenButton>

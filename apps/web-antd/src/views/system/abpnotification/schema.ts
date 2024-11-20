@@ -159,6 +159,7 @@ export const tableMessageSchema: any = [
   { title: '序号', type: 'seq', width: 50 },
   { field: 'title', title: '标题', minWidth: '150' },
   { field: 'content', title: '内容', minWidth: '150' },
+  { field: 'messageTypeName', title: '类型', minWidth: '150' },
   {
     field: 'messageLevelName',
     title: '级别',
@@ -190,16 +191,16 @@ export const tableMessageSchema: any = [
   },
 ];
 export const queryMessageSchema: any = [
-  {
-    component: 'Input',
-    fieldName: 'messageType',
-    label: 'messageType',
-    defaultValue: 20,
-    dependencies: {
-      show: () => false,
-      triggerFields: ['messageType'],
-    },
-  },
+  // {
+  //   component: 'Input',
+  //   fieldName: 'messageType',
+  //   label: 'messageType',
+  //   defaultValue: 20,
+  //   dependencies: {
+  //     show: () => false,
+  //     triggerFields: ['messageType'],
+  //   },
+  // },
   {
     component: 'Input',
     fieldName: 'title',
@@ -234,20 +235,38 @@ export const queryMessageSchema: any = [
   },
   {
     component: 'Select',
-    fieldName: 'read',
-    label: '是否已读',
+    fieldName: 'messageType',
+    label: '类型',
     width: 120,
     componentProps: {
       options: [
         {
-          label: '是',
-          value: true,
+          label: '广播消息',
+          value: 10,
         },
         {
-          label: '否',
-          value: false,
+          label: '普通文本消息',
+          value: 20,
         },
       ],
     },
   },
+  // {
+  //   component: 'Select',
+  //   fieldName: 'read',
+  //   label: '是否已读',
+  //   width: 120,
+  //   componentProps: {
+  //     options: [
+  //       {
+  //         label: '是',
+  //         value: true,
+  //       },
+  //       {
+  //         label: '否',
+  //         value: false,
+  //       },
+  //     ],
+  //   },
+  // },
 ];

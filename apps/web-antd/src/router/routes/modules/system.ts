@@ -105,17 +105,17 @@ const routes: RouteRecordRaw[] = [
           icon: 'ant-design:database-outlined',
         },
       },
-      {
-        name: 'AbpNotification',
-        path: 'notification',
-        component: () =>
-          import('#/views/system/abpnotification/notification.vue'),
-        meta: {
-          title: '通告管理',
-          authority: ['AbpIdentity.NotificationSubscriptionManagement'],
-          icon: 'ant-design:comment-outlined',
-        },
-      },
+      // {
+      //   name: 'AbpNotification',
+      //   path: 'notification',
+      //   component: () =>
+      //     import('#/views/system/abpnotification/notification.vue'),
+      //   meta: {
+      //     title: '通告管理',
+      //     authority: ['AbpIdentity.NotificationSubscriptionManagement'],
+      //     icon: 'ant-design:comment-outlined',
+      //   },
+      // },
       {
         name: 'AbpMessage',
         path: 'message',
