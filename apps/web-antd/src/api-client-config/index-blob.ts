@@ -1,49 +1,51 @@
-import { message as Message } from 'ant-design-vue'
-import { useUserStore, } from '@vben/stores';
+import { useUserStore } from '@vben/stores';
+
+import { message as Message } from 'ant-design-vue';
+import axios from 'axios';
+
+import { antdLocale } from '#/locales/index';
 import { useAuthStore } from '#/store';
-import axios from 'axios'
-import { antdLocale } from '#/locales/index'
+
 const api = axios.create({
-  baseURL: import.meta.env.DEV ? '/proxy/' : import.meta.env.VITE_APP_API_ADDRESS,
+  baseURL: import.meta.env.DEV
+    ? '/proxy/'
+    : import.meta.env.VITE_APP_API_ADDRESS,
   timeout: 1000 * 60,
   responseType: 'blob', // 设置响应数据类型为blob
-})
+});
 
-api.interceptors.request.use(
-  (request) => {
-    // const businessLine = localStorage.getItem("businessLine");
-    // let key = "VITE_APP_API_BASEURL_BUSINESS_" + businessLine;
-    // let api=  import.meta.env[key];
-    // if(api == undefined){
-    //   api = import.meta.env.VITE_APP_API_BASEURL_BUSINESS;
-    // }
-    // request.baseURL = import.meta.env.DEV ? '/businessProxy/' : api;
-    // console.log(request.baseURL)
-    // 全局拦截请求发送前提交的参数
-    const userStore = useUserStore();
-    const authStore = useAuthStore();
-    const token = userStore.userInfo?.token;
+api.interceptors.request.use((request) => {
+  // const businessLine = localStorage.getItem("businessLine");
+  // let key = "VITE_APP_API_BASEURL_BUSINESS_" + businessLine;
+  // let api=  import.meta.env[key];
+  // if(api == undefined){
+  //   api = import.meta.env.VITE_APP_API_BASEURL_BUSINESS;
+  // }
+  // request.baseURL = import.meta.env.DEV ? '/businessProxy/' : api;
+  // console.log(request.baseURL)
+  // 全局拦截请求发送前提交的参数
+  const userStore = useUserStore();
+  const authStore = useAuthStore();
+  const token = userStore.userInfo?.token;
   // 设置请求头
   if (request.headers) {
-    request.headers['__tenant'] = userStore.tenant?.tenantId
-    request.headers['accept-language'] = antdLocale.value.locale
-   }
-    // 如果token过期，则跳转到登录页面
-    if (token) {
-      if (userStore.checkUserLoginExpire()) {
-        authStore.logout();
-        return Promise.reject('用户登录已过期')
-      }
-    }
+    request.headers.__tenant = userStore.tenant?.tenantId;
+    request.headers['accept-language'] = antdLocale.value.locale;
+  }
+  // 如果token过期，则跳转到登录页面
+  if (token && userStore.checkUserLoginExpire()) {
+    authStore.logout();
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject('用户登录已过期');
+  }
 
-    // 设置请求头
-    if (request.headers) {
-      request.headers['Authorization'] = 'Bearer ' + token
-    }
- 
-    return request
-  },
-)
+  // 设置请求头
+  if (request.headers) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return request;
+});
 
 api.interceptors.response.use(
   (response) => {
@@ -56,39 +58,49 @@ api.interceptors.response.use(
     if (response.data.status === 1) {
       if (response.data.error !== '') {
         // 错误提示
-        Message.error(response.data.error)
-        return Promise.reject(response.data)
+        Message.error(response.data.error);
+        return Promise.reject(response.data);
       }
-    }
-    else {
+    } else {
       // useUserStore().logout()
     }
-    return Promise.resolve(response)
+    return Promise.resolve(response);
   },
   (error) => {
     const authStore = useAuthStore();
-    
-    let message = error.message
+
+    let message = error.message;
     if (message === 'Network Error') {
-      message = '后端网络故障'
-    }
-    else if (message.includes('timeout')) {
-      message = '接口请求超时'
-    } else if (error.status === 403) {
-      message = '权限不足'
-    } else if (error.status === 401) {
-      message = '登录状态失效，请重新登录'
-      authStore.logout()
-    } else if (error.status === 500) {
-      message = error.response.data.error?.message || '服务器异常';
-    }
-    else if (message.includes('Request failed with status code')) {
-      message = `接口${message.substr(message.length - 3)}异常`
-    }
-    Message.error(message)
-    return Promise.reject(error)
+      message = '后端网络故障';
+    } else if (message.includes('timeout')) {
+      message = '接口请求超时';
+    } else
+      switch (error.status) {
+        case 401: {
+          message = '登录状态失效，请重新登录';
+          authStore.logout();
+
+          break;
+        }
+        case 403: {
+          message = '权限不足';
+
+          break;
+        }
+        case 500: {
+          message = error.response.data.error?.message || '服务器异常';
+
+          break;
+        }
+        default: {
+          if (message.includes('Request failed with status code')) {
+            message = `接口${message.slice(-3)}异常`;
+          }
+        }
+      }
+    Message.error(message);
+    return Promise.reject(error);
   },
-)
+);
 
-
-export default api
+export default api;

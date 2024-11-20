@@ -33,7 +33,7 @@ export const languageTextQuerySchema: any = [
           value: 'zh-Hans',
         },
         {
-          label: '英文',
+          label: 'en',
           value: 'en',
         },
       ],

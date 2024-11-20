@@ -112,6 +112,13 @@ export const addMessageFormSchema: any = [
   {
     component: 'Input',
     componentProps: {},
+    fieldName: 'username',
+    label: '接收人',
+    rules: z.string().min(1, { message: '请输入接收人username' }),
+  },
+  {
+    component: 'Input',
+    componentProps: {},
     fieldName: 'title',
     label: '标题',
     rules: z.string().min(1, { message: '请输入标题' }),
