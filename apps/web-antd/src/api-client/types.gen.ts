@@ -559,6 +559,10 @@ export type FileServiceDiscoveryProvider = {
     namespace?: (string) | null;
 };
 
+export type FindByUserNameInput = {
+    userName?: (string) | null;
+};
+
 export type FindTenantByNameInput = {
     name?: (string) | null;
 };
@@ -1422,6 +1426,7 @@ export type PagingNotificationInput = {
      */
     endReadTime?: (string) | null;
     messageType?: MessageType;
+    messageLevel?: MessageLevel;
 };
 
 export type PagingNotificationOutput = {
@@ -2534,3 +2539,11 @@ export type PostUsersLockData = {
 export type PostUsersLockResponse = (unknown);
 
 export type PostUsersLockError = (RemoteServiceErrorResponse);
+
+export type PostUsersFindByUserNameData = {
+    body?: FindByUserNameInput;
+};
+
+export type PostUsersFindByUserNameResponse = (IdentityUserDto);
+
+export type PostUsersFindByUserNameError = (RemoteServiceErrorResponse);

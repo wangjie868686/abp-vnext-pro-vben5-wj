@@ -1635,6 +1635,17 @@ export const FileServiceDiscoveryProviderSchema = {
     additionalProperties: false
 } as const;
 
+export const FindByUserNameInputSchema = {
+    type: 'object',
+    properties: {
+        userName: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const FindTenantByNameInputSchema = {
     type: 'object',
     properties: {
@@ -3655,6 +3666,9 @@ export const PagingNotificationInputSchema = {
         },
         messageType: {
             '$ref': '#/components/schemas/MessageType'
+        },
+        messageLevel: {
+            '$ref': '#/components/schemas/MessageLevel'
         }
     },
     additionalProperties: false

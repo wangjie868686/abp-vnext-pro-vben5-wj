@@ -15,6 +15,7 @@ import {
   postNotificationSendCommonErrorMessage,
   postNotificationSendCommonInformationMessage,
   postNotificationSendCommonWarningMessage,
+  postUsersFindByUserName,
 } from '#/api-client';
 
 import {
@@ -91,8 +92,15 @@ const [AddForm, addFormApi] = useVbenForm({
 async function submit() {
   const { valid } = await addFormApi.validate();
   if (!valid) return;
-
-  const formValues = await addFormApi.getValues();
+  let formValues = await addFormApi.getValues();
+  const user = await postUsersFindByUserName({
+    body: { userName: formValues.userName },
+  });
+  formValues = {
+    ...formValues,
+    receiveUserId: user.data?.id,
+    receiveUserName: user.data?.userName,
+  };
 
   try {
     addModalApi.setState({ loading: true, confirmLoading: true });

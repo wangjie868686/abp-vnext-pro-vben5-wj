@@ -16,7 +16,7 @@
   },
   "type": "module",
   "scripts": {
-    "openapi": "openapi-ts -f ./openapi-config.ts",
+    "nswag": "openapi-ts -f ./src/api-client-config/config.ts",
     "build": "pnpm vite build --mode production",
     "build:analyze": "pnpm vite build --mode analyze",
     "dev": "pnpm vite --mode development",
