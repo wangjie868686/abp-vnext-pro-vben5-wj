@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import type { NotificationItem } from '@vben/layouts';
 
-import { computed, ref, watch } from 'vue';
-import { useVbenModal, } from '@vben/common-ui'
-import { AuthenticationLoginExpiredModal } from '@vben/common-ui';
-import { VBEN_DOC_URL, VBEN_GITHUB_URL } from '@vben/constants';
+import { computed, onMounted, ref, watch } from 'vue';
+
+import {
+  AuthenticationLoginExpiredModal,
+  useVbenModal,
+  z,
+} from '@vben/common-ui';
 import { useWatermark } from '@vben/hooks';
-import { BookOpenText, CircleHelp, MdiGithub } from '@vben/icons';
+import { CircleHelp } from '@vben/icons';
 import {
   BasicLayout,
   LockScreen,
@@ -15,14 +18,15 @@ import {
 } from '@vben/layouts';
 import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
-import { openWindow } from '@vben/utils';
-import { z } from '@vben/common-ui';
-import { $t } from '#/locales';
+
+import { message as Message } from 'ant-design-vue/es/components';
+
+import { useVbenForm } from '#/adapter/form';
+import { postUsersChangePassword } from '#/api-client';
+import { useSignalR } from '#/hooks/useSignalR';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
-import {postUsersChangePassword} from "#/api-client";
-import {message as Message} from "ant-design-vue/es/components";
-import { useVbenForm} from '#/adapter/form.ts';
+
 const notifications = ref<NotificationItem[]>([
   {
     avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
@@ -53,7 +57,10 @@ const notifications = ref<NotificationItem[]>([
     title: '代办提醒',
   },
 ]);
-
+const { startConnect } = useSignalR();
+onMounted(() => {
+  startConnect();
+});
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
@@ -64,18 +71,16 @@ const showDot = computed(() =>
 const [ResetPasswordModal, resetPasswordModalApi] = useVbenModal({
   draggable: true,
   onConfirm: submit,
-  onBeforeClose: () => {
-
-  }
+  onBeforeClose: () => {},
 });
 const menus = computed(() => [
-{
+  {
     handler: () => {
       resetPasswordModalApi.open();
     },
     icon: CircleHelp,
     text: '修改密码',
-  }
+  },
   // {
   //   handler: () => {
   //     openWindow(VBEN_DOC_URL, {
@@ -115,9 +120,7 @@ const [ResetPasswordForm, resetPasswordApi] = useVbenForm({
     },
   },
   // 提交函数
-  handleSubmit: () => {
-
-  },
+  handleSubmit: () => {},
   layout: 'horizontal',
   schema: [
     {
@@ -146,7 +149,7 @@ const [ResetPasswordForm, resetPasswordApi] = useVbenForm({
       fieldName: 'confirmPassword',
       label: '确认密码',
       rules: z.string().min(1, { message: '请输入当前密码' }),
-    }
+    },
   ],
   showCollapseButton: false,
   showDefaultActions: false,
@@ -173,17 +176,17 @@ async function submit() {
   if (!valid) return;
   const formValues = await resetPasswordApi.getValues();
 
-  if(formValues.currentPassword === formValues.confirmPassword){
+  if (formValues.currentPassword === formValues.confirmPassword) {
     Message.warn('新旧密码不能一样.');
     return;
   }
-  if(formValues.newPassword !== formValues.confirmPassword){
+  if (formValues.newPassword !== formValues.confirmPassword) {
     Message.warn('两次密码输入不一致.');
     return;
   }
   await postUsersChangePassword({ body: formValues });
   Message.success('修改成功');
-  await resetPasswordApi.resetForm()
+  await resetPasswordApi.resetForm();
   resetPasswordModalApi.close();
 }
 watch(
@@ -209,8 +212,8 @@ watch(
       <UserDropdown
         :avatar
         :menus
-        :text="userStore.userInfo?.name"        
         :tag-text="userStore.tenant?.name"
+        :text="userStore.userInfo?.name"
         @logout="handleLogout"
       />
     </template>
@@ -235,6 +238,6 @@ watch(
     </template>
   </BasicLayout>
   <ResetPasswordModal class="w-[600px]" title="修改密码">
-    <ResetPasswordForm></ResetPasswordForm>
+    <ResetPasswordForm />
   </ResetPasswordModal>
 </template>
