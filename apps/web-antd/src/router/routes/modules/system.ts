@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
         path: 'organizationUnit',
         component: () => import('#/views/system/organizationUnit/index.vue'),
         meta: {
-          title:'组织机构管理',
+          title: '组织机构管理',
           // authority: ['AbpIdentity.LanguageTexts'],
           icon: 'ant-design:team-outlined',
         },
@@ -60,7 +60,7 @@ const routes: RouteRecordRaw[] = [
         path: 'auditlog',
         component: () => import('#/views/system/abplog/audit.vue'),
         meta: {
-          title:'审计日志',
+          title: '审计日志',
           authority: ['AbpIdentity.AuditLog'],
           icon: 'ant-design:snippets-twotone',
         },
@@ -70,7 +70,7 @@ const routes: RouteRecordRaw[] = [
         path: 'loginlog',
         component: () => import('#/views/system/abplog/login.vue'),
         meta: {
-          title:'登录日志',
+          title: '登录日志',
           authority: ['AbpIdentity.IdentitySecurityLogs'],
           icon: 'ant-design:file-protect-outlined',
         },
@@ -80,7 +80,7 @@ const routes: RouteRecordRaw[] = [
         path: 'language',
         component: () => import('#/views/system/abplanguage/language.vue'),
         meta: {
-          title:'语言管理',
+          title: '语言管理',
           authority: ['AbpIdentity.Languages'],
           icon: 'ant-design:read-outlined',
         },
@@ -90,7 +90,7 @@ const routes: RouteRecordRaw[] = [
         path: 'languagetext',
         component: () => import('#/views/system/abplanguage/languagetext.vue'),
         meta: {
-          title:'语言文本管理',
+          title: '语言文本管理',
           authority: ['AbpIdentity.LanguageTexts'],
           icon: 'ant-design:font-size-outlined',
         },
@@ -100,9 +100,20 @@ const routes: RouteRecordRaw[] = [
         path: 'data-dictionary',
         component: () => import('#/views/system/dataDictionary/index.vue'),
         meta: {
-          title:'数据字典',
-          // authority: ['AbpIdentity.LanguageTexts'], 
-          icon: 'ant-design:database-outlined', 
+          title: '数据字典',
+          // authority: ['AbpIdentity.LanguageTexts'],
+          icon: 'ant-design:database-outlined',
+        },
+      },
+      {
+        name: 'AbpNotification',
+        path: 'notification',
+        component: () =>
+          import('#/views/system/abpnotification/notification.vue'),
+        meta: {
+          title: '通告管理',
+          authority: ['AbpIdentity.NotificationManagement'],
+          icon: 'ant-design:comment-outlined',
         },
       },
     ],
