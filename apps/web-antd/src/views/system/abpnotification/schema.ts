@@ -181,6 +181,13 @@ export const tableMessageSchema: any = [
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
     },
   },
+  {
+    title: '操作',
+    field: 'action',
+    fixed: 'right',
+    minWidth: '150',
+    slots: { default: 'action' },
+  },
 ];
 export const queryMessageSchema: any = [
   {

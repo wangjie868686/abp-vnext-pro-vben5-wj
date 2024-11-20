@@ -6,12 +6,13 @@ import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { Button, message as Message, Space, Tag } from 'ant-design-vue';
+import { Button, message as Message, Modal, Space, Tag } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   postNotificationNotificationPage,
+  postNotificationRead,
   postNotificationSendCommonErrorMessage,
   postNotificationSendCommonInformationMessage,
   postNotificationSendCommonWarningMessage,
@@ -132,6 +133,17 @@ const openAddModal = async () => {
   editRow.value = {};
   addModalApi.open();
 };
+
+const onRead = (row: any) => {
+  Modal.confirm({
+    title: `确认设置已读吗？`,
+    onOk: async () => {
+      await postNotificationRead({ body: { id: row.id } });
+      gridApi.reload();
+      Message.success('设置成功');
+    },
+  });
+};
 </script>
 
 <template>
@@ -157,6 +169,14 @@ const openAddModal = async () => {
       <template #read="{ row }">
         <Tag v-if="row.read" color="green"> 已读 </Tag>
         <Tag v-else color="red"> 未读 </Tag>
+      </template>
+
+      <template #action="{ row }">
+        <Space>
+          <Button size="small" type="primary" @click="onRead(row)">
+            设置已读
+          </Button>
+        </Space>
       </template>
     </Grid>
 
