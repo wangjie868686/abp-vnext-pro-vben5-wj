@@ -21,6 +21,7 @@ import {
   postNotificationSendCommonWarningMessage,
   postUsersFindByUserName,
 } from '#/api-client';
+import { $t } from '#/locales';
 
 import {
   addFormSchema,
@@ -138,7 +139,7 @@ async function broadCastSubmit() {
         body: formValues,
       });
     }
-    Message.success('发送成功');
+    Message.success($t('common.success'));
     addBroadCastModalApi.close();
     gridApi.reload();
   } finally {
@@ -177,7 +178,7 @@ async function submit() {
         body: formValues,
       });
     }
-    Message.success('发送成功');
+    Message.success($t('common.success'));
     addModalApi.close();
     gridApi.reload();
   } finally {
@@ -195,15 +196,15 @@ const openBroadCastAddModal = async () => {
 };
 const onRead = (row: any) => {
   if (row.read) {
-    Message.info('该消息已读,不需要重复设置');
+    // Message.info('该消息已读,不需要重复设置');
     return;
   }
   Modal.confirm({
-    title: `确认设置已读吗？`,
+    title: $t('abp.message.confirmRead'),
     onOk: async () => {
       await postNotificationRead({ body: { id: row.id } });
       gridApi.reload();
-      Message.success('设置成功');
+      Message.success($t('common.success'));
     },
   });
 };
@@ -214,7 +215,9 @@ const onRead = (row: any) => {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button type="primary" @click="openAddModal"> 发送消息 </Button>
+          <Button type="primary" @click="openAddModal">
+            {{ $t('abp.message.sendMessage') }}
+          </Button>
           <!-- <Button type="primary" @click="openBroadCastAddModal">
             发送通告
           </Button> -->
@@ -233,20 +236,20 @@ const onRead = (row: any) => {
         </Tag>
       </template>
       <template #read="{ row }">
-        <Tag v-if="row.read" color="green"> 已读 </Tag>
-        <Tag v-else color="red"> 未读 </Tag>
+        <Tag v-if="row.read" color="green"> {{ $t('abp.message.read') }} </Tag>
+        <Tag v-else color="red"> {{ $t('abp.message.unread') }} </Tag>
       </template>
 
       <template #action="{ row }">
         <Space>
           <Button size="small" type="primary" @click="onRead(row)">
-            设置已读
+            {{ $t('abp.message.setRead') }}
           </Button>
         </Space>
       </template>
     </Grid>
 
-    <AddModal class="w-[600px]" title="发送消息">
+    <AddModal :title="$t('abp.message.sendMessage')" class="w-[600px]">
       <AddForm />
     </AddModal>
 

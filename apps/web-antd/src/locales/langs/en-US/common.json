@@ -16,5 +16,9 @@
   "deleteSuccess": "Delete Success",
   "yes": "yes",
   "no": "no",
-  "confirmDelete": "Confirm to delete"
+  "confirmDelete": "Confirm to delete",
+  "warning": "warning",
+  "info": "info",
+  "error": "error",
+  "success": "Success"
 }

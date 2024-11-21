@@ -2,6 +2,8 @@ import { z } from '@vben/common-ui';
 
 import dayjs from 'dayjs';
 
+import { $t } from '#/locales';
+
 export const querySchema: any = [
   {
     component: 'Input',
@@ -16,51 +18,50 @@ export const querySchema: any = [
   {
     component: 'Input',
     fieldName: 'title',
-    label: '标题',
+    label: $t('abp.message.title'),
   },
   {
     component: 'Input',
     fieldName: 'content',
-    label: '内容',
+    label: $t('abp.message.content'),
   },
   {
     component: 'Select',
     fieldName: 'messageLevel',
-    label: '级别',
+    label: $t('abp.message.level'),
     width: 120,
     componentProps: {
       options: [
         {
-          label: '警告',
+          label: $t('common.warning'),
           value: 10,
         },
         {
-          label: '正常',
+          label: $t('common.info'),
           value: 20,
         },
         {
-          label: '错误',
+          label: $t('common.error'),
           value: 30,
         },
       ],
     },
   },
 ];
-
 export const tableSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
-  { field: 'title', title: '标题', minWidth: '150' },
-  { field: 'content', title: '内容', minWidth: '150' },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
+  { field: 'title', title: $t('abp.message.title'), minWidth: '150' },
+  { field: 'content', title: $t('abp.message.content'), minWidth: '150' },
   {
     field: 'messageLevelName',
-    title: '级别',
+    title: $t('abp.message.level'),
     minWidth: '150',
     slots: { default: 'messageLevel' },
   },
-  { field: 'senderUserName', title: '发送人', minWidth: '150' },
+  { field: 'senderUserName', title: $t('abp.message.sender'), minWidth: '150' },
   {
     field: 'creationTime',
-    title: '创建时间',
+    title: $t('common.createTime'),
     minWidth: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
@@ -73,34 +74,38 @@ export const addFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'title',
-    label: '标题',
-    rules: z.string().min(1, { message: '请输入标题' }),
+    label: $t('abp.message.title'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.message.title') }),
   },
   {
     component: 'Textarea',
     componentProps: {},
     fieldName: 'content',
-    label: '内容',
-    rules: z.string().min(1, { message: '请输入内容' }),
+    label: $t('abp.message.content'),
+    rules: z.string().min(1, {
+      message: $t('common.pleaseInput') + $t('abp.message.content'),
+    }),
   },
   {
     component: 'Select',
     fieldName: 'messageLevel',
-    label: '级别',
+    label: $t('abp.message.level'),
     required: true,
     defaultValue: 20,
     componentProps: {
       options: [
         {
-          label: '警告',
+          label: $t('common.warning'),
           value: 10,
         },
         {
-          label: '正常',
+          label: $t('common.info'),
           value: 20,
         },
         {
-          label: '错误',
+          label: $t('common.error'),
           value: 30,
         },
       ],
@@ -113,41 +118,41 @@ export const addMessageFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'userName',
-    label: '接收人',
+    label: $t('abp.message.sender'),
     rules: z.string().min(1, { message: '请输入接收人username' }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'title',
-    label: '标题',
+    label: $t('abp.message.title'),
     rules: z.string().min(1, { message: '请输入标题' }),
   },
   {
     component: 'Textarea',
     componentProps: {},
     fieldName: 'content',
-    label: '内容',
+    label: $t('abp.message.content'),
     rules: z.string().min(1, { message: '请输入内容' }),
   },
   {
     component: 'Select',
     fieldName: 'messageLevel',
-    label: '级别',
+    label: $t('abp.message.level'),
     required: true,
     defaultValue: 20,
     componentProps: {
       options: [
         {
-          label: '警告',
+          label: $t('common.warning'),
           value: 10,
         },
         {
-          label: '正常',
+          label: $t('common.info'),
           value: 20,
         },
         {
-          label: '错误',
+          label: $t('common.error'),
           value: 30,
         },
       ],
@@ -156,34 +161,42 @@ export const addMessageFormSchema: any = [
 ];
 
 export const tableMessageSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
-  { field: 'title', title: '标题', minWidth: '150' },
-  { field: 'content', title: '内容', minWidth: '150' },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
+  { field: 'title', title: $t('abp.message.title'), minWidth: '150' },
+  { field: 'content', title: $t('abp.message.content'), minWidth: '150' },
   // { field: 'messageTypeName', title: '类型', minWidth: '150' },
   {
     field: 'messageLevelName',
-    title: '级别',
+    title: $t('abp.message.level'),
     minWidth: '150',
     slots: { default: 'messageLevel' },
   },
-  { field: 'senderUserName', title: '发送人', minWidth: '150' },
-  { field: 'receiveUserName', title: '接收人', minWidth: '150' },
+  {
+    field: 'senderUserName',
+    title: $t('abp.message.receiver'),
+    minWidth: '150',
+  },
+  {
+    field: 'receiveUserName',
+    title: $t('abp.message.sender'),
+    minWidth: '150',
+  },
   {
     field: 'read',
-    title: '是否已读',
+    title: $t('abp.message.isRead'),
     minWidth: '150',
     slots: { default: 'read' },
   },
   {
     field: 'creationTime',
-    title: '创建时间',
+    title: $t('common.createTime'),
     minWidth: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
     },
   },
   {
-    title: '操作',
+    title: $t('common.action'),
     field: 'action',
     fixed: 'right',
     minWidth: '150',
@@ -204,30 +217,30 @@ export const queryMessageSchema: any = [
   {
     component: 'Input',
     fieldName: 'title',
-    label: '标题',
+    label: $t('abp.message.title'),
   },
   {
     component: 'Input',
     fieldName: 'content',
-    label: '内容',
+    label: $t('abp.message.content'),
   },
   {
     component: 'Select',
     fieldName: 'messageLevel',
-    label: '级别',
+    label: $t('abp.message.level'),
     width: 120,
     componentProps: {
       options: [
         {
-          label: '警告',
+          label: $t('common.warning'),
           value: 10,
         },
         {
-          label: '正常',
+          label: $t('common.info'),
           value: 20,
         },
         {
-          label: '错误',
+          label: $t('common.error'),
           value: 30,
         },
       ],
@@ -254,7 +267,7 @@ export const queryMessageSchema: any = [
   {
     component: 'Select',
     fieldName: 'read',
-    label: '是否已读',
+    label: $t('abp.message.isRead'),
     componentProps: {
       options: [
         {

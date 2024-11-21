@@ -53,5 +53,20 @@
     "applicationName": "applicationName",
     "loginMode": "loginMode",
     "loginUrl": "loginUrl"
+  },
+  "message": {
+    "title": "title",
+    "content": "content",
+    "type": "type",
+    "level": "level",
+    "sender": "sender",
+    "receiver": "receiver",
+    "isRead": "isRead",
+    "sendMessage": "sendMessage",
+    "sendNotification": "sendNotification",
+    "setRead": "setRead",
+    "confirmRead": "Are you sure you want to set the message as read?",
+    "read": "read",
+    "unread": "unread"
   }
 }

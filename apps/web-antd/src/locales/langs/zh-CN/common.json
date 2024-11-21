@@ -16,5 +16,9 @@
   "deleteSuccess": "删除成功！",
   "yes": "是",
   "no": "否",
-  "confirmDelete": "确认删除"
+  "confirmDelete": "确认删除",
+  "warning": "警告",
+  "info": "正常",
+  "error": "错误",
+  "success": "成功"
 }

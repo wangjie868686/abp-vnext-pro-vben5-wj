@@ -16,6 +16,7 @@ import {
   postNotificationSendBroadCastInformationMessage,
   postNotificationSendBroadCastWarningMessage,
 } from '#/api-client';
+import { $t } from '#/locales';
 
 import { addFormSchema, querySchema, tableSchema } from './schema';
 
@@ -109,7 +110,7 @@ async function submit() {
         body: formValues,
       });
     }
-    Message.success('发送成功');
+    Message.success($t('common.success'));
     addModalApi.close();
     gridApi.reload();
   } finally {
@@ -128,7 +129,9 @@ const openAddModal = async () => {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button type="primary" @click="openAddModal"> 发送通告 </Button>
+          <Button type="primary" @click="openAddModal">
+            {{ $t('abp.message.sendNotification') }}
+          </Button>
         </Space>
       </template>
 
@@ -145,7 +148,7 @@ const openAddModal = async () => {
       </template>
     </Grid>
 
-    <AddModal class="w-[600px]" title="发送通告">
+    <AddModal :title="$t('abp.message.sendNotification')" class="w-[600px]">
       <AddForm />
     </AddModal>
   </Page>
