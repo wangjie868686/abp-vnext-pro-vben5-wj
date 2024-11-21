@@ -60,7 +60,7 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
             h(
               Tag,
               { color: row.isEnabled ? 'green' : 'red' },
-              row.isEnabled ? '启用' : '禁用',
+              row.isEnabled ? $t('common.enabled') : $t('common.disabled'),
             )
           "
         />

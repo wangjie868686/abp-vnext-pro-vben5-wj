@@ -68,5 +68,11 @@
     "confirmRead": "确认设置已读?",
     "read": "已读",
     "unread": "未读"
+  },
+  "language": {
+    "language": "语言名称",
+    "showLanguage": "显示名称",
+    "icon": "图标",
+    "resourceName": "资源名称"
   }
 }

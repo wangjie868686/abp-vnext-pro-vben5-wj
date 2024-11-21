@@ -6,6 +6,7 @@
   "export": "Export",
   "save": "save",
   "seq": "Seq",
+  "isEnable": "IsEnable",
   "enabled": "Enabled",
   "disabled": "Disabled",
   "action": "Action",
@@ -20,5 +21,6 @@
   "warning": "warning",
   "info": "info",
   "error": "error",
-  "success": "Success"
+  "success": "Success",
+  "keyword": "Keyword"
 }

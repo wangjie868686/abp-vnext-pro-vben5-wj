@@ -5,6 +5,7 @@
   "search": "搜索",
   "save": "保存",
   "export": "导出",
+  "isEnable": "是否启用",
   "enabled": "启用",
   "disabled": "禁用",
   "seq": "序号",
@@ -20,5 +21,6 @@
   "warning": "警告",
   "info": "正常",
   "error": "错误",
-  "success": "成功"
+  "success": "成功",
+  "keyword": "关键字"
 }
