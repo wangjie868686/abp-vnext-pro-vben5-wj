@@ -265,7 +265,7 @@ async function test() {
         :dot="showDot"
         :notifications="notifications"
         @clear="handleNoticeClear"
-        @click="test"
+        @iconClick="test"
         @make-all="handleMakeAll"
         @read="handleRead"
         @view-all="handleViewAll"

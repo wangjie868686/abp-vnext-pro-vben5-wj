@@ -35,6 +35,7 @@ const emit = defineEmits<{
   makeAll: [];
   read: [NotificationItem];
   viewAll: [];
+  iconClick: [];
 }>();
 
 const [open, toggle] = useToggle();
@@ -59,6 +60,11 @@ function handleClear() {
 function handleClick(item: NotificationItem) {
   emit('read', item);
 }
+
+function handleIconClick() {
+  emit('iconClick',);
+}
+
 </script>
 <template>
   <VbenPopover
@@ -66,8 +72,8 @@ function handleClick(item: NotificationItem) {
     content-class="relative right-2 w-[360px] p-0"
   >
     <template #trigger>
-      <div class="flex-center mr-2 h-full" @click.stop="toggle()">
-        <VbenIconButton class="bell-button text-foreground relative">
+      <div class="flex-center mr-2 h-full" @click.stop="handleIconClick">
+        <VbenIconButton class="bell-button text-foreground relative" @click="">
           <span
             v-if="dot"
             class="bg-primary absolute right-0.5 top-0.5 h-2 w-2 rounded"
