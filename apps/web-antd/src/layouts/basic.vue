@@ -24,43 +24,18 @@ import dayjs from 'dayjs';
 
 import { useVbenForm } from '#/adapter/form';
 import {
+  postNotificationBatchRead,
   postNotificationNotificationPage,
+  postNotificationRead,
   postUsersChangePassword,
 } from '#/api-client';
 import { useSignalR } from '#/hooks/useSignalR';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
-const notifications = ref<NotificationItem[]>([
-  // {
-  //   avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-  //   date: '3小时前',
-  //   isRead: true,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '收到了 14 份新周报',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/1',
-  //   date: '刚刚',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '朱偏右 回复了你',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/1',
-  //   date: '2024-01-01',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '曲丽丽 评论了你',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/satori',
-  //   date: '1天前',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '代办提醒',
-  // },
-]);
+import NotifyItem from './NotifyItem.vue';
+
+const notifications = ref<NotificationItem[]>([]);
 const { startConnect } = useSignalR();
 function convertToNotificationItem(message: any): NotificationItem {
   return {
@@ -69,12 +44,21 @@ function convertToNotificationItem(message: any): NotificationItem {
     isRead: message.read,
     message: message.content,
     title: message.title,
+    id: message.id,
   };
 }
+const userStore = useUserStore();
+const authStore = useAuthStore();
+const accessStore = useAccessStore();
 onMounted(async () => {
   startConnect();
   const message = await postNotificationNotificationPage({
-    body: { pageIndex: 1, pageSize: 4, messageType: 20 },
+    body: {
+      pageIndex: 1,
+      pageSize: 4,
+      messageType: 20,
+      receiverUserId: userStore.userInfo?.userId,
+    },
   });
   message.data?.items?.forEach((item) => {
     notifications.value.push(convertToNotificationItem(item));
@@ -87,9 +71,7 @@ onMounted(async () => {
     });
   });
 });
-const userStore = useUserStore();
-const authStore = useAuthStore();
-const accessStore = useAccessStore();
+
 const { destroyWatermark, updateWatermark } = useWatermark();
 const showDot = computed(() =>
   notifications.value.some((item) => !item.isRead),
@@ -97,6 +79,11 @@ const showDot = computed(() =>
 const [ResetPasswordModal, resetPasswordModalApi] = useVbenModal({
   draggable: true,
   onConfirm: submit,
+  onBeforeClose: () => {},
+});
+const [NotifyItemModal, notifyItemModalApi] = useVbenModal({
+  draggable: true,
+  onConfirm: () => {},
   onBeforeClose: () => {},
 });
 const menus = computed(() => [
@@ -193,8 +180,34 @@ function handleNoticeClear() {
   notifications.value = [];
 }
 
-function handleMakeAll() {
+async function handleMakeAll() {
+  // 获取notifications 已读的数据，并且请求api 标记为已读
+  const readIds = notifications.value
+    .filter((item) => item.isRead)
+    .map((item) => item.id);
+
+  if (readIds.length > 0) {
+    await postNotificationBatchRead({ body: { ids: readIds } });
+    Message.success('设置成功');
+  }
+
   notifications.value.forEach((item) => (item.isRead = true));
+}
+
+async function handleRead(row: NotificationItem) {
+  if (row.isRead) {
+    return;
+  }
+  await postNotificationRead({ body: { id: row.id } });
+
+  notifications.value.forEach((item) => {
+    if (item.id === row.id) {
+      item.isRead = true;
+    }
+  });
+}
+function handleViewAll() {
+  notifyItemModalApi.open();
 }
 async function submit() {
   // 表单校验
@@ -254,6 +267,8 @@ async function test() {
         @clear="handleNoticeClear"
         @click="test"
         @make-all="handleMakeAll"
+        @read="handleRead"
+        @view-all="handleViewAll"
       />
     </template>
     <template #extra>
@@ -271,4 +286,12 @@ async function test() {
   <ResetPasswordModal class="w-[600px]" title="修改密码">
     <ResetPasswordForm />
   </ResetPasswordModal>
+
+  <NotifyItemModal
+    :fullscreen="true"
+    :show-cancel-button="false"
+    :show-confirm-button="false"
+  >
+    <NotifyItem />
+  </NotifyItemModal>
 </template>

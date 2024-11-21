@@ -255,7 +255,6 @@ export const queryMessageSchema: any = [
     component: 'Select',
     fieldName: 'read',
     label: '是否已读',
-    width: 120,
     componentProps: {
       options: [
         {

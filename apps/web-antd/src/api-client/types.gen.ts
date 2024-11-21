@@ -1723,6 +1723,10 @@ export type SendCommonMessageInput = {
     receiveUserName?: (string) | null;
 };
 
+export type SetBatchReadInput = {
+    ids?: Array<(string)> | null;
+};
+
 export type SetDataDictinaryDetailInput = {
     dataDictionaryId?: string;
     dataDictionayDetailId?: string;
@@ -2247,6 +2251,14 @@ export type PostNotificationReadData = {
 export type PostNotificationReadResponse = (unknown);
 
 export type PostNotificationReadError = (RemoteServiceErrorResponse);
+
+export type PostNotificationBatchReadData = {
+    body?: SetBatchReadInput;
+};
+
+export type PostNotificationBatchReadResponse = (unknown);
+
+export type PostNotificationBatchReadError = (RemoteServiceErrorResponse);
 
 export type PostOrganizationUnitsTreeResponse = (Array<TreeOutput>);
 
