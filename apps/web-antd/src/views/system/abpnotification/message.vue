@@ -210,7 +210,7 @@ const onRead = (row: any) => {
 </script>
 
 <template>
-  <Page auto-content-height title="消息管理">
+  <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
         <Space>

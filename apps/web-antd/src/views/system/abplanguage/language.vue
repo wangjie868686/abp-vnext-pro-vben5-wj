@@ -52,7 +52,7 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 
 <template>
-  <Page auto-content-height title="语言管理">
+  <Page auto-content-height>
     <Grid>
       <template #isEnabled="{ row }">
         <component

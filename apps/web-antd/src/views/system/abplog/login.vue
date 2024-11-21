@@ -55,7 +55,7 @@ const gridOptions: VxeGridProps<any> = {
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 <template>
-  <Page auto-content-height title="登录日志">
+  <Page auto-content-height>
     <Grid />
   </Page>
 </template>

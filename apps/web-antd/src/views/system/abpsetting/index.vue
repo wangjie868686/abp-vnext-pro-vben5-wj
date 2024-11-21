@@ -57,7 +57,7 @@ const save = async (settingValue: Record<string, any>) => {
 </script>
 
 <template>
-  <Page auto-content-height class="pb-5" title="设置管理">
+  <Page auto-content-height class="pb-5">
     <Spin :spinning="loading" tip="加载中...">
       <div class="bg-card px-8">
         <Tabs v-model:active-key="activeName">
