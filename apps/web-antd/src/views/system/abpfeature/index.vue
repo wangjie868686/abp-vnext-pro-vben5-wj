@@ -17,6 +17,7 @@ import {
 } from 'ant-design-vue';
 
 import { postFeaturesList, postFeaturesUpdate } from '#/api-client';
+import { $t } from '#/locales';
 
 defineOptions({
   name: 'AbpFeature',
@@ -74,13 +75,13 @@ const save = async (item: any) => {
       },
     },
   });
-  Message.success('保存成功');
+  Message.success($t('common.editSuccess'));
 };
 </script>
 
 <template>
-  <Page auto-content-height class="pb-5" title="功能管理">
-    <Spin :spinning="loading" tip="加载中...">
+  <Page :title="$t('abp.menu.feature')" auto-content-height class="pb-5">
+    <Spin :spinning="loading" tip="loading...">
       <div class="bg-card px-8">
         <Tabs v-model:active-key="activeName" tab-position="left">
           <TabPane
@@ -117,9 +118,11 @@ const save = async (item: any) => {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
+              <Row style="margin-bottom: 10px">
                 <Col :offset="6">
-                  <Button type="primary" @click="save(paneItem)"> 保存 </Button>
+                  <Button type="primary" @click="save(paneItem)">
+                    {{ $t('common.save') }}
+                  </Button>
                 </Col>
               </Row>
             </Form>

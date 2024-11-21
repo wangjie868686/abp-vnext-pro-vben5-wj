@@ -119,7 +119,7 @@ const save = async (settingValue: Record<string, any>) => {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
+              <Row style="margin-bottom: 10px">
                 <Col :offset="6">
                   <Button
                     type="primary"
