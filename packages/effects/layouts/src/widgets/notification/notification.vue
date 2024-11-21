@@ -62,6 +62,7 @@ function handleClick(item: NotificationItem) {
 }
 
 function handleIconClick() {
+  open.value = !open.value;
   emit('iconClick');
 }
 </script>

@@ -227,6 +227,7 @@ watch(
 );
 
 async function loadMessage() {
+  notifications.value = [];
   const message = await postNotificationNotificationPage({
     body: {
       pageIndex: 1,
