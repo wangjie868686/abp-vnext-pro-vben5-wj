@@ -35,6 +35,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: queryMessageSchema,
+  wrapperClass: 'grid-cols-5',
 };
 
 const gridOptions: VxeGridProps<any> = {
@@ -214,9 +215,9 @@ const onRead = (row: any) => {
       <template #toolbar-actions>
         <Space>
           <Button type="primary" @click="openAddModal"> 发送消息 </Button>
-          <Button type="primary" @click="openBroadCastAddModal">
+          <!-- <Button type="primary" @click="openBroadCastAddModal">
             发送通告
-          </Button>
+          </Button> -->
         </Space>
       </template>
 

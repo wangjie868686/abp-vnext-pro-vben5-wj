@@ -25,6 +25,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: querySchema,
+  wrapperClass: 'grid-cols-4',
 };
 
 const gridOptions: VxeGridProps<any> = {

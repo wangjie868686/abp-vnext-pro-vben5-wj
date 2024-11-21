@@ -74,7 +74,7 @@ function convertToNotificationItem(message: any): NotificationItem {
 onMounted(async () => {
   startConnect();
   const message = await postNotificationNotificationPage({
-    body: { pageIndex: 1, pageSize: 4 },
+    body: { pageIndex: 1, pageSize: 4, messageType: 20 },
   });
   message.data?.items?.forEach((item) => {
     notifications.value.push(convertToNotificationItem(item));
@@ -230,6 +230,10 @@ watch(
     immediate: true,
   },
 );
+
+async function test() {
+  console.log('test');
+}
 </script>
 
 <template>
@@ -248,6 +252,7 @@ watch(
         :dot="showDot"
         :notifications="notifications"
         @clear="handleNoticeClear"
+        @click="test"
         @make-all="handleMakeAll"
       />
     </template>
