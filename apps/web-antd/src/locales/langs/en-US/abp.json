@@ -37,6 +37,9 @@
     "newPasswordAndCurrentPasswordNotAlike": "The old and new passwords cannot be the same"
   },
   "role": {
-    "role": "role"
+    "role": "role",
+    "roleName": "roleName",
+    "isDefault": "isDefault",
+    "permissions": "permissions"
   }
 }

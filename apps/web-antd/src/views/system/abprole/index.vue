@@ -28,6 +28,7 @@ import {
   postRolesPage,
   postRolesUpdate,
 } from '#/api-client';
+import { $t } from '#/locales';
 
 import { addRoleFormSchema, querySchema, tableSchema } from './schema';
 
@@ -127,7 +128,9 @@ async function submit() {
     addModalApi.setState({ loading: true, confirmLoading: true });
     const { data = {} } = await api({ body: fetchParams });
     if (data.id) {
-      Message.success(editRow.value.id ? '修改成功' : '新增成功');
+      Message.success(
+        editRow.value.id ? $t('common.editSuccess') : $t('common.addSuccess'),
+      );
       addModalApi.close();
       gridApi.reload();
     }
@@ -144,11 +147,11 @@ function onEdit(record: any) {
 
 function onDel(row: any) {
   Modal.confirm({
-    title: `确认删除 ${row.name} 吗？`,
+    title: `${$t('common.confirmDelete')}${row.name} ?`,
     onOk: async () => {
       await postRolesDelete({ body: { id: row.id } });
       gridApi.reload();
-      Message.success('删除成功');
+      Message.success($t('common.deleteSuccess'));
     },
   });
 }
@@ -235,7 +238,7 @@ const updateAuth = async () => {
       },
     });
     if (resp.status === 200 || resp.status === 204) {
-      Message.success('授权成功');
+      $t('common.editSuccess');
       authDrawerApi.close();
     }
   } finally {
@@ -254,7 +257,7 @@ const updateAuth = async () => {
             v-access:code="'AbpIdentity.Roles.Create'"
             @click="addModalApi.open"
           >
-            新增
+            {{ $t('common.add') }}
           </Button>
         </Space>
       </template>
@@ -265,7 +268,7 @@ const updateAuth = async () => {
             h(
               Tag,
               { color: row.isDefault ? 'green' : 'red' },
-              row.isDefault ? '是' : '否',
+              row.isDefault ? $t('common.yes') : $t('common.no'),
             )
           "
         />
@@ -279,10 +282,10 @@ const updateAuth = async () => {
             v-access:code="'AbpIdentity.Roles.Update'"
             @click="onEdit(row)"
           >
-            编辑
+            {{ $t('common.edit') }}
           </Button>
           <Dropdown>
-            <Button size="small"> 更多操作 </Button>
+            <Button size="small">......</Button>
             <template #overlay>
               <Menu>
                 <MenuItem @click="onAuth(row)">
@@ -291,7 +294,7 @@ const updateAuth = async () => {
                     type="link"
                     v-access:code="'AbpIdentity.Roles.ManagePermissions'"
                   >
-                    授权
+                    {{ $t('abp.role.permissions') }}
                   </Button>
                 </MenuItem>
                 <MenuItem @click="onDel(row)">
@@ -301,7 +304,7 @@ const updateAuth = async () => {
                     type="link"
                     v-access:code="'AbpIdentity.Roles.Delete'"
                   >
-                    删除
+                    {{ $t('common.delete') }}
                   </Button>
                 </MenuItem>
               </Menu>
@@ -311,10 +314,13 @@ const updateAuth = async () => {
       </template>
     </Grid>
 
-    <AddModal :title="editRow.id ? '编辑角色' : '新增角色'" class="w-[600px]">
+    <AddModal
+      :title="editRow.id ? $t('common.edit') : $t('common.add')"
+      class="w-[600px]"
+    >
       <AddRoleForm />
     </AddModal>
-    <AuthDrawer class="w-[500px]" title="授权">
+    <AuthDrawer :title="$t('abp.role.permissions')" class="w-[500px]">
       <Tree
         v-model:checked-keys="defaultCheckedKeys"
         :check-strictly="true"

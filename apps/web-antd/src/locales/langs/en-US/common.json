@@ -12,5 +12,8 @@
   "pleaseInput": "Please input",
   "addSuccess": "Add Success",
   "editSuccess": "Edit Success",
-  "deleteSuccess": "Delete Success"
+  "deleteSuccess": "Delete Success",
+  "yes": "yes",
+  "no": "no",
+  "confirmDelete": "Confirm to delete"
 }

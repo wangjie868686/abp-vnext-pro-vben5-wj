@@ -12,5 +12,8 @@
   "pleaseInput": "请输入",
   "addSuccess": "新增成功！",
   "editSuccess": "编辑成功！",
-  "deleteSuccess": "删除成功！"
+  "deleteSuccess": "删除成功！",
+  "yes": "是",
+  "no": "否",
+  "confirmDelete": "确认删除"
 }

@@ -37,7 +37,10 @@
     "newPasswordAndCurrentPasswordNotAlike": "新旧密码不能一样"
   },
   "role": {
-    "role": "角色"
+    "role": "角色",
+    "roleName": "角色名称",
+    "isDefault": "是否默认",
+    "permissions": "授权"
   },
   "setting": {
     "menu": "设置管理"

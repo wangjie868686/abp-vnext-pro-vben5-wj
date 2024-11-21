@@ -170,7 +170,7 @@ async function onEdit(record: any) {
 
 function onDel(row: any) {
   Modal.confirm({
-    title: `${$t('abp.user.comfirmDeleteUser')}${row.userName} ?`,
+    title: `${$t('common.confirmDelete')}${row.userName} ?`,
     onOk: async () => {
       await postUsersDelete({ body: { id: row.id } });
       gridApi.reload();
