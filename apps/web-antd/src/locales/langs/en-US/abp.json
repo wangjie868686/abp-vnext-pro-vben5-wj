@@ -41,5 +41,17 @@
     "roleName": "roleName",
     "isDefault": "isDefault",
     "permissions": "permissions"
+  },
+  "log": {
+    "loginTime": "loginTime",
+    "userName": "userName",
+    "tenant": "tenant",
+    "executionTime": "executionTime",
+    "responseTime": "responseTime(ms)",
+    "clientIp": "clientIp",
+    "exception": "exception",
+    "applicationName": "applicationName",
+    "loginMode": "loginMode",
+    "loginUrl": "loginUrl"
   }
 }

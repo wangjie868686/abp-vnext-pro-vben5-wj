@@ -15,7 +15,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: auditLogQuerySchema,
-  wrapperClass: 'grid-cols-4',
+  wrapperClass: 'grid-cols-5',
 };
 
 const gridOptions: VxeGridProps<any> = {

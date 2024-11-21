@@ -42,7 +42,16 @@
     "isDefault": "是否默认",
     "permissions": "授权"
   },
-  "setting": {
-    "menu": "设置管理"
+  "log": {
+    "loginTime": "登录时间",
+    "userName": "用户名",
+    "tenant": "租户",
+    "executionTime": "执行时间",
+    "responseTime": "响应时间(毫秒)",
+    "clientIp": "客户端Ip",
+    "exception": "异常",
+    "applicationName": "应用名称",
+    "loginMode": "登录方式",
+    "loginUrl": "登录地址"
   }
 }

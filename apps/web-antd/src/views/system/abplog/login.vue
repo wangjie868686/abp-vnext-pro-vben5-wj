@@ -7,14 +7,14 @@ import { Page } from '@vben/common-ui';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postIdentitySecurityLogsPage } from '#/api-client';
 
-import { loginLogQuerySchema, logTableSchema } from './schema';
+import { logQuerySchema, logTableSchema } from './schema';
 
 defineOptions({
   name: 'AbpLoginLog',
 });
 
 const formOptions: VbenFormProps = {
-  schema: loginLogQuerySchema,
+  schema: logQuerySchema,
   wrapperClass: 'grid-cols-4',
 };
 
