@@ -2,36 +2,38 @@ import { z } from '@vben/common-ui';
 
 import dayjs from 'dayjs';
 
+import { $t } from '#/locales';
+
 export const querySchema = [
   {
     component: 'Input',
     fieldName: 'filter',
-    label: '用户名',
+    label: $t('abp.user.userName'),
   },
 ];
 
 export const tableSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
-  { field: 'userName', title: '用户名', minWidth: '150' },
-  { field: 'name', title: '真实名称', minWidth: '150' },
-  { field: 'email', title: '邮箱', minWidth: '150' },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
+  { field: 'userName', title: $t('abp.user.userName'), minWidth: '150' },
+  { field: 'name', title: $t('abp.user.name'), minWidth: '150' },
+  { field: 'email', title: $t('abp.user.email'), minWidth: '150' },
   {
     field: 'isActive',
-    title: '状态',
+    title: $t('abp.user.status'),
     minWidth: '150',
     slots: { default: 'isActive' },
   },
-  { field: 'phoneNumber', title: '手机号码', minWidth: '150' },
+  { field: 'phoneNumber', title: $t('abp.user.phone'), minWidth: '150' },
   {
     field: 'creationTime',
-    title: '创建时间',
+    title: $t('common.createTime'),
     minWidth: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
     },
   },
   {
-    title: '操作',
+    title: $t('common.action'),
     field: 'action',
     fixed: 'right',
     minWidth: '150',
@@ -44,43 +46,49 @@ export const addUserFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'userName',
-    label: '用户名',
-    rules: z.string().min(1, { message: '请输入用户名' }),
+    label: $t('abp.user.userName'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.userName') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'name',
-    label: '名称',
-    rules: z.string().min(1, { message: '请输入名称' }),
+    label: $t('abp.user.name'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.name') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'email',
-    label: '邮箱',
-    rules: z.string().email('请输入正确的邮箱'),
+    label: $t('abp.user.email'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.email')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'phoneNumber',
-    label: '手机号码',
-    rules: z.string().min(3, { message: '请输入手机号码' }),
+    label: $t('abp.user.phone'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.phone')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'password',
-    label: '密码',
-    rules: z.string().min(1, { message: '请输入密码' }),
+    label: $t('abp.user.password'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.password')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'confirmPassword',
-    label: '密码(再次确认)',
-    rules: 'required',
+    label: $t('abp.user.comfirmPassword'),
+    rules: z
+      .string()
+      .email($t('common.pleaseInput') + $t('abp.user.comfirmPassword')),
   },
 ];
 
@@ -89,39 +97,48 @@ export const editUserFormSchemaEdit: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'userName',
-    label: '用户名',
-    rules: z.string().min(1, { message: '请输入用户名' }),
+    label: $t('abp.user.userName'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.userName') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'name',
-    label: '名称',
-    rules: z.string().min(1, { message: '请输入名称' }),
+    label: $t('abp.user.name'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.name') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'email',
-    label: '邮箱',
-    rules: z.string().email('请输入正确的邮箱'),
+    label: $t('abp.user.email'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.email')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'phoneNumber',
-    label: '手机号码',
+    label: $t('abp.user.phone'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.phone')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'password',
-    label: '密码',
+    label: $t('abp.user.password'),
+    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.password')),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'confirmPassword',
-    label: '密码(再次确认)',
+    label: $t('abp.user.comfirmPassword'),
+    rules: z
+      .string()
+      .email($t('common.pleaseInput') + $t('abp.user.comfirmPassword')),
   },
 ];

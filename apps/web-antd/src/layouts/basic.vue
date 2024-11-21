@@ -30,6 +30,7 @@ import {
   postUsersChangePassword,
 } from '#/api-client';
 import { useSignalR } from '#/hooks/useSignalR';
+import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
@@ -74,7 +75,7 @@ const menus = computed(() => [
       resetPasswordModalApi.open();
     },
     icon: CircleHelp,
-    text: '修改密码',
+    text: $t('abp.user.changePassword'),
   },
   // {
   //   handler: () => {
@@ -121,29 +122,35 @@ const [ResetPasswordForm, resetPasswordApi] = useVbenForm({
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入当前密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.currentPassword'),
       },
       fieldName: 'currentPassword',
-      label: '当前密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.currentPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.currentPassword'),
+      }),
     },
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入新密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.newPassword'),
       },
       fieldName: 'newPassword',
-      label: '新密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.newPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.newPassword'),
+      }),
     },
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入确认新密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.comfirmPassword'),
       },
       fieldName: 'confirmPassword',
-      label: '确认密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.comfirmPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword'),
+      }),
     },
   ],
   showCollapseButton: false,
@@ -170,7 +177,7 @@ async function handleMakeAll() {
 
   if (readIds.length > 0) {
     await postNotificationBatchRead({ body: { ids: readIds } });
-    Message.success('设置成功');
+    Message.success($t('common.editSuccess'));
   }
 
   notifications.value.forEach((item) => (item.isRead = true));
@@ -198,15 +205,15 @@ async function submit() {
   const formValues = await resetPasswordApi.getValues();
 
   if (formValues.currentPassword === formValues.confirmPassword) {
-    Message.warn('新旧密码不能一样.');
+    Message.warn($t('abp.user.newPasswordAndCurrentPasswordNotAlike'));
     return;
   }
   if (formValues.newPassword !== formValues.confirmPassword) {
-    Message.warn('两次密码输入不一致.');
+    Message.warn($t('abp.user.newPasswordAndConfirmPasswordNotMatch'));
     return;
   }
   await postUsersChangePassword({ body: formValues });
-  Message.success('修改成功');
+  Message.success($t('common.editSuccess'));
   await resetPasswordApi.resetForm();
   resetPasswordModalApi.close();
 }
@@ -283,7 +290,7 @@ async function loadMessage() {
       <LockScreen :avatar @to-login="handleLogout" />
     </template>
   </BasicLayout>
-  <ResetPasswordModal class="w-[600px]" title="修改密码">
+  <ResetPasswordModal :title="$t('abp.user.changePassword')" class="w-[600px]">
     <ResetPasswordForm />
   </ResetPasswordModal>
 

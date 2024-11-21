@@ -20,10 +20,24 @@
     "message": "消息管理"
   },
   "user": {
-    "menu": "用户管理"
+    "user": "用户",
+    "userName": "用户名",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "手机号",
+    "password": "密码",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "confirmNewPassword": "确认新密码",
+    "changePassword": "修改密码",
+    "status": "状态",
+    "comfirmPassword": "确认密码",
+    "comfirmDeleteUser": "确认删除用户",
+    "newPasswordAndConfirmPasswordNotMatch": "新密码与确认密码不匹配",
+    "newPasswordAndCurrentPasswordNotAlike": "新旧密码不能一样"
   },
   "role": {
-    "menu": "角色管理"
+    "role": "角色"
   },
   "setting": {
     "menu": "设置管理"

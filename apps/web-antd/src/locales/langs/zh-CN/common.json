@@ -1,0 +1,16 @@
+{
+  "add": "新增",
+  "edit": "编辑",
+  "delete": "删除",
+  "search": "搜索",
+  "export": "导出",
+  "enabled": "启用",
+  "disabled": "禁用",
+  "seq": "序号",
+  "action": "操作",
+  "createTime": "创建时间",
+  "pleaseInput": "请输入",
+  "addSuccess": "新增成功！",
+  "editSuccess": "编辑成功！",
+  "deleteSuccess": "删除成功！"
+}

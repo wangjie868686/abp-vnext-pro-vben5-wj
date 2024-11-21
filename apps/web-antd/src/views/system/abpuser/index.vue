@@ -32,6 +32,7 @@ import {
   postUsersUpdate,
 } from '#/api-client';
 import fileRequest from '#/api-client-config/index-blob';
+import { $t } from '#/locales';
 
 import {
   addUserFormSchema,
@@ -145,7 +146,9 @@ async function submit() {
     userModalApi.setState({ loading: true, confirmLoading: true });
     const resp = await api({ body: fetchParams });
     if (resp.status === 200 || resp.status === 204) {
-      Message.success(editRow.value.id ? '修改成功' : '新增成功');
+      Message.success(
+        editRow.value.id ? $t('common.editSuccess') : $t('common.addSuccess'),
+      );
       userModalApi.close();
       gridApi.reload();
     }
@@ -167,11 +170,11 @@ async function onEdit(record: any) {
 
 function onDel(row: any) {
   Modal.confirm({
-    title: `确认删除用户 ${row.userName} 吗？`,
+    title: `${$t('abp.user.comfirmDeleteUser')}${row.userName} ?`,
     onOk: async () => {
       await postUsersDelete({ body: { id: row.id } });
       gridApi.reload();
-      Message.success('删除成功');
+      Message.success($t('common.deleteSuccess'));
     },
   });
 }
@@ -235,14 +238,14 @@ const exportData = async () => {
             v-access:code="'AbpIdentity.Users.Create'"
             @click="openAddModal"
           >
-            新增
+            {{ $t('common.add') }}
           </Button>
           <Button
             type="primary"
             v-access:code="'AbpIdentity.Users.Export'"
             @click="exportData"
           >
-            导出
+            {{ $t('common.export') }}
           </Button>
         </Space>
       </template>
@@ -253,7 +256,7 @@ const exportData = async () => {
             h(
               Tag,
               { color: row.isActive ? 'green' : 'red' },
-              row.isActive ? '启用' : '禁用',
+              row.isActive ? $t('common.enabled') : $t('common.disabled'),
             )
           "
         />
@@ -266,10 +269,10 @@ const exportData = async () => {
             v-access:code="'AbpIdentity.Users.Update'"
             @click="onEdit(row)"
           >
-            编辑
+            {{ $t('common.edit') }}
           </Button>
           <Dropdown>
-            <Button size="small"> 更多操作 </Button>
+            <Button size="small"> ...... </Button>
             <template #overlay>
               <Menu>
                 <MenuItem @click="onLock(row)">
@@ -278,7 +281,11 @@ const exportData = async () => {
                     type="link"
                     v-access:code="'AbpIdentity.Users.Enable'"
                   >
-                    {{ row.isActive ? '禁用' : '启用' }}
+                    {{
+                      row.isActive
+                        ? $t('common.disabled')
+                        : $t('common.enabled')
+                    }}
                   </Button>
                 </MenuItem>
                 <MenuItem @click="onDel(row)">
@@ -288,7 +295,7 @@ const exportData = async () => {
                     type="link"
                     v-access:code="'AbpIdentity.Users.Delete'"
                   >
-                    删除
+                    {{ $t('common.delete') }}
                   </Button>
                 </MenuItem>
               </Menu>
@@ -298,12 +305,15 @@ const exportData = async () => {
       </template>
     </Grid>
 
-    <UserModal :title="editRow.id ? '编辑用户' : '新增用户'" class="w-[800px]">
+    <UserModal
+      :title="editRow.id ? $t('common.edit') : $t('common.add')"
+      class="w-[800px]"
+    >
       <Tabs>
-        <TabPane key="1" tab="用户信息">
+        <TabPane key="1" :tab="$t('abp.user.user')">
           <component :is="editRow.id ? EditForm : AddForm" />
         </TabPane>
-        <TabPane key="2" tab="角色">
+        <TabPane key="2" :tab="$t('abp.role.role')">
           <CheckboxGroup
             v-model:value="checkedRoles"
             :options="rolesList"

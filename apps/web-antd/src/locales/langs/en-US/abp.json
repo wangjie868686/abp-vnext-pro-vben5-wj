@@ -18,5 +18,25 @@
     "dataDictionary": "DataDictionaryManagement",
     "notification": "NotificationManagement",
     "message": "MessageManagement"
+  },
+  "user": {
+    "user": "user",
+    "userName": "userName",
+    "name": "name",
+    "email": "email",
+    "phone": "phone",
+    "password": "password",
+    "currentPassword": "currentPassword",
+    "newPassword": "newPassword",
+    "confirmNewPassword": "confirmNewPassword",
+    "changePassword": "changePassword",
+    "status": "status",
+    "comfirmPassword": "comfirmPassword",
+    "comfirmDeleteUser": "Are you sure you want to delete the user",
+    "newPasswordAndConfirmPasswordNotMatch": "New password and confirm password not match",
+    "newPasswordAndCurrentPasswordNotAlike": "The old and new passwords cannot be the same"
+  },
+  "role": {
+    "role": "role"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "add": "Add",
+  "edit": "Edit",
+  "delete": "Delete",
+  "search": "Search",
+  "export": "Export",
+  "seq": "Seq",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "action": "Action",
+  "createTime": "CreationTime",
+  "pleaseInput": "Please input",
+  "addSuccess": "Add Success",
+  "editSuccess": "Edit Success",
+  "deleteSuccess": "Delete Success"
+}
