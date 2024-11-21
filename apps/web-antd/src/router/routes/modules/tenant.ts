@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
 import { BasicLayout } from '#/layouts';
+import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -8,7 +9,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'ant-design:switcher-filled',
       order: 2,
-      title: '租户管理',
+      title: $t('abp.menu.tenant'),
       authority: ['AbpTenantManagement'],
     },
     name: 'tenant',
@@ -20,10 +21,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/abptenant/index.vue'),
         meta: {
           icon: 'ph:user',
-          title: '租户列表',
+          title: $t('abp.menu.tenantList'),
           authority: ['AbpTenantManagement.Tenants'],
         },
-      }
+      },
     ],
   },
 ];

@@ -1,0 +1,22 @@
+{
+  "login": {
+    "selectTenant": "Please select Tenant and ignore the non-tenant mode"
+  },
+  "menu": {
+    "system": "SystemManagement",
+    "user": "UserManagement",
+    "role": "RoleManagement",
+    "tenant": "TenantManagement",
+    "tenantList": "TenantList",
+    "language": "LanguageManagement",
+    "auditLog": "AuditLog",
+    "loginLog": "LoginLog",
+    "feature": "FeatureManagement",
+    "setting": "SettingsManagement",
+    "organizationUnit": "OrganizationUnitManagement",
+    "languageText": "LanguageTextManagement",
+    "dataDictionary": "DataDictionaryManagement",
+    "notification": "NotificationManagement",
+    "message": "MessageManagement"
+  }
+}

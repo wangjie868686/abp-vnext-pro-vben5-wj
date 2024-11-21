@@ -1,0 +1,31 @@
+{
+  "login": {
+    "selectTenant": "请选择租户,非租户模式请忽略"
+  },
+  "menu": {
+    "system": "系统管理",
+    "user": "用户管理",
+    "role": "角色管理",
+    "tenant": "租户管理",
+    "tenantList": "租户列表",
+    "language": "语言管理",
+    "auditLog": "审计日志",
+    "loginLog": "登录日志",
+    "feature": "功能管理",
+    "setting": "设置管理",
+    "organizationUnit": "组织机构管理",
+    "languageText": "语言文本管理",
+    "dataDictionary": "数据字典管理",
+    "notification": "通告管理",
+    "message": "消息管理"
+  },
+  "user": {
+    "menu": "用户管理"
+  },
+  "role": {
+    "menu": "角色管理"
+  },
+  "setting": {
+    "menu": "设置管理"
+  }
+}

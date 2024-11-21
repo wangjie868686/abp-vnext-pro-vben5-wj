@@ -31,8 +31,8 @@ const defaultPreferences: Preferences = {
     styleType: 'normal',
   },
   copyright: {
-    companyName: 'Vben',
-    companySiteLink: 'https://www.vben.pro',
+    companyName: 'Abp Vben5',
+    companySiteLink: 'https://doc.cncore.club/',
     date: '2024',
     enable: true,
     icp: '',

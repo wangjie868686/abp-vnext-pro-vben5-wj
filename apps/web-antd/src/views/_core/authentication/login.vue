@@ -33,7 +33,7 @@ const formSchema = computed((): VbenFormSchema[] => {
     {
       component: 'VbenInput',
       componentProps: {
-        placeholder: '请选择租户,非租户模式请忽略',
+        placeholder: $t('abp.login.selectTenant'),
       },
       fieldName: 'tenant',
       label: '租户',
@@ -61,7 +61,10 @@ const formSchema = computed((): VbenFormSchema[] => {
       // },
       fieldName: 'name',
       label: $t('authentication.username'),
-      rules: z.string().min(1, { message: $t('authentication.usernameTip') }).default('admin'),
+      rules: z
+        .string()
+        .min(1, { message: $t('authentication.usernameTip') })
+        .default('admin'),
     },
     {
       component: 'VbenInputPassword',
@@ -70,7 +73,10 @@ const formSchema = computed((): VbenFormSchema[] => {
       },
       fieldName: 'password',
       label: $t('authentication.password'),
-      rules: z.string().min(1, { message: $t('authentication.passwordTip') }).default('1q2w3E*'),
+      rules: z
+        .string()
+        .min(1, { message: $t('authentication.passwordTip') })
+        .default('1q2w3E*'),
     },
     {
       component: markRaw(SliderCaptcha),

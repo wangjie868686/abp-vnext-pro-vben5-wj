@@ -33,22 +33,12 @@ function processData(data: any) {
   data.forEach((group: any) => {
     group.settingItemOutput.forEach((setting: any) => {
       if (setting.type === 'CheckBox') {
-        switch (setting.value) {
-          case 'false': {
-            setting.convertvalue = false;
-
-            break;
-          }
-          case 'true': {
-            setting.convertvalue = true;
-
-            break;
-          }
-          case 'undefined': {
-            setting.convertvalue = undefined;
-
-            break;
-          }
+        if (setting.value === 'true') {
+          setting.convertvalue = true;
+        } else if (setting.value === 'false') {
+          setting.convertvalue = false;
+        } else {
+          setting.convertvalue = false;
         }
       }
     });
