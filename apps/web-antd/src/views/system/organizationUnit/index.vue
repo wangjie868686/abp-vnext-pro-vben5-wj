@@ -12,8 +12,8 @@
               </Button>
               <template #overlay>
                 <Menu>
-                  <Menu.Item>展开全部</Menu.Item>
-                  <Menu.Item>折叠全部</Menu.Item>
+                  <Menu.Item @click="toggleExpand">展开全部</Menu.Item>
+                  <Menu.Item @click="toggleExpand">折叠全部</Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -140,6 +140,31 @@ const getParentKey = (
   }
   return parentKey;
 };
+
+// 写一个方法，获取treeData中所有父节点的key
+const getAllParentKeys = (key: string | number, tree: TreeProps['treeData']) => {
+  const parentKeys: (string | number)[] = [];
+  const getParentKey = (key: string | number, tree: TreeProps['treeData']) => {
+    for (let i = 0; i < tree.length; i++) {
+      const node = tree[i];
+      if (node.children) {
+        if (node.children.some(item => item.key === key)) {
+          parentKeys.push(node.key);
+          getParentKey(node.key, tree);
+        } else {
+          getParentKey(key, node.children);
+        }
+      }
+    }
+  };
+  getParentKey(key, tree);
+  return parentKeys;
+};
+
+const toggleExpand = () => {
+  expandedKeys.value = expandedKeys.value.length === 0 ? getAllParentKeys(currentSelectedKey.value, gData.value) : [];
+  console.log(expandedKeys.value);
+}
 
 
 const onExpand = (keys: string[]) => {
