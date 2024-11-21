@@ -22,16 +22,46 @@ import { postSettingsAll, postSettingsUpdate } from '#/api-client';
 defineOptions({
   name: 'AbpSetting',
 });
-const activeName = ref('Setting.Group.System');
+const activeName = ref(0);
 const allSetting = ref();
 const loading = ref(false);
+/**
+ * 后端返回的数据格式不是boolean类型，需要转换一下
+ * @param data
+ */
+function processData(data: any) {
+  data.forEach((group: any) => {
+    group.settingItemOutput.forEach((setting: any) => {
+      if (setting.type === 'CheckBox') {
+        switch (setting.value) {
+          case 'false': {
+            setting.convertvalue = false;
 
+            break;
+          }
+          case 'true': {
+            setting.convertvalue = true;
+
+            break;
+          }
+          case 'undefined': {
+            setting.convertvalue = undefined;
+
+            break;
+          }
+        }
+      }
+    });
+  });
+  return data;
+}
 onMounted(async () => {
   try {
     loading.value = true;
     const resp = await postSettingsAll();
     if (resp.status === 200 || resp.status === 204) {
-      allSetting.value = resp.data || [];
+      const data = processData(resp.data);
+      allSetting.value = data || [];
     }
   } finally {
     loading.value = false;
@@ -43,7 +73,7 @@ const save = async (settingValue: Record<string, any>) => {
   const params: Record<string, any> = {};
   settingValue.forEach((item: any) => {
     if (item.type === 'CheckBox') {
-      params[prefix + item.name] = String(item.checkBoxValue);
+      params[prefix + item.name] = String(item.convertvalue);
     } else {
       params[prefix + item.name] = String(item.value);
     }
@@ -57,13 +87,13 @@ const save = async (settingValue: Record<string, any>) => {
 </script>
 
 <template>
-  <Page auto-content-height class="pb-5">
+  <Page auto-content-height class="pb-5" title="设置管理">
     <Spin :spinning="loading" tip="加载中...">
       <div class="bg-card px-8">
-        <Tabs v-model:active-key="activeName">
+        <Tabs v-model:active-key="activeName" tab-position="left">
           <TabPane
-            v-for="paneItem in allSetting"
-            :key="paneItem.group"
+            v-for="(paneItem, index) in allSetting"
+            :key="index"
             :tab="paneItem.groupDisplayName"
           >
             <Form
@@ -91,7 +121,7 @@ const save = async (settingValue: Record<string, any>) => {
                     />
                     <Checkbox
                       v-else-if="formItem.type === 'CheckBox'"
-                      v-model:checked="formItem.checkBoxValue"
+                      v-model:checked="formItem.convertvalue"
                     >
                       {{ formItem.description }}
                     </Checkbox>

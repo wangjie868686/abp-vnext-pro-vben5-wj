@@ -56,6 +56,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: 'abpfeature',
+        path: 'Feature',
+        component: () => import('#/views/system/abpfeature/index.vue'),
+        meta: {
+          icon: 'ant-design:tool-outlined',
+          title: '功能管理',
+          authority: ['AbpIdentity.FeatureManagement'],
+        },
+      },
+      {
         name: 'AbpAuditLog',
         path: 'auditlog',
         component: () => import('#/views/system/abplog/audit.vue'),
