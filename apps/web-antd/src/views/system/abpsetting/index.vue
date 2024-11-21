@@ -18,20 +18,41 @@ import {
 } from 'ant-design-vue';
 
 import { postSettingsAll, postSettingsUpdate } from '#/api-client';
+import { $t } from '#/locales';
 
 defineOptions({
   name: 'AbpSetting',
 });
-const activeName = ref('Setting.Group.System');
+const activeName = ref(0);
 const allSetting = ref();
 const loading = ref(false);
-
+/**
+ * 后端返回的数据格式不是boolean类型，需要转换一下
+ * @param data
+ */
+function processData(data: any) {
+  data.forEach((group: any) => {
+    group.settingItemOutput.forEach((setting: any) => {
+      if (setting.type === 'CheckBox') {
+        if (setting.value === 'true') {
+          setting.convertvalue = true;
+        } else if (setting.value === 'false') {
+          setting.convertvalue = false;
+        } else {
+          setting.convertvalue = false;
+        }
+      }
+    });
+  });
+  return data;
+}
 onMounted(async () => {
   try {
     loading.value = true;
     const resp = await postSettingsAll();
     if (resp.status === 200 || resp.status === 204) {
-      allSetting.value = resp.data || [];
+      const data = processData(resp.data);
+      allSetting.value = data || [];
     }
   } finally {
     loading.value = false;
@@ -43,7 +64,7 @@ const save = async (settingValue: Record<string, any>) => {
   const params: Record<string, any> = {};
   settingValue.forEach((item: any) => {
     if (item.type === 'CheckBox') {
-      params[prefix + item.name] = String(item.checkBoxValue);
+      params[prefix + item.name] = String(item.convertvalue);
     } else {
       params[prefix + item.name] = String(item.value);
     }
@@ -51,19 +72,19 @@ const save = async (settingValue: Record<string, any>) => {
 
   const resp = await postSettingsUpdate({ body: { values: params } });
   if (resp.status === 200 || resp.status === 204) {
-    Message.success('保存成功');
+    Message.success($t('common.editSuccess'));
   }
 };
 </script>
 
 <template>
-  <Page auto-content-height class="pb-5" title="设置管理">
-    <Spin :spinning="loading" tip="加载中...">
+  <Page :title="$t('abp.menu.setting')" auto-content-heightclass="pb-5">
+    <Spin :spinning="loading" tip="loading...">
       <div class="bg-card px-8">
-        <Tabs v-model:active-key="activeName">
+        <Tabs v-model:active-key="activeName" tab-position="left">
           <TabPane
-            v-for="paneItem in allSetting"
-            :key="paneItem.group"
+            v-for="(paneItem, index) in allSetting"
+            :key="index"
             :tab="paneItem.groupDisplayName"
           >
             <Form
@@ -91,20 +112,20 @@ const save = async (settingValue: Record<string, any>) => {
                     />
                     <Checkbox
                       v-else-if="formItem.type === 'CheckBox'"
-                      v-model:checked="formItem.checkBoxValue"
+                      v-model:checked="formItem.convertvalue"
                     >
                       {{ formItem.description }}
                     </Checkbox>
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
+              <Row style="margin-bottom: 10px">
                 <Col :offset="6">
                   <Button
                     type="primary"
                     @click="save(paneItem.settingItemOutput)"
                   >
-                    保存
+                    {{ $t('common.save') }}
                   </Button>
                 </Col>
               </Row>

@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
 import { BasicLayout } from '#/layouts';
+import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -8,7 +9,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'lucide:layout-dashboard',
       order: 1,
-      title: '系统管理',
+      title: $t('abp.menu.system'),
       authority: ['AbpIdentity'],
     },
     name: 'system',
@@ -21,7 +22,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           // affixTab: true,
           icon: 'ph:user',
-          title: '用户管理',
+          title: $t('abp.menu.user'),
           authority: ['AbpIdentity.Users'],
         },
       },
@@ -31,7 +32,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/abprole/index.vue'),
         meta: {
           icon: 'oui:app-users-roles',
-          title: '角色管理',
+          title: $t('abp.menu.role'),
           authority: ['AbpIdentity.Roles'],
         },
       },
@@ -40,8 +41,8 @@ const routes: RouteRecordRaw[] = [
         path: 'organizationUnit',
         component: () => import('#/views/system/organizationUnit/index.vue'),
         meta: {
-          title: '组织机构管理',
-          // authority: ['AbpIdentity.LanguageTexts'],
+          title: $t('abp.menu.organizationUnit'),
+          authority: ['AbpIdentity.OrganizationUnitManagement'],
           icon: 'ant-design:team-outlined',
         },
       },
@@ -51,8 +52,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('#/views/system/abpsetting/index.vue'),
         meta: {
           icon: 'uil:setting',
-          title: '设置管理',
+          title: $t('abp.menu.setting'),
           authority: ['AbpIdentity.Setting'],
+        },
+      },
+      {
+        name: 'abpfeature',
+        path: 'Feature',
+        component: () => import('#/views/system/abpfeature/index.vue'),
+        meta: {
+          icon: 'ant-design:tool-outlined',
+          title: $t('abp.menu.feature'),
+          authority: ['AbpIdentity.FeatureManagement'],
         },
       },
       {
@@ -60,7 +71,7 @@ const routes: RouteRecordRaw[] = [
         path: 'auditlog',
         component: () => import('#/views/system/abplog/audit.vue'),
         meta: {
-          title: '审计日志',
+          title: $t('abp.menu.auditLog'),
           authority: ['AbpIdentity.AuditLog'],
           icon: 'ant-design:snippets-twotone',
         },
@@ -70,7 +81,7 @@ const routes: RouteRecordRaw[] = [
         path: 'loginlog',
         component: () => import('#/views/system/abplog/login.vue'),
         meta: {
-          title: '登录日志',
+          title: $t('abp.menu.loginLog'),
           authority: ['AbpIdentity.IdentitySecurityLogs'],
           icon: 'ant-design:file-protect-outlined',
         },
@@ -80,7 +91,7 @@ const routes: RouteRecordRaw[] = [
         path: 'language',
         component: () => import('#/views/system/abplanguage/language.vue'),
         meta: {
-          title: '语言管理',
+          title: $t('abp.menu.language'),
           authority: ['AbpIdentity.Languages'],
           icon: 'ant-design:read-outlined',
         },
@@ -90,7 +101,7 @@ const routes: RouteRecordRaw[] = [
         path: 'languagetext',
         component: () => import('#/views/system/abplanguage/languagetext.vue'),
         meta: {
-          title: '语言文本管理',
+          title: $t('abp.menu.languageText'),
           authority: ['AbpIdentity.LanguageTexts'],
           icon: 'ant-design:font-size-outlined',
         },
@@ -100,9 +111,9 @@ const routes: RouteRecordRaw[] = [
         path: 'data-dictionary',
         component: () => import('#/views/system/dataDictionary/index.vue'),
         meta: {
-          title: '数据字典',
-          // authority: ['AbpIdentity.LanguageTexts'],
-          icon: 'ant-design:database-outlined',
+          title: $t('abp.menu.dataDictionary'),
+          authority: ['AbpIdentity.DataDictionaryManagement'],
+          icon: 'ant-design:table-outlined',
         },
       },
       {
@@ -111,7 +122,7 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import('#/views/system/abpnotification/notification.vue'),
         meta: {
-          title: '通告管理',
+          title: $t('abp.menu.notification'),
           authority: ['AbpIdentity.NotificationSubscriptionManagement'],
           icon: 'ant-design:comment-outlined',
         },
@@ -121,7 +132,7 @@ const routes: RouteRecordRaw[] = [
         path: 'message',
         component: () => import('#/views/system/abpnotification/message.vue'),
         meta: {
-          title: '消息管理',
+          title: $t('abp.menu.message'),
           authority: ['AbpIdentity.NotificationManagement'],
           icon: 'ant-design:customer-service-twotone',
         },

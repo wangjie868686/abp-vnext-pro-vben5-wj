@@ -7,14 +7,14 @@ import { Page } from '@vben/common-ui';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postIdentitySecurityLogsPage } from '#/api-client';
 
-import { loginLogQuerySchema, logTableSchema } from './schema';
+import { logQuerySchema, logTableSchema } from './schema';
 
 defineOptions({
   name: 'AbpLoginLog',
 });
 
 const formOptions: VbenFormProps = {
-  schema: loginLogQuerySchema,
+  schema: logQuerySchema,
   wrapperClass: 'grid-cols-4',
 };
 
@@ -55,7 +55,7 @@ const gridOptions: VxeGridProps<any> = {
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 <template>
-  <Page auto-content-height title="登录日志">
+  <Page auto-content-height>
     <Grid />
   </Page>
 </template>

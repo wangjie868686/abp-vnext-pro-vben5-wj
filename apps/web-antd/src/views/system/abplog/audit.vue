@@ -15,7 +15,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: auditLogQuerySchema,
-  wrapperClass: 'grid-cols-4',
+  wrapperClass: 'grid-cols-5',
 };
 
 const gridOptions: VxeGridProps<any> = {
@@ -56,7 +56,7 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 
 <template>
-  <Page auto-content-height title="审计日志">
+  <Page auto-content-height>
     <Grid />
   </Page>
 </template>

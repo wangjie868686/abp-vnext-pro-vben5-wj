@@ -152,7 +152,7 @@ const openAddModal = async () => {
 </script>
 
 <template>
-  <Page auto-content-height title="租户管理">
+  <Page auto-content-height>
     <Grid>
       <template #toolbar-actions>
         <Space>

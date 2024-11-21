@@ -24,43 +24,19 @@ import dayjs from 'dayjs';
 
 import { useVbenForm } from '#/adapter/form';
 import {
+  postNotificationBatchRead,
   postNotificationNotificationPage,
+  postNotificationRead,
   postUsersChangePassword,
 } from '#/api-client';
 import { useSignalR } from '#/hooks/useSignalR';
+import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
-const notifications = ref<NotificationItem[]>([
-  // {
-  //   avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
-  //   date: '3小时前',
-  //   isRead: true,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '收到了 14 份新周报',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/1',
-  //   date: '刚刚',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '朱偏右 回复了你',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/1',
-  //   date: '2024-01-01',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '曲丽丽 评论了你',
-  // },
-  // {
-  //   avatar: 'https://avatar.vercel.sh/satori',
-  //   date: '1天前',
-  //   isRead: false,
-  //   message: '描述信息描述信息描述信息',
-  //   title: '代办提醒',
-  // },
-]);
+import NotifyItem from './NotifyItem.vue';
+
+const notifications = ref<NotificationItem[]>([]);
 const { startConnect } = useSignalR();
 function convertToNotificationItem(message: any): NotificationItem {
   return {
@@ -69,27 +45,16 @@ function convertToNotificationItem(message: any): NotificationItem {
     isRead: message.read,
     message: message.content,
     title: message.title,
+    id: message.id,
   };
 }
-onMounted(async () => {
-  startConnect();
-  const message = await postNotificationNotificationPage({
-    body: { pageIndex: 1, pageSize: 4, messageType: 20 },
-  });
-  message.data?.items?.forEach((item) => {
-    notifications.value.push(convertToNotificationItem(item));
-    // 按照isRead属性进行排序
-    notifications.value.sort((a, b) => {
-      if (a.isRead === b.isRead) {
-        return 0;
-      }
-      return a.isRead ? 1 : -1;
-    });
-  });
-});
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
+onMounted(async () => {
+  startConnect();
+});
+
 const { destroyWatermark, updateWatermark } = useWatermark();
 const showDot = computed(() =>
   notifications.value.some((item) => !item.isRead),
@@ -99,13 +64,18 @@ const [ResetPasswordModal, resetPasswordModalApi] = useVbenModal({
   onConfirm: submit,
   onBeforeClose: () => {},
 });
+const [NotifyItemModal, notifyItemModalApi] = useVbenModal({
+  draggable: true,
+  onConfirm: () => {},
+  onBeforeClose: () => {},
+});
 const menus = computed(() => [
   {
     handler: () => {
       resetPasswordModalApi.open();
     },
     icon: CircleHelp,
-    text: '修改密码',
+    text: $t('abp.user.changePassword'),
   },
   // {
   //   handler: () => {
@@ -152,29 +122,35 @@ const [ResetPasswordForm, resetPasswordApi] = useVbenForm({
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入当前密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.currentPassword'),
       },
       fieldName: 'currentPassword',
-      label: '当前密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.currentPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.currentPassword'),
+      }),
     },
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入新密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.newPassword'),
       },
       fieldName: 'newPassword',
-      label: '新密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.newPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.newPassword'),
+      }),
     },
     {
       component: 'VbenInputPassword',
       componentProps: {
-        placeholder: '请输入确认新密码',
+        placeholder: $t('common.pleaseInput') + $t('abp.user.comfirmPassword'),
       },
       fieldName: 'confirmPassword',
-      label: '确认密码',
-      rules: z.string().min(1, { message: '请输入当前密码' }),
+      label: $t('abp.user.comfirmPassword'),
+      rules: z.string().min(1, {
+        message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword'),
+      }),
     },
   ],
   showCollapseButton: false,
@@ -193,8 +169,34 @@ function handleNoticeClear() {
   notifications.value = [];
 }
 
-function handleMakeAll() {
+async function handleMakeAll() {
+  // 获取notifications 已读的数据，并且请求api 标记为已读
+  const readIds = notifications.value
+    .filter((item) => item.isRead)
+    .map((item) => item.id);
+
+  if (readIds.length > 0) {
+    await postNotificationBatchRead({ body: { ids: readIds } });
+    Message.success($t('common.editSuccess'));
+  }
+
   notifications.value.forEach((item) => (item.isRead = true));
+}
+
+async function handleRead(row: NotificationItem) {
+  if (row.isRead) {
+    return;
+  }
+  await postNotificationRead({ body: { id: row.id } });
+
+  notifications.value.forEach((item) => {
+    if (item.id === row.id) {
+      item.isRead = true;
+    }
+  });
+}
+function handleViewAll() {
+  notifyItemModalApi.open();
 }
 async function submit() {
   // 表单校验
@@ -203,15 +205,15 @@ async function submit() {
   const formValues = await resetPasswordApi.getValues();
 
   if (formValues.currentPassword === formValues.confirmPassword) {
-    Message.warn('新旧密码不能一样.');
+    Message.warn($t('abp.user.newPasswordAndCurrentPasswordNotAlike'));
     return;
   }
   if (formValues.newPassword !== formValues.confirmPassword) {
-    Message.warn('两次密码输入不一致.');
+    Message.warn($t('abp.user.newPasswordAndConfirmPasswordNotMatch'));
     return;
   }
   await postUsersChangePassword({ body: formValues });
-  Message.success('修改成功');
+  Message.success($t('common.editSuccess'));
   await resetPasswordApi.resetForm();
   resetPasswordModalApi.close();
 }
@@ -231,8 +233,26 @@ watch(
   },
 );
 
-async function test() {
-  console.log('test');
+async function loadMessage() {
+  notifications.value = [];
+  const message = await postNotificationNotificationPage({
+    body: {
+      pageIndex: 1,
+      pageSize: 4,
+      messageType: 20,
+      receiverUserId: userStore.userInfo?.userId,
+    },
+  });
+  message.data?.items?.forEach((item) => {
+    notifications.value.push(convertToNotificationItem(item));
+    // 按照isRead属性进行排序
+    notifications.value.sort((a, b) => {
+      if (a.isRead === b.isRead) {
+        return 0;
+      }
+      return a.isRead ? 1 : -1;
+    });
+  });
 }
 </script>
 
@@ -252,8 +272,10 @@ async function test() {
         :dot="showDot"
         :notifications="notifications"
         @clear="handleNoticeClear"
-        @iconClick="test"
+        @icon-click="loadMessage"
         @make-all="handleMakeAll"
+        @read="handleRead"
+        @view-all="handleViewAll"
       />
     </template>
     <template #extra>
@@ -268,7 +290,15 @@ async function test() {
       <LockScreen :avatar @to-login="handleLogout" />
     </template>
   </BasicLayout>
-  <ResetPasswordModal class="w-[600px]" title="修改密码">
+  <ResetPasswordModal :title="$t('abp.user.changePassword')" class="w-[600px]">
     <ResetPasswordForm />
   </ResetPasswordModal>
+
+  <NotifyItemModal
+    :fullscreen="true"
+    :show-cancel-button="false"
+    :show-confirm-button="false"
+  >
+    <NotifyItem />
+  </NotifyItemModal>
 </template>

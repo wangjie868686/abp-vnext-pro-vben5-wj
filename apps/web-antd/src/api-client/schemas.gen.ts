@@ -4298,6 +4298,21 @@ export const SendCommonMessageInputSchema = {
     additionalProperties: false
 } as const;
 
+export const SetBatchReadInputSchema = {
+    type: 'object',
+    properties: {
+        ids: {
+            type: 'array',
+            items: {
+                type: 'string',
+                format: 'uuid'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const SetDataDictinaryDetailInputSchema = {
     required: ['isEnabled'],
     type: 'object',

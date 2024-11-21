@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
 
-export const loginLogQuerySchema: any = [
+import { $t } from '#/locales';
+
+export const logQuerySchema: any = [
   {
     component: 'RangePicker',
     fieldName: 'time',
-    label: '登录时间',
+    label: $t('abp.log.loginTime'),
     componentProps: {
       'value-format': 'YYYY-MM-DD',
     },
@@ -16,7 +18,7 @@ export const loginLogQuerySchema: any = [
   {
     component: 'Input',
     fieldName: 'userName',
-    label: '用户名',
+    label: $t('abp.log.userName'),
   },
   {
     component: 'Input',
@@ -26,16 +28,20 @@ export const loginLogQuerySchema: any = [
 ];
 
 export const logTableSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
-  { field: 'applicationName', title: '应用程序名称', minWidth: '150' },
-  { field: 'identity', title: '登录方式', minWidth: '150' },
-  { field: 'action', title: '登录地址', minWidth: '150' },
-  { field: 'userName', title: '用户名', minWidth: '150' },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
+  {
+    field: 'applicationName',
+    title: $t('abp.log.applicationName'),
+    minWidth: '150',
+  },
+  { field: 'identity', title: $t('abp.log.loginMode'), minWidth: '150' },
+  { field: 'action', title: $t('abp.log.loginUrl'), minWidth: '150' },
+  { field: 'userName', title: $t('abp.log.userName'), minWidth: '150' },
   { field: 'correlationId', title: 'CorrelationId', minWidth: '150' },
-  { field: 'clientIpAddress', title: '客户端IP', minWidth: '150' },
+  { field: 'clientIpAddress', title: $t('abp.log.clientIp'), minWidth: '150' },
   {
     field: 'creationTime',
-    title: '创建时间',
+    title: $t('common.createTime'),
     minWidth: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
@@ -47,7 +53,7 @@ export const auditLogQuerySchema: any = [
   {
     component: 'RangePicker',
     fieldName: 'time',
-    label: '登录时间',
+    label: $t('abp.log.executionTime'),
     componentProps: {
       'value-format': 'YYYY-MM-DD',
     },
@@ -59,30 +65,43 @@ export const auditLogQuerySchema: any = [
   {
     component: 'Input',
     fieldName: 'userName',
-    label: '用户名',
+    label: $t('abp.log.userName'),
   },
   {
     component: 'Input',
     fieldName: 'correlationId',
     label: 'CorrelationId',
   },
+  {
+    component: 'Input',
+    fieldName: 'url',
+    label: 'Url',
+  },
 ];
 
 export const auditLogTableSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
   { field: 'url', title: 'Url', minWidth: '150' },
-  { field: 'tenantName', title: '租户', minWidth: '150' },
-  { field: 'userName', title: '用户名', minWidth: '150' },
+  { field: 'tenantName', title: $t('abp.log.tenant'), minWidth: '150' },
+  { field: 'userName', title: $t('abp.log.userName'), minWidth: '150' },
   {
     field: 'executionTime',
-    title: '执行时间',
+    title: $t('abp.log.executionTime'),
     minWidth: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
     },
   },
-  { field: 'executionDuration', title: '响应时间(毫秒)	', minWidth: '150' },
-  { field: 'clientIpAddress', title: '客户端IP', minWidth: '150' },
+  {
+    field: 'executionDuration',
+    title: $t('abp.log.responseTime'),
+    minWidth: '150',
+  },
+  {
+    field: 'clientIpAddress',
+    title: $t('abp.log.clientIp'),
+    minWidth: '150',
+  },
   { field: 'correlationId', title: 'CorrelationId', minWidth: '150' },
-  { field: 'exceptions', title: '异常', minWidth: '150' },
+  { field: 'exceptions', title: $t('abp.log.exception'), minWidth: '150' },
 ];

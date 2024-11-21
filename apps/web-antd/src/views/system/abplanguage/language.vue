@@ -5,6 +5,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { h } from 'vue';
 
 import { Page } from '@vben/common-ui';
+import { $t } from '@vben/locales';
 
 import { Tag } from 'ant-design-vue';
 
@@ -52,7 +53,7 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
 
 <template>
-  <Page auto-content-height title="语言管理">
+  <Page auto-content-height>
     <Grid>
       <template #isEnabled="{ row }">
         <component
@@ -60,7 +61,7 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
             h(
               Tag,
               { color: row.isEnabled ? 'green' : 'red' },
-              row.isEnabled ? '启用' : '禁用',
+              row.isEnabled ? $t('common.enabled') : $t('common.disabled'),
             )
           "
         />

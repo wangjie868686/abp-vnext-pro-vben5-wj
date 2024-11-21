@@ -1,0 +1,78 @@
+{
+  "login": {
+    "selectTenant": "Please select Tenant and ignore the non-tenant mode"
+  },
+  "menu": {
+    "system": "SystemManagement",
+    "user": "UserManagement",
+    "role": "RoleManagement",
+    "tenant": "TenantManagement",
+    "tenantList": "TenantList",
+    "language": "LanguageManagement",
+    "auditLog": "AuditLog",
+    "loginLog": "LoginLog",
+    "feature": "FeatureManagement",
+    "setting": "SettingsManagement",
+    "organizationUnit": "OrganizationUnitManagement",
+    "languageText": "LanguageTextManagement",
+    "dataDictionary": "DataDictionaryManagement",
+    "notification": "NotificationManagement",
+    "message": "MessageManagement"
+  },
+  "user": {
+    "user": "User",
+    "userName": "UserName",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "currentPassword": "CurrentPassword",
+    "newPassword": "NewPassword",
+    "confirmNewPassword": "ConfirmNewPassword",
+    "changePassword": "ChangePassword",
+    "status": "Status",
+    "comfirmPassword": "ComfirmPassword",
+    "comfirmDeleteUser": "Are you sure you want to delete the user",
+    "newPasswordAndConfirmPasswordNotMatch": "New password and confirm password not match",
+    "newPasswordAndCurrentPasswordNotAlike": "The old and new passwords cannot be the same"
+  },
+  "role": {
+    "role": "Role",
+    "roleName": "RoleName",
+    "isDefault": "IsDefault",
+    "permissions": "Permissions"
+  },
+  "log": {
+    "loginTime": "LoginTime",
+    "userName": "UserName",
+    "tenant": "Tenant",
+    "executionTime": "ExecutionTime",
+    "responseTime": "ResponseTime(ms)",
+    "clientIp": "ClientIp",
+    "exception": "Exception",
+    "applicationName": "ApplicationName",
+    "loginMode": "LoginMode",
+    "loginUrl": "LoginUrl"
+  },
+  "message": {
+    "title": "Title",
+    "content": "Content",
+    "type": "Type",
+    "level": "Level",
+    "sender": "Sender",
+    "receiver": "Receiver",
+    "isRead": "IsRead",
+    "sendMessage": "SendMessage",
+    "sendNotification": "SendNotification",
+    "setRead": "SetRead",
+    "confirmRead": "Are you sure you want to set the message as read?",
+    "read": "Read",
+    "unread": "UnRead"
+  },
+  "language": {
+    "language": "LanguageName",
+    "showLanguage": "ShowLanguageName",
+    "icon": "Icon",
+    "resourceName": "ResourceName"
+  }
+}
