@@ -1,67 +1,73 @@
 <template>
   <Page :autoContentHeight="true">
-    <Row :gutter="16">
-      <Col :span="6" :lg="8">
-      <div class="flex justify-between items-center bg-card p-3">
-        <span class="text-lg">组织机构</span>
-        <Button class="mx-3" type="primary" size="small" @click="orgModalApi.open">新增根机构</Button>
-        <Input.Search v-model:value="searchValue" class="flex-1 ml-1" placeholder="搜索" />
-        <Dropdown class="ml-1">
-          <Button class="font-bold">
-            ...
-          </Button>
-          <template #overlay>
-            <Menu>
-              <Menu.Item>展开全部</Menu.Item>
-              <Menu.Item>折叠全部</Menu.Item>
-            </Menu>
-          </template>
-        </Dropdown>
-      </div>
-      <Tree class="mt-3" :expanded-keys="expandedKeys" :auto-expand-parent="autoExpandParent" :tree-data="gData"
-        @select="onSelect"
-        @expand="onExpand">
-        <template #title="{ title }">
-          <span v-if="title.indexOf(searchValue) > -1">
-            {{ title.substring(0, title.indexOf(searchValue)) }}
-            <span style="color: #f50">{{ searchValue }}</span>
-            {{ title.substring(title.indexOf(searchValue) + searchValue.length) }}
-          </span>
-          <span v-else>{{ title }}</span>
-        </template>
-      </Tree>
-      </Col>
-      <Col :span="16" :lg="14">
-        <div class="bg-card px-3">
-          <Tabs v-model:activeKey="activeKey">
-            <Tabs.TabPane key="1" tab="成员">
-              <UserGrid>
-                <template #toolbar-actions>
-                  <Button type="primary" @click="">新增</Button>
-                </template>
-              </UserGrid>
-            </Tabs.TabPane>
-            <Tabs.TabPane key="2" tab="角色">
-              <RolesGrid>
-                <template #toolbar-actions>
-                  <Button type="primary" @click="addRolesModalApi.open">新增</Button>
-                </template>
-              </RolesGrid>
-            </Tabs.TabPane>
-          </Tabs>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-4 xl:col-span-3 bg-card">
+          <div class="flex justify-between items-center bg-card p-3">
+            <span class="text-lg">组织机构</span>
+            <Button class="mx-3" type="primary" size="small" @click="orgModalApi.open">新增根机构</Button>
+            <Input.Search v-model:value="searchValue" class="flex-1 ml-1" placeholder="搜索" />
+            <Dropdown class="ml-1">
+              <Button class="font-bold">
+                ...
+              </Button>
+              <template #overlay>
+                <Menu>
+                  <Menu.Item>展开全部</Menu.Item>
+                  <Menu.Item>折叠全部</Menu.Item>
+                </Menu>
+              </template>
+            </Dropdown>
+          </div>
+          <Tree class="mt-3" :expanded-keys="expandedKeys" :auto-expand-parent="autoExpandParent" :tree-data="gData"
+            @select="onSelect"
+            @expand="onExpand">
+            <template #title="{ title }">
+              <span v-if="title.indexOf(searchValue) > -1">
+                {{ title.substring(0, title.indexOf(searchValue)) }}
+                <span style="color: #f50">{{ searchValue }}</span>
+                {{ title.substring(title.indexOf(searchValue) + searchValue.length) }}
+              </span>
+              <span v-else>{{ title }}</span>
+            </template>
+          </Tree>
         </div>
-      </Col>
-    </Row>
 
+        <div class="col-span-8 xl:col-span-9">
+          <div class="bg-card">
+            <Tabs v-model:activeKey="activeKey" class="px-3">
+              <Tabs.TabPane key="1" tab="成员">
+                <UserGrid>
+                  <template #toolbar-actions>
+                    <Button type="primary" @click="addUsersModalApi.open">新增</Button>
+                  </template>
+                </UserGrid>
+              </Tabs.TabPane>
+              <Tabs.TabPane key="2" tab="角色">
+                <RolesGrid>
+                  <template #toolbar-actions>
+                    <Button type="primary" @click="addRolesModalApi.open">新增</Button>
+                  </template>
+                </RolesGrid>
+              </Tabs.TabPane>
+            </Tabs>
+          </div>
+
+        </div>
+      </div>
+
+  
     <OrgAddModal class="w-[600px]" title="新增"> 
       <OrgAddForm ></OrgAddForm>
     </OrgAddModal>
 
     <AddRolesModal>
       <UnAddRolesTable>
-
       </UnAddRolesTable>
     </AddRolesModal>
+    <AddUsersModal>
+      <UnAddUsersTable>
+      </UnAddUsersTable>
+    </AddUsersModal>
   </Page>
 </template>
 
@@ -79,6 +85,7 @@ import {
   postOrganizationUnitsGetUnAddRoles,
   postOrganizationUnitsGetUnAddUsers,
   postOrganizationUnitsAddRoleToOrganizationUnitAsync,
+  postOrganizationUnitsAddUserToOrganizationUnit,
 } from '#/api-client/index';
 import { onMounted, ref, watch } from 'vue';
 
@@ -92,6 +99,7 @@ const gData = ref<Array<TreeOutput>>([]);
 const activeKey = ref('1');
 const currentSelectedKey = ref('');
 const selectRoles = ref();
+const selectUsers = ref();
 
 async function getTreeData() {
   const { data = [] } = await postOrganizationUnitsTree();
@@ -199,7 +207,8 @@ const userFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '',
+      label: '用户名',
+      labelWidth: 50,
       componentProps: {
         allowClear: true,
       }
@@ -208,9 +217,6 @@ const userFormOptions: VbenFormProps = {
   showDefaultActions: true,
   submitOnEnter: true,
   showCollapseButton: false,
-  commonConfig: {
-    hideLabel: true,
-  }
 };
 
 const userGridOptions: VxeGridProps<any> = {
@@ -313,7 +319,7 @@ const [AddRolesModal, addRolesModalApi] = useVbenModal({
         }
       });
       addRolesModalApi.close();
-      unAddRolesTableApi.reload();
+      rolesGridApi.reload();
       Message.success('添加成功');
       
     } finally {
@@ -361,6 +367,83 @@ const unAddRolesTableEvents = {
 }
 
 const [UnAddRolesTable, unAddRolesTableApi] = useVbenVxeGrid({ gridOptions: unAddRolesOptions, gridEvents: unAddRolesTableEvents });
+
+const unAddUsersFormOptions: VbenFormProps = {
+  schema: [
+    {
+      component: 'Input',
+      fieldName: 'filter',
+      label: '用户名',
+      labelWidth: 50,
+      componentProps: {
+        allowClear: true,
+      }
+    }],
+  wrapperClass: 'grid-cols-2',
+  showDefaultActions: true,
+  submitOnEnter: true,
+  showCollapseButton: false,
+};
+
+const unUsersOptions: VxeGridProps<any> = {
+  columns: [
+    { title: '', type: 'checkbox', width: 50 },
+    { type: 'seq', title: '序号', width: 50},
+    { field: 'userName', title: '用户名', minWidth: '150', },
+    { field: 'email', title: '邮箱', minWidth: '200', },
+  ],
+  minHeight: '500',
+  keepSource: true,
+  pagerConfig: {},
+  radioConfig: {
+    highlight: true,
+  },
+  proxyConfig: {
+    response: {
+      total: 'totalCount'
+    },
+    ajax: {
+      query: async ({ page },) => {
+        if (!currentSelectedKey.value) return;
+        const { data } = await postOrganizationUnitsGetUnAddUsers({
+          body: {
+            pageIndex: page.currentPage,
+            pageSize: page.pageSize,
+            organizationUnitId: currentSelectedKey.value,
+          }
+        });
+        return data;
+      },
+    },
+  },
+};
+
+const unAddUserTableEvents = {
+  checkboxChange: ({ records }: { records: { name: string }[] }) => {
+    selectUsers.value = records;
+  }
+}
+const [UnAddUsersTable, unAddUsersTableApi] = useVbenVxeGrid({ gridOptions: unUsersOptions, formOptions: unAddUsersFormOptions, gridEvents: unAddUserTableEvents });
+const [AddUsersModal, addUsersModalApi] = useVbenModal({
+  onConfirm: async () => {
+    try {
+      addUsersModalApi.setState({ loading: true, confirmLoading: true });
+      await postOrganizationUnitsAddUserToOrganizationUnit({
+        body: {
+          userId: selectUsers.value.map((item: { id: string; }) => item.id),
+          organizationUnitId: currentSelectedKey.value,
+        }
+      });
+      addUsersModalApi.close();
+      userGridApi.reload();
+      Message.success('添加成功');
+      
+    } finally {
+      addUsersModalApi.setState({ loading: false, confirmLoading: false });
+    }
+  }
+});
+
 </script>
 
 <style scoped></style>
