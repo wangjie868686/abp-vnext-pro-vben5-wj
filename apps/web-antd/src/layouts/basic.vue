@@ -52,24 +52,6 @@ const authStore = useAuthStore();
 const accessStore = useAccessStore();
 onMounted(async () => {
   startConnect();
-  const message = await postNotificationNotificationPage({
-    body: {
-      pageIndex: 1,
-      pageSize: 4,
-      messageType: 20,
-      receiverUserId: userStore.userInfo?.userId,
-    },
-  });
-  message.data?.items?.forEach((item) => {
-    notifications.value.push(convertToNotificationItem(item));
-    // 按照isRead属性进行排序
-    notifications.value.sort((a, b) => {
-      if (a.isRead === b.isRead) {
-        return 0;
-      }
-      return a.isRead ? 1 : -1;
-    });
-  });
 });
 
 const { destroyWatermark, updateWatermark } = useWatermark();
@@ -244,8 +226,25 @@ watch(
   },
 );
 
-async function test() {
-  console.log('test');
+async function loadMessage() {
+  const message = await postNotificationNotificationPage({
+    body: {
+      pageIndex: 1,
+      pageSize: 4,
+      messageType: 20,
+      receiverUserId: userStore.userInfo?.userId,
+    },
+  });
+  message.data?.items?.forEach((item) => {
+    notifications.value.push(convertToNotificationItem(item));
+    // 按照isRead属性进行排序
+    notifications.value.sort((a, b) => {
+      if (a.isRead === b.isRead) {
+        return 0;
+      }
+      return a.isRead ? 1 : -1;
+    });
+  });
 }
 </script>
 
@@ -265,7 +264,7 @@ async function test() {
         :dot="showDot"
         :notifications="notifications"
         @clear="handleNoticeClear"
-        @iconClick="test"
+        @icon-click="loadMessage"
         @make-all="handleMakeAll"
         @read="handleRead"
         @view-all="handleViewAll"
