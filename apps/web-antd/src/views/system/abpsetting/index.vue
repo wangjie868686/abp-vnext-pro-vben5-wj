@@ -18,6 +18,7 @@ import {
 } from 'ant-design-vue';
 
 import { postSettingsAll, postSettingsUpdate } from '#/api-client';
+import { $t } from '#/locales';
 
 defineOptions({
   name: 'AbpSetting',
@@ -71,14 +72,14 @@ const save = async (settingValue: Record<string, any>) => {
 
   const resp = await postSettingsUpdate({ body: { values: params } });
   if (resp.status === 200 || resp.status === 204) {
-    Message.success('保存成功');
+    Message.success($t('common.editSuccess'));
   }
 };
 </script>
 
 <template>
-  <Page auto-content-height class="pb-5" title="设置管理">
-    <Spin :spinning="loading" tip="加载中...">
+  <Page :title="$t('abp.menu.setting')" auto-content-heightclass="pb-5">
+    <Spin :spinning="loading" tip="loading...">
       <div class="bg-card px-8">
         <Tabs v-model:active-key="activeName" tab-position="left">
           <TabPane
@@ -124,7 +125,7 @@ const save = async (settingValue: Record<string, any>) => {
                     type="primary"
                     @click="save(paneItem.settingItemOutput)"
                   >
-                    保存
+                    {{ $t('common.save') }}
                   </Button>
                 </Col>
               </Row>
