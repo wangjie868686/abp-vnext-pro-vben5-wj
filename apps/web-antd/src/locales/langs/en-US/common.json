@@ -22,5 +22,12 @@
   "info": "info",
   "error": "error",
   "success": "Success",
-  "keyword": "Keyword"
+  "keyword": "Keyword",
+  "mesage403": "You don't have permission to access this page or function!",
+  "mesage401": "You are not logged in or the login has timed out. Please log in again!",
+  "mesage500": "Internal server error!",
+  "mesage404": "The page you are trying to access does not exist!",
+  "mesage400": "Request error!",
+  "mesage405": "Incorrect request method!",
+  "timeOut": "Request timed out!"
 }
