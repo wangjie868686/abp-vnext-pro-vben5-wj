@@ -2,12 +2,14 @@
 import type { NotificationItem } from '@vben/layouts';
 
 import { computed, onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import {
   AuthenticationLoginExpiredModal,
   useVbenModal,
   z,
 } from '@vben/common-ui';
+import { LOGIN_PATH } from '@vben/constants';
 import { useWatermark } from '@vben/hooks';
 import { CircleHelp } from '@vben/icons';
 import {
@@ -51,7 +53,18 @@ function convertToNotificationItem(message: any): NotificationItem {
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const accessStore = useAccessStore();
+const router = useRouter();
 onMounted(async () => {
+  // 判断是否登录
+  if (userStore?.userInfo?.token || userStore.checkUserLoginExpire()) {
+    // 回登录页带上当前路由地址
+    await router.replace({
+      path: LOGIN_PATH,
+      query: {
+        redirect: encodeURIComponent(router.currentRoute.value.fullPath),
+      },
+    });
+  }
   startConnect();
 });
 

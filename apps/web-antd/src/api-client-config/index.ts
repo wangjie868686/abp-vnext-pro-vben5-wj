@@ -2,6 +2,7 @@ import { useUserStore } from '@vben/stores';
 
 import { message as Message } from 'ant-design-vue';
 
+import { $t } from '#/locales';
 import { antdLocale } from '#/locales/index';
 import { useAuthStore } from '#/store';
 
@@ -38,9 +39,9 @@ client.instance.interceptors.request.use((request) => {
   if (token && userStore.checkUserLoginExpire()) {
     const authStore = useAuthStore();
     authStore.logout();
-    Message.warn('用户登录已过期');
-    // eslint-disable-next-line prefer-promise-reject-errors
-    return Promise.reject('用户登录已过期');
+    Message.warn($t('common.mesage401'));
+
+    return Promise.reject($t('common.mesage401'));
   }
 
   // 设置请求头
@@ -73,35 +74,35 @@ client.instance.interceptors.response.use(
   (error) => {
     let message = error.message;
     if (message === 'Network Error') {
-      message = '后端网络故障';
+      message = $t('common.mesage500');
     } else if (message.includes('timeout')) {
-      message = '接口请求超时';
+      message = $t('common.timeOut');
     } else
       switch (error.status) {
         case 400: {
-          message = error.response.data.error?.details || '服务器异常';
+          message = error.response.data.error?.validationErrors[0].message;
 
           break;
         }
         case 401: {
-          message = '登录状态失效，请重新登录';
+          message = $t('common.mesage401');
           // useUserStore().logout()
 
           break;
         }
         case 403: {
-          message = '您没有操作权限';
+          message = $t('common.mesage403');
 
           break;
         }
         case 500: {
-          message = error.response.data.error?.message || '服务器异常';
+          message = error.response.data.error?.message;
 
           break;
         }
         default: {
           if (message.includes('Request failed with status code')) {
-            message = `接口${message.slice(-3)}异常`;
+            message = $t('common.mesage500');
           }
         }
       }
