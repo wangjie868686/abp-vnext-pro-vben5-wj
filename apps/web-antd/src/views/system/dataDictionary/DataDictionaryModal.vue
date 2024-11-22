@@ -1,48 +1,17 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useVbenModal } from '@vben/common-ui';
-import { useVbenForm, z } from '#/adapter/form';
-import { postDataDictionaryCreate, postDataDictionaryUpdate, } from '#/api-client/index';
 
+import { useVbenModal } from '@vben/common-ui';
+
+import { useVbenForm, z } from '#/adapter/form';
+import {
+  postDataDictionaryCreate,
+  postDataDictionaryUpdate,
+} from '#/api-client/index';
+import { $t } from '#/locales';
 
 const emit = defineEmits(['reload']);
 const data = ref<Record<string, any>>({});
-const [Modal, modalApi] = useVbenModal({
-  onOpenChange(isOpen: boolean) {
-    if (isOpen) {
-      data.value = modalApi.getData<Record<string, any>>();
-      console.log(data.value);
-      if (data.value.isEdit) {
-        formApi.setValues({ ...data.value.row });
-      }
-    }
-  },
-  onConfirm: async () => {
-    try {
-      modalApi.setState({ loading: true, confirmLoading: true });
-      const { valid } = await formApi.validate();
-      if (!valid) return;
-      const values = await formApi.getValues();
-      if (data.value.isEdit) {
-        await postDataDictionaryUpdate({
-          body: {
-            ...values,
-            id: data.value.row.id,
-          }
-        })
-      } else {
-         await postDataDictionaryCreate({
-          body: values,
-        });
-      }
-      emit('reload');
-      modalApi.close();
-    } finally {
-      modalApi.setState({ loading: false, confirmLoading: false });
-    }
-
-  }
-});
 
 const [Form, formApi] = useVbenForm({
   // 所有表单项共用，可单独在表单内覆盖
@@ -62,40 +31,70 @@ const [Form, formApi] = useVbenForm({
       component: 'Input',
       // 对应组件的参数
       componentProps: {
-        placeholder: '请输入',
+        placeholder: $t('common.pleaseInput'),
       },
       // 字段名
       fieldName: 'code',
       // 界面显示的label
-      label: '编码',
+      label: $t('abp.dataDictionary.code'),
       rules: 'required',
     },
     {
       component: 'Input',
       componentProps: {
-        placeholder: '请输入',
+        placeholder: $t('common.pleaseInput'),
       },
       fieldName: 'displayText',
-      label: '名称',
+      label: $t('abp.dataDictionary.name'),
       rules: 'required',
     },
     {
       component: 'Textarea',
       componentProps: {
-        placeholder: '请输入',
+        placeholder: $t('common.pleaseInput'),
       },
       fieldName: 'description',
-      label: '描述',
+      label: $t('abp.dataDictionary.description'),
       rules: z.string().default('').optional(),
     },
   ],
   wrapperClass: 'grid-cols-1',
 });
-
-
+const [Modal, modalApi] = useVbenModal({
+  onOpenChange(isOpen: boolean) {
+    if (isOpen) {
+      data.value = modalApi.getData<Record<string, any>>();
+      if (data.value.isEdit) {
+        formApi.setValues({ ...data.value.row });
+      }
+    }
+  },
+  onConfirm: async () => {
+    try {
+      modalApi.setState({ loading: true, confirmLoading: true });
+      const { valid } = await formApi.validate();
+      if (!valid) return;
+      const values = await formApi.getValues();
+      await (data.value.isEdit
+        ? postDataDictionaryUpdate({
+            body: {
+              ...values,
+              id: data.value.row.id,
+            },
+          })
+        : postDataDictionaryCreate({
+            body: values,
+          }));
+      emit('reload');
+      modalApi.close();
+    } finally {
+      modalApi.setState({ loading: false, confirmLoading: false });
+    }
+  },
+});
 </script>
 <template>
-  <Modal :title="data.isEdit ? '编辑' : '新增'"> 
-    <Form></Form>
+  <Modal :title="data.isEdit ? $t('common.edit') : $t('common.add')">
+    <Form />
   </Modal>
 </template>

@@ -62,7 +62,7 @@ export const tableSchema: any = [
   {
     field: 'creationTime',
     title: $t('common.createTime'),
-    minWidth: '150',
+    width: '150',
     formatter: ({ cellValue }) => {
       return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
     },
@@ -199,7 +199,7 @@ export const tableMessageSchema: any = [
     title: $t('common.action'),
     field: 'action',
     fixed: 'right',
-    minWidth: '150',
+    width: '150',
     slots: { default: 'action' },
   },
 ];

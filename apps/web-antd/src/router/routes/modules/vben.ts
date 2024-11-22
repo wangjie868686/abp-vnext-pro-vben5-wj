@@ -1,13 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import {
-  VBEN_DOC_URL,
-  VBEN_ELE_PREVIEW_URL,
-  VBEN_GITHUB_URL,
-  VBEN_LOGO_URL,
-  VBEN_NAIVE_PREVIEW_URL,
-} from '@vben/constants';
-
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -48,6 +40,16 @@ const routes: RouteRecordRaw[] = [
         component: IFrameView,
         meta: {
           icon: 'lucide:book-open-text',
+          link: 'http://doc.china.cncore.club:81/',
+          title: 'ABPPro国内文档',
+        },
+      },
+      {
+        name: 'VbenDocument',
+        path: '/vben-admin/document',
+        component: IFrameView,
+        meta: {
+          icon: 'lucide:book-open-text',
           link: 'https://abp.io/docs/latest/',
           title: 'ABP官方文档',
         },
@@ -61,7 +63,17 @@ const routes: RouteRecordRaw[] = [
           link: 'https://github.com/WangJunZzz/abp-vnext-pro',
           title: 'Github',
         },
-      }
+      },
+      {
+        name: 'VbenGithub',
+        path: '/vben-admin/github',
+        component: IFrameView,
+        meta: {
+          icon: 'ant-design:google-circle-filled',
+          link: 'https://gitee.com/WangJunZzz/abp-vnext-pro',
+          title: 'Gitee',
+        },
+      },
     ],
   },
 ];

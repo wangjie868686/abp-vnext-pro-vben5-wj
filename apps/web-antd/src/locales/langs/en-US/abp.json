@@ -74,5 +74,14 @@
     "showLanguage": "ShowLanguageName",
     "icon": "Icon",
     "resourceName": "ResourceName"
+  },
+  "dataDictionary": {
+    "codeName": "Code|Name",
+    "code": "Code",
+    "name": "Name",
+    "order": "Order",
+    "status": "Status",
+    "description": "Description",
+    "type": "Type"
   }
 }

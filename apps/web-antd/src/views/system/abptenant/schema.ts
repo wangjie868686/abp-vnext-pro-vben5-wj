@@ -15,7 +15,7 @@ export const tableSchema: any = [
     title: '操作',
     field: 'action',
     fixed: 'right',
-    minWidth: '150',
+    width: '150',
     slots: { default: 'action' },
   },
 ];
