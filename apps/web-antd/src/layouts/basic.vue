@@ -64,9 +64,8 @@ onMounted(async () => {
         redirect: encodeURIComponent(router.currentRoute.value.fullPath),
       },
     });
-  } else {
-    startConnect();
   }
+  startConnect();
 });
 
 const { destroyWatermark, updateWatermark } = useWatermark();
