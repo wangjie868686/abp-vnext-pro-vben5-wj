@@ -18,8 +18,9 @@
               </template>
             </Dropdown>
           </div>
-          <Tree class="mt-3" :expanded-keys="expandedKeys" :auto-expand-parent="autoExpandParent" :tree-data="gData"
+          <Tree class="mt-3" :expanded-keys="expandedKeys" :blockNode="true" :auto-expand-parent="autoExpandParent" :tree-data="gData"
             @select="onSelect"
+            @rightClick="onRightClick"
             @expand="onExpand">
             <template #title="{ title }">
               <span v-if="title.indexOf(searchValue) > -1">
@@ -65,26 +66,36 @@
 
         </div>
       </div>
-
   
     <OrgAddModal class="w-[600px]" title="新增"> 
       <OrgAddForm ></OrgAddForm>
     </OrgAddModal>
-
     <AddRolesModal>
       <UnAddRolesTable>
       </UnAddRolesTable>
     </AddRolesModal>
+
     <AddUsersModal>
       <UnAddUsersTable>
       </UnAddUsersTable>
     </AddUsersModal>
+
+    <OrgTreeAddModal @getTreeData="getTreeData"></OrgTreeAddModal>
+    <OrgTreeEditModal @getTreeData="getTreeData"></OrgTreeEditModal>
+    <ContextMenu 
+      v-if="contextMenu.visible"
+      :x="contextMenu.x"
+      :y="contextMenu.y"
+      :options="contextMenuOptions"
+      @select="onContextMenuSelect"
+      @close="closeContextMenu" />
   </Page>
 </template>
 
 <script setup lang="ts">
-import { Row, Col, Space, Button, Dropdown, Menu, Input, Modal, Tree, Tabs, message as Message } from 'ant-design-vue';
-import { Page, useVbenModal, VbenButton, type VbenFormProps } from '@vben/common-ui';
+import { Button, Dropdown, Menu, Input, Modal, Tree, Tabs, message as Message } from 'ant-design-vue';
+import { onMounted, ref, watch, reactive, onUnmounted, } from 'vue';
+import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import type { TreeProps } from 'ant-design-vue';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import { useVbenForm, z } from '#/adapter/form';
@@ -92,27 +103,101 @@ import {
   postOrganizationUnitsTree, type TreeOutput,
   postOrganizationUnitsGetRoles,
   postOrganizationUnitsGetUsers,
-  postOrganizationUnitsCreate,
   postOrganizationUnitsGetUnAddRoles,
   postOrganizationUnitsGetUnAddUsers,
   postOrganizationUnitsAddRoleToOrganizationUnitAsync,
   postOrganizationUnitsAddUserToOrganizationUnit,
   postOrganizationUnitsRemoveRoleFromOrganizationUnitAsync,
   postOrganizationUnitsRemoveUserFromOrganizationUnit,
+  postOrganizationUnitsDelete,
+  postOrganizationUnitsCreate,
+
 } from '#/api-client/index';
-import { onMounted, ref, watch } from 'vue';
+import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
+import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
+import ContextMenu from './ContextMenu.vue';
 
 
 // const { isDark } = usePreferences();
-const selectedKeys = ref([]);
 const expandedKeys = ref<(string | number)[]>([]);
 const searchValue = ref<string>('');
 const autoExpandParent = ref<boolean>(true);
 const gData = ref<Array<TreeOutput>>([]);
 const activeKey = ref('1');
 const currentSelectedKey = ref('');
+const parentDisplayName = ref('');
 const selectRoles = ref();
 const selectUsers = ref();
+
+const contextMenu = reactive({
+  visible: false,
+  x: 0,
+  y: 0,
+});
+
+const contextMenuOptions = [
+  { label: '新增', key: 'add' },
+  { label: '编辑', key: 'edit' },
+  { label: '删除', key: 'delete' },
+];
+
+function onRightClick({ event, node}) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (!currentSelectedKey.value) {
+    Message.warning('请先选择一个节点再进行操作');
+    return;
+  }
+  contextMenu.visible = true;
+  contextMenu.x = event.clientX;
+  contextMenu.y = event.clientY;
+}
+
+const onContextMenuSelect = async (key: string) => {
+  switch(key) {
+    case 'add':
+      orgTreeAddModalApi.setData({
+        parentDisplayName: parentDisplayName.value,
+        parentId: currentSelectedKey.value,
+      });
+      orgTreeAddModalApi.open();
+      break;
+    case 'edit':
+      orgTreeEditModalApi.setData({
+        displayName: parentDisplayName.value,
+        id: currentSelectedKey.value
+      });
+      orgTreeEditModalApi.open();
+      break;
+    case 'delete':
+      Modal.confirm({
+        title: '提示',
+        content: '确认删除吗?',
+        onOk: async () => {
+          await postOrganizationUnitsDelete({
+            body: {
+              id: currentSelectedKey.value,
+            }
+          });
+          Message.success('删除成功');
+          currentSelectedKey.value = '';
+          getTreeData();
+        },
+      });
+      break;
+  }
+  closeContextMenu();
+};
+
+const handleClickOutside = () => {
+  if (contextMenu.visible) {
+    closeContextMenu();
+  }
+};
+
+const closeContextMenu = () => {
+  contextMenu.visible = false;
+};
 
 async function getTreeData() {
   const { data = [] } = await postOrganizationUnitsTree();
@@ -120,8 +205,13 @@ async function getTreeData() {
   generateList(data);
 }
 
-onMounted(async () => {
+onMounted(() => {
   getTreeData();
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
 });
 
 const dataList: TreeProps['treeData'] = [];
@@ -197,6 +287,16 @@ watch(searchValue, value => {
   expandedKeys.value = expanded;
   searchValue.value = value;
   autoExpandParent.value = true;
+});
+
+const [OrgTreeAddModal, orgTreeAddModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: OrgTreeAddModalComponent,
+});
+
+const [OrgTreeEditModal, orgTreeEditModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: OrgTreeEditModalComponent,
 });
 
 const [OrgAddModal, orgModalApi] = useVbenModal({
@@ -343,6 +443,7 @@ const [RolesGrid, rolesGridApi] = useVbenVxeGrid({ gridOptions: rolesGridOptions
 
 const onSelect = (keys: string[], event: any) => {
   currentSelectedKey.value = keys[0] ?? '';
+  parentDisplayName.value = event.node.title;
   if (!keys[0]) return;
   activeKey.value === '1' ? userGridApi.reload() : rolesGridApi.reload();
 }
