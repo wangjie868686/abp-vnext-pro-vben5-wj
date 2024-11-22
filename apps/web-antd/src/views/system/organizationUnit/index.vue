@@ -40,12 +40,23 @@
                   <template #toolbar-actions>
                     <Button type="primary" @click="addUsersModalApi.open">新增</Button>
                   </template>
+                  <template #action="{ row }">
+                    <Button type="link" @click="removeUser(row)">
+                      {{ $t('common.delete') }}
+                    </Button>
+                  </template>
                 </UserGrid>
               </Tabs.TabPane>
               <Tabs.TabPane key="2" tab="角色">
                 <RolesGrid>
                   <template #toolbar-actions>
                     <Button type="primary" @click="addRolesModalApi.open">新增</Button>
+                  </template>
+
+                  <template #action="{ row }">
+                    <Button type="link" @click="removeRole(row)">
+                      {{ $t('common.delete') }}
+                    </Button>
                   </template>
                 </RolesGrid>
               </Tabs.TabPane>
@@ -86,6 +97,8 @@ import {
   postOrganizationUnitsGetUnAddUsers,
   postOrganizationUnitsAddRoleToOrganizationUnitAsync,
   postOrganizationUnitsAddUserToOrganizationUnit,
+  postOrganizationUnitsRemoveRoleFromOrganizationUnitAsync,
+  postOrganizationUnitsRemoveUserFromOrganizationUnit,
 } from '#/api-client/index';
 import { onMounted, ref, watch } from 'vue';
 
@@ -246,7 +259,8 @@ const userFormOptions: VbenFormProps = {
 
 const userGridOptions: VxeGridProps<any> = {
   columns: [
-    { type: 'radio', width: '50', },
+    // { type: 'radio', width: '50', },
+    { type: 'seq', title: '序号', width: '50' },
     { field: 'userName', title: '用户名', minWidth: '200', },
     { field: 'email', title: '邮箱', minWidth: '200', },
     {
@@ -356,7 +370,14 @@ const [AddRolesModal, addRolesModalApi] = useVbenModal({
 const unAddRolesOptions: VxeGridProps<any> = {
   columns: [
     { title: '', type: 'checkbox', width: 50 },
-    { field: 'name', title: '角色名称', minWidth: '200', },
+    { field: 'name', title: '角色名称', minWidth: '200'},
+    {
+      title: '操作',
+      field: 'action',
+      fixed: 'right',
+      width: '180',
+      slots: { default: 'action' },
+    },
   ],
   minHeight: '500',
   keepSource: true,
@@ -412,10 +433,16 @@ const unAddUsersFormOptions: VbenFormProps = {
 
 const unUsersOptions: VxeGridProps<any> = {
   columns: [
-    { title: '', type: 'checkbox', width: 50 },
-    { type: 'seq', title: '序号', width: 50},
+    { type: 'checkbox', title: '', width: 50},
     { field: 'userName', title: '用户名', minWidth: '150', },
     { field: 'email', title: '邮箱', minWidth: '200', },
+    {
+      title: '操作',
+      field: 'action',
+      fixed: 'right',
+      width: '180',
+      slots: { default: 'action' },
+    },
   ],
   minHeight: '500',
   keepSource: true,
@@ -469,6 +496,47 @@ const [AddUsersModal, addUsersModalApi] = useVbenModal({
   }
 });
 
+function removeRole(row: Record<string, any>) {
+  Modal.confirm({
+    title: '提示',
+    content: `确定要删除角色${row.name}吗？`,
+    onOk: async () => {
+      try {
+        await postOrganizationUnitsRemoveRoleFromOrganizationUnitAsync({
+          body: {
+            roleId: row.id,
+            organizationUnitId: currentSelectedKey.value,
+          }
+        });
+        unAddRolesTableApi.reload();
+        Message.success('删除成功');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+}
+
+function removeUser(row: Record<string, any>) {
+  Modal.confirm({
+    title: '提示',
+    content: `确定要删除用户${row.userName}吗？`,
+    onOk: async () => {
+      try {
+        await postOrganizationUnitsRemoveUserFromOrganizationUnit({
+          body: {
+            userId: row.id,
+            organizationUnitId: currentSelectedKey.value,
+          }
+        });
+        unAddUsersTableApi.reload();
+        Message.success('删除成功');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+}
 </script>
 
 <style scoped></style>
