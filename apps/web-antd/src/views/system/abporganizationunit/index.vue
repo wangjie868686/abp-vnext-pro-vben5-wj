@@ -623,7 +623,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
             <Tabs.TabPane key="1" :tab="$t('abp.organizationunit.member')">
               <UserGrid>
                 <template #toolbar-actions>
-                  <Button type="primary" @click="addUsersModalApi.open">
+                  <Button type="primary" :disabled="!currentSelectedKey" @click="addUsersModalApi.open">
                     {{ $t('common.add') }}
                   </Button>
                 </template>
@@ -637,7 +637,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
             <Tabs.TabPane key="2" :tab="$t('abp.organizationunit.role')">
               <RolesGrid>
                 <template #toolbar-actions>
-                  <Button type="primary" @click="addRolesModalApi.open">
+                  <Button type="primary" :disabled="!currentSelectedKey" @click="addRolesModalApi.open">
                     {{ $t('common.add') }}
                   </Button>
                 </template>
