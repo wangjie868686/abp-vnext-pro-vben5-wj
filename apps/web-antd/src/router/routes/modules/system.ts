@@ -36,16 +36,16 @@ const routes: RouteRecordRaw[] = [
           authority: ['AbpIdentity.Roles'],
         },
       },
-      {
-        name: 'OrganizationUnit',
-        path: 'organizationUnit',
-        component: () => import('#/views/system/abporganizationunit/index.vue'),
-        meta: {
-          title: $t('abp.menu.organizationUnit'),
-          authority: ['AbpIdentity.OrganizationUnitManagement'],
-          icon: 'ant-design:team-outlined',
-        },
-      },
+      // {
+      //   name: 'OrganizationUnit',
+      //   path: 'organizationUnit',
+      //   component: () => import('#/views/system/abporganizationunit/index.vue'),
+      //   meta: {
+      //     title: $t('abp.menu.organizationUnit'),
+      //     authority: ['AbpIdentity.OrganizationUnitManagement'],
+      //     icon: 'ant-design:team-outlined',
+      //   },
+      // },
       {
         name: 'abpSetting',
         path: 'setting',
