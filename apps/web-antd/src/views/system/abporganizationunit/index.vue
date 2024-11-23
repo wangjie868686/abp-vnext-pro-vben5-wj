@@ -36,12 +36,14 @@ import {
 import ContextMenu from './ContextMenu.vue';
 import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
 import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
+import type { DataNode } from 'ant-design-vue/es/tree';
 
 // const { isDark } = usePreferences();
 const expandedKeys = ref<(number | string)[]>([]);
 const searchValue = ref<string>('');
 const autoExpandParent = ref<boolean>(true);
 const gData = ref<Array<TreeOutput>>([]);
+
 const activeKey = ref('1');
 const currentSelectedKey = ref('');
 const parentDisplayName = ref('');
@@ -124,7 +126,7 @@ const closeContextMenu = () => {
 async function getTreeData() {
   const { data = [] } = await postOrganizationUnitsTree();
   gData.value = data;
-  generateList(data);
+  generateList(data as any);
 }
 
 onMounted(() => {
@@ -164,35 +166,32 @@ const getParentKey = (
   return parentKey;
 };
 
-// 写一个方法，获取treeData中所有父节点的key
-const getAllParentKeys = (
-  key: number | string,
-  tree: TreeProps['treeData'],
-) => {
-  const parentKeys: (number | string)[] = [];
-  const getParentKey = (key: number | string, tree: TreeProps['treeData']) => {
-    for (let i = 0; i < tree.length; i++) {
-      const node = tree[i];
-      if (node.children) {
-        if (node.children.some((item) => item.key === key)) {
-          parentKeys.push(node.key);
-          getParentKey(node.key, tree);
-        } else {
-          getParentKey(key, node.children);
-        }
+// 获取所有节点的key
+const getAllKeys = (tree: TreeProps['treeData']): (string | number)[] => {
+  const keys: (string | number)[] = [];
+  const traverse = (nodes: TreeProps['treeData']) => {
+    if (!nodes) return;
+    nodes.forEach((node) => {
+      if (node.key) {
+        keys.push(node.key);
       }
-    }
+      if (node.children) {
+        traverse(node.children);
+      }
+    });
   };
-  getParentKey(key, tree);
-  return parentKeys;
+  traverse(tree);
+  return keys;
 };
 
+// 修改 toggleExpand 方法
 const toggleExpand = () => {
-  expandedKeys.value =
-    expandedKeys.value.length === 0
-      ? getAllParentKeys(currentSelectedKey.value, gData.value)
-      : [];
-  console.log(expandedKeys.value);
+  // 如果当前没有展开的节点，则展开所有节点
+  // 否则折叠所有节点
+  expandedKeys.value = expandedKeys.value.length === 0 
+    ? getAllKeys(gData.value as TreeProps['treeData']) 
+    : [];
+  autoExpandParent.value = true;
 };
 
 const onExpand = (keys: string[]) => {
@@ -202,14 +201,14 @@ const onExpand = (keys: string[]) => {
 
 watch(searchValue, (value) => {
   const expanded = dataList
-    .map((item: TreeProps['treeData'][number]) => {
+    .map((item: DataNode) => {
       if (item.title.includes(value)) {
-        return getParentKey(item.key, gData.value);
+        return getParentKey(item.key, gData.value as TreeProps['treeData']);
       }
       return null;
     })
     .filter((item, i, self) => item && self.indexOf(item) === i);
-  expandedKeys.value = expanded;
+  expandedKeys.value = expanded as (string | number)[];
   searchValue.value = value;
   autoExpandParent.value = true;
 });
@@ -499,7 +498,7 @@ const [AddUsersModal, addUsersModalApi] = useVbenModal({
 
 function removeRole(row: Record<string, any>) {
   Modal.confirm({
-    title: '提示',
+    title: '提���',
     content: `确定要删除角色${row.name}吗？`,
     onOk: async () => {
       try {
