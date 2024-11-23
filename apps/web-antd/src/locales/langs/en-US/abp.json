@@ -92,6 +92,6 @@
     "userName": "UserName",
     "email": "Email",
     "name": "Name",
-    "selectNode": "选择一个节点在操作"
+    "selectNode": "Select a node to operate on"
   }
 }
