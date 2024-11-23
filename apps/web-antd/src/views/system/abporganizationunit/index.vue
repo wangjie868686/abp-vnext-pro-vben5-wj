@@ -527,7 +527,7 @@ function removeRole(row: Record<string, any>) {
             organizationUnitId: currentSelectedKey.value,
           },
         });
-        unAddRolesTableApi.reload();
+        rolesGridApi.reload();
         Message.success($t('common.success'));
       } catch (error) {
         console.error(error);
@@ -547,7 +547,7 @@ function removeUser(row: Record<string, any>) {
             organizationUnitId: currentSelectedKey.value,
           },
         });
-        unAddUsersTableApi.reload();
+        userGridApi.reload();
         Message.success($t('common.success'));
       } catch (error) {
         console.error(error);

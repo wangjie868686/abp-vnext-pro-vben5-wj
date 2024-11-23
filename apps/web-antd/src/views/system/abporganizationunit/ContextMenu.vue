@@ -1,7 +1,21 @@
+<script setup lang="ts">
+import { defineEmits, defineProps } from 'vue';
+
+import { Button, Menu } from 'ant-design-vue';
+
+defineProps({
+  x: Number,
+  y: Number,
+  options: Array,
+});
+
+const emit = defineEmits(['select', 'close']);
+</script>
+
 <template>
   <div
-    class="context-menu"
     :style="{ left: `${x}px`, top: `${y}px` }"
+    class="context-menu"
     @click.stop
   >
     <Menu mode="vertical">
@@ -16,31 +30,18 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import { Menu, Button } from 'ant-design-vue';
-
-defineProps({
-  x: Number,
-  y: Number,
-  options: Array,
-});
-
-const emit = defineEmits(['select', 'close']);
-</script>
-
 <style scoped>
 .context-menu {
   position: fixed;
-  background: white;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  background: white;
+  box-shadow: 2px 2px 5px rgb(0 0 0 / 10%);
 }
 
 ul {
-  list-style-type: none;
   padding: 0;
   margin: 0;
+  list-style-type: none;
 }
 
 li {
@@ -52,4 +53,3 @@ li:hover {
   background-color: #f0f0f0;
 }
 </style>
-
