@@ -555,6 +555,12 @@ function removeUser(row: Record<string, any>) {
     },
   });
 }
+
+// 添加 onExpand 方法处理节点展开/折叠
+const onExpand = (keys: (string | number)[], info: any) => {
+  expandedKeys.value = keys;
+  autoExpandParent.value = false;
+};
 </script>
 
 <template>
