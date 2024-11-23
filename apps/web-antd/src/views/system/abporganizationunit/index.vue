@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TreeProps } from 'ant-design-vue';
+import type { DataNode } from 'ant-design-vue/es/tree';
 
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
@@ -32,12 +33,11 @@ import {
   postOrganizationUnitsTree,
   type TreeOutput,
 } from '#/api-client/index';
+import { $t } from '#/locales';
 
 import ContextMenu from './ContextMenu.vue';
 import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
 import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
-import type { DataNode } from 'ant-design-vue/es/tree';
-
 // const { isDark } = usePreferences();
 const expandedKeys = ref<(number | string)[]>([]);
 const searchValue = ref<string>('');
@@ -167,8 +167,8 @@ const getParentKey = (
 };
 
 // 获取所有节点的key
-const getAllKeys = (tree: TreeProps['treeData']): (string | number)[] => {
-  const keys: (string | number)[] = [];
+const getAllKeys = (tree: TreeProps['treeData']): (number | string)[] => {
+  const keys: (number | string)[] = [];
   const traverse = (nodes: TreeProps['treeData']) => {
     if (!nodes) return;
     nodes.forEach((node) => {
@@ -205,7 +205,7 @@ watch(searchValue, (value) => {
       return null;
     })
     .filter((item, i, self) => item && self.indexOf(item) === i);
-  expandedKeys.value = expanded as (string | number)[];
+  expandedKeys.value = expanded as (number | string)[];
   searchValue.value = value;
   autoExpandParent.value = true;
 });
@@ -285,8 +285,15 @@ const userGridOptions: VxeGridProps<any> = {
     { type: 'seq', title: '序号', width: '50' },
     { field: 'userName', title: '用户名', minWidth: '200' },
     { field: 'email', title: '邮箱', minWidth: '200' },
+    {
+      title: $t('common.action'),
+      field: 'action',
+      fixed: 'right',
+      width: '150',
+      slots: { default: 'action' },
+    },
   ],
-  minHeight: '500',
+  minHeight: '800',
   keepSource: true,
   pagerConfig: {},
   radioConfig: {
@@ -319,17 +326,21 @@ const rolesGridOptions: VxeGridProps<any> = {
   columns: [
     { title: '序号', type: 'seq', width: 50 },
     { field: 'name', title: '角色名称', minWidth: '200' },
+    {
+      title: $t('common.action'),
+      field: 'action',
+      fixed: 'right',
+      width: '150',
+      slots: { default: 'action' },
+    },
   ],
-  minHeight: '500',
+  minHeight: '800',
   keepSource: true,
   pagerConfig: {},
   radioConfig: {
     highlight: true,
   },
   proxyConfig: {
-    response: {
-      total: 'totalCount',
-    },
     ajax: {
       query: async ({ page }, formValues) => {
         if (!currentSelectedKey.value) return;
@@ -382,7 +393,7 @@ const unAddRolesOptions: VxeGridProps<any> = {
     { title: '', type: 'checkbox', width: 50 },
     { field: 'name', title: '角色名称', minWidth: '200' },
   ],
-  minHeight: '500',
+  minHeight: '800',
   keepSource: true,
   pagerConfig: {},
   radioConfig: {
@@ -441,7 +452,7 @@ const unUsersOptions: VxeGridProps<any> = {
     { field: 'userName', title: '用户名', minWidth: '150' },
     { field: 'email', title: '邮箱', minWidth: '200' },
   ],
-  minHeight: '500',
+  minHeight: '800',
   keepSource: true,
   pagerConfig: {},
   radioConfig: {
