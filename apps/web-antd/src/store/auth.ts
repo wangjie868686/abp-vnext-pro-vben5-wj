@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (tenantResult.data?.success) {
           userStore.setTenantInfo(tenantResult.data as any);
         } else {
-          Message.error(`${params.tenant}租户不存在`);
+          Message.error(`${params.tenant}$t('abp.tenant.notExist')`);
           return;
         }
       }
@@ -82,9 +82,9 @@ export const useAuthStore = defineStore('auth', () => {
             : await router.push(DEFAULT_HOME_PATH);
         }
 
-        if (userInfo?.realName) {
+        if (userInfo?.userName) {
           notification.success({
-            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+            description: `${$t('authentication.loginSuccessDesc')}:${userInfo?.userName}`,
             duration: 3,
             message: $t('authentication.loginSuccess'),
           });

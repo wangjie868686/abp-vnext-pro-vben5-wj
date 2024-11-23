@@ -93,5 +93,8 @@
     "email": "邮箱",
     "name": "名称",
     "selectNode": "请先选择一个节点再进行操作"
+  },
+  "tenant": {
+    "notExist": "租户不存在"
   }
 }

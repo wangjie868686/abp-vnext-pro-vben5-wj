@@ -93,5 +93,8 @@
     "email": "Email",
     "name": "Name",
     "selectNode": "Select a node to operate on"
+  },
+  "tenant": {
+    "notExist": "Tenant Does not exist"
   }
 }
