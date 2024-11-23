@@ -36,16 +36,16 @@ const routes: RouteRecordRaw[] = [
           authority: ['AbpIdentity.Roles'],
         },
       },
-      {
-        name: 'OrganizationUnit',
-        path: 'organizationUnit',
-        component: () => import('#/views/system/organizationUnit/index.vue'),
-        meta: {
-          title: $t('abp.menu.organizationUnit'),
-          authority: ['AbpIdentity.OrganizationUnitManagement'],
-          icon: 'ant-design:team-outlined',
-        },
-      },
+      // {
+      //   name: 'OrganizationUnit',
+      //   path: 'organizationUnit',
+      //   component: () => import('#/views/system/abporganizationunit/index.vue'),
+      //   meta: {
+      //     title: $t('abp.menu.organizationUnit'),
+      //     authority: ['AbpIdentity.OrganizationUnitManagement'],
+      //     icon: 'ant-design:team-outlined',
+      //   },
+      // },
       {
         name: 'abpSetting',
         path: 'setting',
@@ -109,7 +109,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'DataDictionary',
         path: 'data-dictionary',
-        component: () => import('#/views/system/dataDictionary/index.vue'),
+        component: () => import('#/views/system/abpdatadictionary/index.vue'),
         meta: {
           title: $t('abp.menu.dataDictionary'),
           authority: ['AbpIdentity.DataDictionaryManagement'],
