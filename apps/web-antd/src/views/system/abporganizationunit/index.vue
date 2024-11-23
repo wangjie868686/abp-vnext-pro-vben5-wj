@@ -184,19 +184,16 @@ const getAllKeys = (tree: TreeProps['treeData']): (string | number)[] => {
   return keys;
 };
 
-// 修改 toggleExpand 方法
-const toggleExpand = () => {
-  // 如果当前没有展开的节点，则展开所有节点
-  // 否则折叠所有节点
-  expandedKeys.value = expandedKeys.value.length === 0 
-    ? getAllKeys(gData.value as TreeProps['treeData']) 
-    : [];
+// 展开所有节点
+const expandAll = () => {
+  expandedKeys.value = getAllKeys(gData.value as TreeProps['treeData']);
   autoExpandParent.value = true;
 };
 
-const onExpand = (keys: string[]) => {
-  expandedKeys.value = keys;
-  autoExpandParent.value = false;
+// 折叠所有节点
+const collapseAll = () => {
+  expandedKeys.value = [];
+  autoExpandParent.value = true;
 };
 
 watch(searchValue, (value) => {
@@ -498,7 +495,7 @@ const [AddUsersModal, addUsersModalApi] = useVbenModal({
 
 function removeRole(row: Record<string, any>) {
   Modal.confirm({
-    title: '提���',
+    title: '提',
     content: `确定要删除角色${row.name}吗？`,
     onOk: async () => {
       try {
@@ -562,8 +559,8 @@ function removeUser(row: Record<string, any>) {
             <Button class="font-bold"> ... </Button>
             <template #overlay>
               <Menu>
-                <Menu.Item @click="toggleExpand">展开全部</Menu.Item>
-                <Menu.Item @click="toggleExpand">折叠全部</Menu.Item>
+                <Menu.Item @click="expandAll">展开全部</Menu.Item>
+                <Menu.Item @click="collapseAll">折叠全部</Menu.Item>
               </Menu>
             </template>
           </Dropdown>
