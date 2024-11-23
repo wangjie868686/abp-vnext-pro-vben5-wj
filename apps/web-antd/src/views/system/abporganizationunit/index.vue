@@ -57,16 +57,16 @@ const contextMenu = reactive({
 });
 
 const contextMenuOptions = [
-  { label: '新增', key: 'add' },
-  { label: '编辑', key: 'edit' },
-  { label: '删除', key: 'delete' },
+  { label: $t('common.add'), key: 'add' },
+  { label: $t('common.edit'), key: 'edit' },
+  { label: $t('common.delete'), key: 'delete' },
 ];
 
 function onRightClick({ event, node }) {
   event.preventDefault();
   event.stopPropagation();
   if (!currentSelectedKey.value) {
-    Message.warning('请先选择一个节点再进行操作');
+    Message.warning($t('abp.organizationunit.selectNode'));
     return;
   }
   contextMenu.visible = true;
@@ -86,15 +86,14 @@ const onContextMenuSelect = async (key: string) => {
     }
     case 'delete': {
       Modal.confirm({
-        title: '提示',
-        content: '确认删除吗?',
+        title: `${$t('common.confirmDelete')}?`,
         onOk: async () => {
           await postOrganizationUnitsDelete({
             body: {
               id: currentSelectedKey.value,
             },
           });
-          Message.success('删除成功');
+          Message.success($t('common.success'));
           currentSelectedKey.value = '';
           getTreeData();
         },
@@ -231,7 +230,7 @@ const [OrgAddModal, orgModalApi] = useVbenModal({
         body: { ...values },
       });
       getTreeData();
-      Message.success('新增成功');
+      Message.success($t('common.success'));
       orgModalApi.close();
     } finally {
       orgModalApi.setState({ loading: false, confirmLoading: false });
@@ -250,11 +249,9 @@ const [OrgAddForm, orgFormApi] = useVbenForm({
   schema: [
     {
       component: 'Input',
-      componentProps: {
-        placeholder: '请输入',
-      },
+      componentProps: {},
       fieldName: 'displayName',
-      label: '名称·',
+      label: $t('abp.organizationunit.name'),
       rules: 'required',
     },
   ],
@@ -266,7 +263,7 @@ const userFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '用户名',
+      label: $t('abp.organizationunit.userName'),
       labelWidth: 50,
       componentProps: {
         allowClear: true,
@@ -282,9 +279,17 @@ const userFormOptions: VbenFormProps = {
 const userGridOptions: VxeGridProps<any> = {
   columns: [
     // { type: 'radio', width: '50', },
-    { type: 'seq', title: '序号', width: '50' },
-    { field: 'userName', title: '用户名', minWidth: '200' },
-    { field: 'email', title: '邮箱', minWidth: '200' },
+    { type: 'seq', title: $t('common.seq'), width: '50' },
+    {
+      field: 'userName',
+      title: $t('abp.organizationunit.userName'),
+      minWidth: '200',
+    },
+    {
+      field: 'email',
+      title: $t('abp.organizationunit.email'),
+      minWidth: '200',
+    },
     {
       title: $t('common.action'),
       field: 'action',
@@ -324,8 +329,8 @@ const [UserGrid, userGridApi] = useVbenVxeGrid({
 
 const rolesGridOptions: VxeGridProps<any> = {
   columns: [
-    { title: '序号', type: 'seq', width: 50 },
-    { field: 'name', title: '角色名称', minWidth: '200' },
+    { title: $t('common.seq'), type: 'seq', width: 50 },
+    { field: 'name', title: $t('abp.organizationunit.role'), minWidth: '200' },
     {
       title: $t('common.action'),
       field: 'action',
@@ -381,7 +386,7 @@ const [AddRolesModal, addRolesModalApi] = useVbenModal({
       });
       addRolesModalApi.close();
       rolesGridApi.reload();
-      Message.success('添加成功');
+      Message.success($t('common.add'));
     } finally {
       addRolesModalApi.setState({ loading: false, confirmLoading: false });
     }
@@ -391,7 +396,7 @@ const [AddRolesModal, addRolesModalApi] = useVbenModal({
 const unAddRolesOptions: VxeGridProps<any> = {
   columns: [
     { title: '', type: 'checkbox', width: 50 },
-    { field: 'name', title: '角色名称', minWidth: '200' },
+    { field: 'name', title: $t('abp.organizationunit.role'), minWidth: '200' },
   ],
   minHeight: '800',
   keepSource: true,
@@ -418,7 +423,6 @@ const unAddRolesOptions: VxeGridProps<any> = {
 
 const unAddRolesTableEvents = {
   checkboxChange: ({ records }: { records: { name: string }[] }) => {
-    console.log(records);
     selectRoles.value = records;
   },
 };
@@ -433,7 +437,7 @@ const unAddUsersFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '用户名',
+      label: $t('abp.organizationunit.userName'),
       labelWidth: 50,
       componentProps: {
         allowClear: true,
@@ -449,8 +453,16 @@ const unAddUsersFormOptions: VbenFormProps = {
 const unUsersOptions: VxeGridProps<any> = {
   columns: [
     { type: 'checkbox', title: '', width: 50 },
-    { field: 'userName', title: '用户名', minWidth: '150' },
-    { field: 'email', title: '邮箱', minWidth: '200' },
+    {
+      field: 'userName',
+      title: $t('abp.organizationunit.userName'),
+      minWidth: '150',
+    },
+    {
+      field: 'email',
+      title: $t('abp.organizationunit.email'),
+      minWidth: '200',
+    },
   ],
   minHeight: '800',
   keepSource: true,
@@ -497,7 +509,7 @@ const [AddUsersModal, addUsersModalApi] = useVbenModal({
       });
       addUsersModalApi.close();
       userGridApi.reload();
-      Message.success('添加成功');
+      Message.success($t('common.add'));
     } finally {
       addUsersModalApi.setState({ loading: false, confirmLoading: false });
     }
@@ -506,8 +518,7 @@ const [AddUsersModal, addUsersModalApi] = useVbenModal({
 
 function removeRole(row: Record<string, any>) {
   Modal.confirm({
-    title: '提',
-    content: `确定要删除角色${row.name}吗？`,
+    title: `${$t('common.confirmDelete')}${row.name} ?`,
     onOk: async () => {
       try {
         await postOrganizationUnitsRemoveRoleFromOrganizationUnitAsync({
@@ -517,9 +528,9 @@ function removeRole(row: Record<string, any>) {
           },
         });
         unAddRolesTableApi.reload();
-        Message.success('删除成功');
+        Message.success($t('common.success'));
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   });
@@ -527,8 +538,7 @@ function removeRole(row: Record<string, any>) {
 
 function removeUser(row: Record<string, any>) {
   Modal.confirm({
-    title: '提示',
-    content: `确定要删除用户${row.userName}吗？`,
+    title: `${$t('common.confirmDelete')}${row.userName} ?`,
     onOk: async () => {
       try {
         await postOrganizationUnitsRemoveUserFromOrganizationUnit({
@@ -538,9 +548,9 @@ function removeUser(row: Record<string, any>) {
           },
         });
         unAddUsersTableApi.reload();
-        Message.success('删除成功');
+        Message.success($t('common.success'));
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
   });
@@ -552,26 +562,28 @@ function removeUser(row: Record<string, any>) {
     <div class="grid grid-cols-12 gap-4">
       <div class="bg-card col-span-4 xl:col-span-3">
         <div class="bg-card flex items-center justify-between p-3">
-          <span class="text-lg">组织机构</span>
+          <span class="text-lg">{{
+            $t('abp.organizationunit.organizationunit')
+          }}</span>
           <Button
             class="mx-3"
             size="small"
             type="primary"
             @click="orgModalApi.open"
           >
-            新增根机构
+            {{ $t('abp.organizationunit.add') }}
           </Button>
-          <Input.Search
-            v-model:value="searchValue"
-            class="ml-1 flex-1"
-            placeholder="搜索"
-          />
+          <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
           <Dropdown class="ml-1">
-            <Button class="font-bold"> ... </Button>
+            <Button class="font-bold">......</Button>
             <template #overlay>
               <Menu>
-                <Menu.Item @click="expandAll">展开全部</Menu.Item>
-                <Menu.Item @click="collapseAll">折叠全部</Menu.Item>
+                <Menu.Item @click="expandAll">
+                  {{ $t('common.expandAll') }}
+                </Menu.Item>
+                <Menu.Item @click="collapseAll">
+                  {{ $t('common.collapseAll') }}
+                </Menu.Item>
               </Menu>
             </template>
           </Dropdown>
@@ -602,11 +614,11 @@ function removeUser(row: Record<string, any>) {
       <div class="col-span-8 xl:col-span-9">
         <div class="bg-card">
           <Tabs v-model:active-key="activeKey" class="px-3">
-            <Tabs.TabPane key="1" tab="成员">
+            <Tabs.TabPane key="1" :tab="$t('abp.organizationunit.member')">
               <UserGrid>
                 <template #toolbar-actions>
                   <Button type="primary" @click="addUsersModalApi.open">
-                    新增
+                    {{ $t('common.add') }}
                   </Button>
                 </template>
                 <template #action="{ row }">
@@ -616,11 +628,11 @@ function removeUser(row: Record<string, any>) {
                 </template>
               </UserGrid>
             </Tabs.TabPane>
-            <Tabs.TabPane key="2" tab="角色">
+            <Tabs.TabPane key="2" :tab="$t('abp.organizationunit.role')">
               <RolesGrid>
                 <template #toolbar-actions>
                   <Button type="primary" @click="addRolesModalApi.open">
-                    新增
+                    {{ $t('common.add') }}
                   </Button>
                 </template>
 
@@ -636,7 +648,7 @@ function removeUser(row: Record<string, any>) {
       </div>
     </div>
 
-    <OrgAddModal class="w-[600px]" title="新增">
+    <OrgAddModal :title="$t('common.add')" class="w-[600px]">
       <OrgAddForm />
     </OrgAddModal>
     <AddRolesModal>

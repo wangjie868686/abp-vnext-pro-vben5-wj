@@ -83,5 +83,15 @@
     "status": "状态",
     "description": "描述",
     "type": "字典类型"
+  },
+  "organizationunit": {
+    "organizationunit": "组织机构",
+    "add": "新增根机构",
+    "member": "成员",
+    "role": "角色",
+    "userName": "用户名",
+    "email": "邮箱",
+    "name": "名称",
+    "selectNode": "请先选择一个节点再进行操作"
   }
 }

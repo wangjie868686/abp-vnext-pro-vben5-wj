@@ -83,5 +83,15 @@
     "status": "Status",
     "description": "Description",
     "type": "Type"
+  },
+  "organizationunit": {
+    "organizationunit": "Organizationunit",
+    "add": "Add",
+    "member": "Member",
+    "role": "Role",
+    "userName": "UserName",
+    "email": "Email",
+    "name": "Name",
+    "selectNode": "选择一个节点在操作"
   }
 }

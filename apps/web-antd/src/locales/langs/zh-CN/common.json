@@ -29,5 +29,7 @@
   "mesage404": "您访问的页面不存在！",
   "mesage400": "请求错误！",
   "mesage405": "请求方法错误！",
-  "timeOut": "请求超时！"
+  "timeOut": "请求超时！",
+  "expandAll": "展开全部",
+  "collapseAll": "折叠全部"
 }
