@@ -66,46 +66,7 @@ const routes: RouteRecordRaw[] = [
       //     authority: ['AbpIdentity.FeatureManagement'],
       //   },
       // },
-      // {
-      //   name: 'AbpAuditLog',
-      //   path: 'auditlog',
-      //   component: () => import('#/views/system/abplog/audit.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.auditLog'),
-      //     authority: ['AbpIdentity.AuditLog'],
-      //     icon: 'ant-design:snippets-twotone',
-      //   },
-      // },
-      // {
-      //   name: 'AbpLoginLog',
-      //   path: 'loginlog',
-      //   component: () => import('#/views/system/abplog/login.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.loginLog'),
-      //     authority: ['AbpIdentity.IdentitySecurityLogs'],
-      //     icon: 'ant-design:file-protect-outlined',
-      //   },
-      // },
-      // {
-      //   name: 'AboLanguage',
-      //   path: 'language',
-      //   component: () => import('#/views/system/abplanguage/language.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.language'),
-      //     authority: ['AbpIdentity.Languages'],
-      //     icon: 'ant-design:read-outlined',
-      //   },
-      // },
-      // {
-      //   name: 'AboLanguageText',
-      //   path: 'languagetext',
-      //   component: () => import('#/views/system/abplanguage/languagetext.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.languageText'),
-      //     authority: ['AbpIdentity.LanguageTexts'],
-      //     icon: 'ant-design:font-size-outlined',
-      //   },
-      // },
+
       // {
       //   name: 'DataDictionary',
       //   path: 'data-dictionary',
@@ -116,6 +77,46 @@ const routes: RouteRecordRaw[] = [
       //     icon: 'ant-design:table-outlined',
       //   },
       // },
+      {
+        name: 'AbpAuditLog',
+        path: 'auditlog',
+        component: () => import('#/views/system/abplog/audit.vue'),
+        meta: {
+          title: $t('abp.menu.auditLog'),
+          authority: ['AbpIdentity.AuditLog'],
+          icon: 'ant-design:snippets-twotone',
+        },
+      },
+      {
+        name: 'AbpLoginLog',
+        path: 'loginlog',
+        component: () => import('#/views/system/abplog/login.vue'),
+        meta: {
+          title: $t('abp.menu.loginLog'),
+          authority: ['AbpIdentity.IdentitySecurityLogs'],
+          icon: 'ant-design:file-protect-outlined',
+        },
+      },
+      {
+        name: 'AboLanguage',
+        path: 'language',
+        component: () => import('#/views/system/abplanguage/language.vue'),
+        meta: {
+          title: $t('abp.menu.language'),
+          authority: ['AbpIdentity.Languages'],
+          icon: 'ant-design:read-outlined',
+        },
+      },
+      {
+        name: 'AboLanguageText',
+        path: 'languagetext',
+        component: () => import('#/views/system/abplanguage/languagetext.vue'),
+        meta: {
+          title: $t('abp.menu.languageText'),
+          authority: ['AbpIdentity.LanguageTexts'],
+          icon: 'ant-design:font-size-outlined',
+        },
+      },
       {
         name: 'AbpNotification',
         path: 'notification',
