@@ -66,26 +66,6 @@ const routes: RouteRecordRaw[] = [
       //     authority: ['AbpIdentity.FeatureManagement'],
       //   },
       // },
-      // {
-      //   name: 'AbpAuditLog',
-      //   path: 'auditlog',
-      //   component: () => import('#/views/system/abplog/audit.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.auditLog'),
-      //     authority: ['AbpIdentity.AuditLog'],
-      //     icon: 'ant-design:snippets-twotone',
-      //   },
-      // },
-      // {
-      //   name: 'AbpLoginLog',
-      //   path: 'loginlog',
-      //   component: () => import('#/views/system/abplog/login.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.loginLog'),
-      //     authority: ['AbpIdentity.IdentitySecurityLogs'],
-      //     icon: 'ant-design:file-protect-outlined',
-      //   },
-      // },
 
       // {
       //   name: 'DataDictionary',
@@ -97,7 +77,26 @@ const routes: RouteRecordRaw[] = [
       //     icon: 'ant-design:table-outlined',
       //   },
       // },
-
+      {
+        name: 'AbpAuditLog',
+        path: 'auditlog',
+        component: () => import('#/views/system/abplog/audit.vue'),
+        meta: {
+          title: $t('abp.menu.auditLog'),
+          authority: ['AbpIdentity.AuditLog'],
+          icon: 'ant-design:snippets-twotone',
+        },
+      },
+      {
+        name: 'AbpLoginLog',
+        path: 'loginlog',
+        component: () => import('#/views/system/abplog/login.vue'),
+        meta: {
+          title: $t('abp.menu.loginLog'),
+          authority: ['AbpIdentity.IdentitySecurityLogs'],
+          icon: 'ant-design:file-protect-outlined',
+        },
+      },
       {
         name: 'AboLanguage',
         path: 'language',
