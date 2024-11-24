@@ -123,14 +123,14 @@ export const editUserFormSchemaEdit: any = [
     componentProps: {},
     fieldName: 'phoneNumber',
     label: $t('abp.user.phone'),
-    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.phone')),
+    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.phone') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'password',
     label: $t('abp.user.password'),
-    rules: z.string().email($t('common.pleaseInput') + $t('abp.user.password')),
+    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.password') }),
   },
   {
     component: 'Input',
@@ -139,6 +139,6 @@ export const editUserFormSchemaEdit: any = [
     label: $t('abp.user.comfirmPassword'),
     rules: z
       .string()
-      .email($t('common.pleaseInput') + $t('abp.user.comfirmPassword')),
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword') }),
   },
 ];
