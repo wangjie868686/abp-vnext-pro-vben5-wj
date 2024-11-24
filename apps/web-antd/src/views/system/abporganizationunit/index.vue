@@ -122,36 +122,24 @@ const closeContextMenu = () => {
   contextMenu.visible = false;
 };
 
-async function getTreeData() {
-  const { data = [] } = await postOrganizationUnitsTree();
-  gData.value = data;
-  generateList(data as any);
-}
+const dataList = ref<DataNode[]>([]);
 
-onMounted(() => {
-  getTreeData();
-  document.addEventListener('click', handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
-});
-
-const dataList: TreeProps['treeData'] = [];
 const generateList = (data: TreeProps['treeData']) => {
+  if (!data) return;
   for (const node of data) {
-    const key = node.key;
-    dataList.push({ key, title: key });
-    if (node.children) {
-      generateList(node.children);
+    const { key, title, children } = node;
+    dataList.value.push({ key, title });
+    if (children) {
+      generateList(children);
     }
   }
 };
 
 const getParentKey = (
-  key: number | string,
+  key: string | number,
   tree: TreeProps['treeData'],
-): number | string | undefined => {
+): string | number | undefined => {
+  if (!tree) return undefined;
   let parentKey;
   for (const node of tree) {
     if (node.children) {
@@ -196,17 +184,40 @@ const collapseAll = () => {
 };
 
 watch(searchValue, (value) => {
-  const expanded = dataList
-    .map((item: DataNode) => {
-      if (item.title.includes(value)) {
+  if (!value) {
+    expandedKeys.value = [];
+    return;
+  }
+  
+  const expanded = dataList.value
+    .map((item) => {
+      if (typeof item.title === 'string' && item.title.toLowerCase().indexOf(value.toLowerCase()) > -1) {
         return getParentKey(item.key, gData.value as TreeProps['treeData']);
       }
       return null;
     })
-    .filter((item, i, self) => item && self.indexOf(item) === i);
-  expandedKeys.value = expanded as (number | string)[];
-  searchValue.value = value;
+    .filter((item, i, self): item is string | number => 
+      item !== null && item !== undefined && self.indexOf(item) === i
+    );
+    
+  expandedKeys.value = expanded;
   autoExpandParent.value = true;
+});
+
+async function getTreeData() {
+  const { data = [] } = await postOrganizationUnitsTree();
+  gData.value = data;
+  dataList.value = [];
+  generateList(data as TreeProps['treeData']);
+}
+
+onMounted(() => {
+  getTreeData();
+  document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
 });
 
 const [OrgTreeAddModal, orgTreeAddModalApi] = useVbenModal({
