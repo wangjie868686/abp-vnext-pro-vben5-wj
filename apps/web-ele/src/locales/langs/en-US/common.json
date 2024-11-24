@@ -31,5 +31,6 @@
   "mesage405": "Incorrect request method!",
   "timeOut": "Request timed out!",
   "expandAll": "EexpandAll",
-  "collapseAll": "CollapseAll"
+  "collapseAll": "CollapseAll",
+  "pleaseSelect": "Please Select"
 }

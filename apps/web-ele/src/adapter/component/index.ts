@@ -19,6 +19,7 @@ import {
   ElInput,
   ElInputNumber,
   ElNotification,
+  ElOption,
   ElRadioGroup,
   ElSelect,
   ElSpace,
@@ -27,7 +28,20 @@ import {
   ElTreeSelect,
   ElUpload,
 } from 'element-plus';
-
+// ele 不支持类似antd一样的options
+// https://github.com/vbenjs/vue-vben-admin/issues/4619
+const customSelectRender = <T extends Component>(component: T) => {
+  return (props: any, { attrs }: Omit<SetupContext, 'expose'>) => {
+    const placeholder = props?.placeholder || $t('common.pleaseSelect');
+    const options = props.options;
+    return h(component, { ...props, ...attrs, placeholder }, () => {
+      // ElOption,
+      return options?.map((option: any) =>
+        h(ElOption, { label: option.label, value: option.value }),
+      );
+    });
+  };
+};
 const withDefaultPlaceholder = <T extends Component>(
   component: T,
   type: 'input' | 'select',
@@ -75,7 +89,8 @@ async function initComponentAdapter() {
     Input: withDefaultPlaceholder(ElInput, 'input'),
     InputNumber: withDefaultPlaceholder(ElInputNumber, 'input'),
     RadioGroup: ElRadioGroup,
-    Select: withDefaultPlaceholder(ElSelect, 'select'),
+    // Select: withDefaultPlaceholder(ElSelect, 'select'),
+    Select: customSelectRender(ElSelect),
     Space: ElSpace,
     Switch: ElSwitch,
     TimePicker: ElTimePicker,
