@@ -1,33 +1,45 @@
 import { useUserStore } from '@vben/stores';
 
-import { message as Message } from 'ant-design-vue';
-import axios from 'axios';
+import { ElMessage as Message } from 'element-plus';
 
 import { $t } from '#/locales';
-import { antdLocale } from '#/locales/index';
+import { elementLocale } from '#/locales/index';
 import { useAuthStore } from '#/store';
 
-const api = axios.create({
+import { client } from '../api-client/services.gen';
+
+client.setConfig({
   baseURL: import.meta.env.DEV
     ? '/proxy/'
     : import.meta.env.VITE_APP_API_ADDRESS,
   timeout: 1000 * 60,
-  responseType: 'blob', // 设置响应数据类型为blob
+  responseType: 'json',
+  throwOnError: true,
 });
 
-api.interceptors.request.use((request) => {
+client.instance.interceptors.request.use((request) => {
+  debugger;
   // 全局拦截请求发送前提交的参数
   const userStore = useUserStore();
-  const authStore = useAuthStore();
   const token = userStore.userInfo?.token;
   // 设置请求头
   if (request.headers) {
     request.headers.__tenant = userStore.tenant?.tenantId;
-    request.headers['accept-language'] = antdLocale.value.locale;
+    // todo vben5 没有提供统一获取当前语言的方式
+    request.headers['accept-language'] = elementLocale.value.name;
   }
   // 如果token过期，则跳转到登录页面
+  if (
+    request.url !== undefined &&
+    request.url.includes('/api/app/account/login')
+  ) {
+    return request;
+  }
+
   if (token && userStore.checkUserLoginExpire()) {
+    const authStore = useAuthStore();
     authStore.logout();
+    Message.warning($t('common.mesage401'));
 
     return Promise.reject($t('common.mesage401'));
   }
@@ -40,7 +52,7 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-api.interceptors.response.use(
+client.instance.interceptors.response.use(
   (response) => {
     /**
      * 全局拦截请求发送后返回的数据，如果数据有报错则在这做全局的错误提示
@@ -99,4 +111,4 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+export default client;

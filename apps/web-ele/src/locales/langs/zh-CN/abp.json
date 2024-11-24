@@ -1,0 +1,100 @@
+{
+  "login": {
+    "selectTenant": "请选择租户,非租户模式请忽略"
+  },
+  "menu": {
+    "system": "系统管理",
+    "user": "用户管理",
+    "role": "角色管理",
+    "tenant": "租户管理",
+    "tenantList": "租户列表",
+    "language": "语言管理",
+    "auditLog": "审计日志",
+    "loginLog": "登录日志",
+    "feature": "功能管理",
+    "setting": "设置管理",
+    "organizationUnit": "组织机构管理",
+    "languageText": "语言文本管理",
+    "dataDictionary": "数据字典管理",
+    "notification": "通告管理",
+    "message": "消息管理"
+  },
+  "user": {
+    "user": "用户",
+    "userName": "用户名",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "手机号",
+    "password": "密码",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "confirmNewPassword": "确认新密码",
+    "changePassword": "修改密码",
+    "status": "状态",
+    "comfirmPassword": "确认密码",
+    "comfirmDeleteUser": "确认删除用户",
+    "newPasswordAndConfirmPasswordNotMatch": "新密码与确认密码不匹配",
+    "newPasswordAndCurrentPasswordNotAlike": "新旧密码不能一样"
+  },
+  "role": {
+    "role": "角色",
+    "roleName": "角色名称",
+    "isDefault": "是否默认",
+    "permissions": "授权"
+  },
+  "log": {
+    "loginTime": "登录时间",
+    "userName": "用户名",
+    "tenant": "租户",
+    "executionTime": "执行时间",
+    "responseTime": "响应时间(毫秒)",
+    "clientIp": "客户端Ip",
+    "exception": "异常",
+    "applicationName": "应用名称",
+    "loginMode": "登录方式",
+    "loginUrl": "登录地址"
+  },
+  "message": {
+    "title": "标题",
+    "content": "内容",
+    "type": "类型",
+    "level": "级别",
+    "sender": "发送人",
+    "receiver": "接收人",
+    "isRead": "是否已读",
+    "sendMessage": "发送消息",
+    "sendNotification": "发送通告",
+    "setRead": "设置已读",
+    "confirmRead": "确认设置已读?",
+    "read": "已读",
+    "unread": "未读"
+  },
+  "language": {
+    "language": "语言名称",
+    "showLanguage": "显示名称",
+    "icon": "图标",
+    "resourceName": "资源名称"
+  },
+  "dataDictionary": {
+    "codeName": "编码|名称",
+    "code": "编码",
+    "name": "名称",
+    "order": "排序",
+    "status": "状态",
+    "description": "描述",
+    "type": "字典类型"
+  },
+  "organizationunit": {
+    "organizationunit": "组织机构",
+    "add": "新增根机构",
+    "member": "成员",
+    "role": "角色",
+    "userName": "用户名",
+    "email": "邮箱",
+    "name": "名称",
+    "selectNode": "请先选择一个节点再进行操作"
+  },
+  "tenant": {
+    "notExist": "租户不存在"
+  }
+}

@@ -1,10 +1,11 @@
 import { defineConfig } from '@vben/vite-config';
-import { loadEnv } from 'vite'
+
+import { loadEnv } from 'vite';
 
 export default defineConfig(async (config) => {
-  const { mode, command } = config as { mode: string; command: string };
-  const env = loadEnv(mode, process.cwd())
-  console.log(env, '-----------env', command)
+  const { command, mode } = config as { command: string; mode: string };
+  const env = loadEnv(mode, process.cwd());
+  console.log(env, '-----------env', command);
   return {
     application: {},
     vite: {
