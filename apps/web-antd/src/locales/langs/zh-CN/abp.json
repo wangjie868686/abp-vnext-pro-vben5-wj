@@ -95,6 +95,9 @@
     "selectNode": "请先选择一个节点再进行操作"
   },
   "tenant": {
-    "notExist": "租户不存在"
+    "notExist": "租户不存在",
+    "name": "租户名称",
+    "adminEmail": "管理员邮箱",
+    "adminPassword": "管理员密码"
   }
 }
