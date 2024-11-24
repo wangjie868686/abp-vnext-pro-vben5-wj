@@ -16,6 +16,7 @@ import {
   postTenantsPage,
   postTenantsUpdate,
 } from '#/api-client';
+import { $t } from '#/locales';
 
 import {
   addTenantFormSchema,
@@ -120,7 +121,9 @@ async function submit() {
     tenantModalApi.setState({ loading: true, confirmLoading: true });
     const resp = await api({ body: formValues });
     if (resp.status === 200 || resp.status === 204) {
-      Message.success(editRow.value.id ? '修改成功' : '新增成功');
+      Message.success(
+        editRow.value.id ? $t('common.editSuccess') : $t('common.addSuccess'),
+      );
       tenantModalApi.close();
       gridApi.reload();
     }
@@ -136,12 +139,13 @@ async function onEdit(record: any) {
 }
 
 function onDel(row: any) {
+  const message = `${$t('common.confirmDelete') + row.name}?`;
   Modal.confirm({
-    title: `确认删除租户 ${row.name} 吗？`,
+    title: message,
     onOk: async () => {
       await postTenantsDelete({ body: { id: row.id } });
       gridApi.reload();
-      Message.success('删除成功');
+      Message.success($t('common.deleteSuccess'));
     },
   });
 }
@@ -161,7 +165,7 @@ const openAddModal = async () => {
             v-access:code="'AbpTenantManagement.Tenants.Create'"
             @click="openAddModal"
           >
-            新增
+            {{ $t('common.add') }}
           </Button>
         </Space>
       </template>
@@ -173,7 +177,7 @@ const openAddModal = async () => {
             v-access:code="'AbpTenantManagement.Tenants.Update'"
             @click="onEdit(row)"
           >
-            编辑
+            {{ $t('common.edit') }}
           </Button>
           <Button
             danger
@@ -182,14 +186,14 @@ const openAddModal = async () => {
             v-access:code="'AbpTenantManagement.Tenants.Delete'"
             @click="onDel(row)"
           >
-            删除
+            {{ $t('common.delete') }}
           </Button>
         </Space>
       </template>
     </Grid>
 
     <TenantModal
-      :title="editRow.id ? '编辑租户' : '新增租户'"
+      :title="editRow.id ? $t('common.edit') : $t('common.add')"
       class="w-[600px]"
     >
       <component :is="editRow.id ? EditForm : AddForm" />

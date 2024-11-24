@@ -1,18 +1,20 @@
 import { z } from '@vben/common-ui';
 
+import { $t } from '#/locales';
+
 export const querySchema: any = [
   {
     component: 'Input',
     fieldName: 'filter',
-    label: '租户名称',
+    label: $t('abp.tenant.name'),
   },
 ];
 
 export const tableSchema: any = [
-  { title: '序号', type: 'seq', width: 50 },
-  { field: 'name', title: '租户名称', minWidth: '150' },
+  { title: $t('common.seq'), type: 'seq', width: 50 },
+  { field: 'name', title: $t('abp.tenant.name'), minWidth: '150' },
   {
-    title: '操作',
+    title: $t('common.action'),
     field: 'action',
     fixed: 'right',
     width: '150',
@@ -25,22 +27,28 @@ export const addTenantFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'name',
-    label: '租户名称',
-    rules: z.string().min(1, { message: '请输入租户名称' }),
+    label: $t('abp.tenant.name'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.tenant.name') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'adminEmailAddress',
-    label: '管理员邮箱',
-    rules: z.string().min(1, { message: '请输入管理员邮箱' }),
+    label: $t('abp.tenant.adminEmail'),
+    rules: z.string().min(1, {
+      message: $t('common.pleaseInput') + $t('abp.tenant.adminEmail'),
+    }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'adminPassword',
-    label: '管理员密码',
-    rules: z.string().min(1, { message: '请输入管理员密码' }),
+    label: $t('abp.tenant.adminPassword'),
+    rules: z.string().min(1, {
+      message: $t('common.pleaseInput') + $t('abp.tenant.adminPassword'),
+    }),
   },
 ];
 
@@ -58,7 +66,9 @@ export const editTenantFormSchemaEdit: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'name',
-    label: '租户名称',
-    rules: z.string().min(1, { message: '请输入租户名称' }),
+    label: $t('abp.tenant.name'),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.tenant.name') }),
   },
 ];

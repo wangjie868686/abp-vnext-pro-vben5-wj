@@ -271,11 +271,11 @@ export const queryMessageSchema: any = [
     componentProps: {
       options: [
         {
-          label: '是',
+          label: $t('common.yes'),
           value: true,
         },
         {
-          label: '否',
+          label: $t('common.no'),
           value: false,
         },
       ],
