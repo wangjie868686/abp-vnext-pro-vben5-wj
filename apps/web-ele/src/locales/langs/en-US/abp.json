@@ -95,6 +95,9 @@
     "selectNode": "Select a node to operate on"
   },
   "tenant": {
-    "notExist": "Tenant Does not exist"
+    "notExist": "Tenant Does not exist",
+    "name": "Tenant Name",
+    "adminEmail": "Admin Email",
+    "adminPassword": "Admin Password"
   }
 }

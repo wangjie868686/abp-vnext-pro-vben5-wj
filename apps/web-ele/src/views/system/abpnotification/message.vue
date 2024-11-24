@@ -10,7 +10,7 @@ import { Page, useVbenModal } from '@vben/common-ui';
 import {
   ElButton as Button,
   ElMessage as Message,
-  ElNotification as Modal,
+  ElMessageBox as Modal,
   ElSpace as Space,
   ElTag as Tag,
 } from 'element-plus';
@@ -206,13 +206,10 @@ const onRead = (row: any) => {
     // Message.info('该消息已读,不需要重复设置');
     return;
   }
-  Modal.confirm({
-    title: $t('abp.message.confirmRead'),
-    onOk: async () => {
-      await postNotificationRead({ body: { id: row.id } });
-      gridApi.reload();
-      Message.success($t('common.success'));
-    },
+  Modal.confirm($t('abp.message.confirmRead')).then(async () => {
+    await postNotificationRead({ body: { id: row.id } });
+    gridApi.reload();
+    Message.success($t('common.success'));
   });
 };
 </script>
