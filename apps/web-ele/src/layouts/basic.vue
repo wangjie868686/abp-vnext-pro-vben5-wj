@@ -35,6 +35,7 @@ import { useSignalR } from '#/hooks/useSignalR';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+import NotifyItem from './NotifyItem.vue';
 
 const notifications = ref<NotificationItem[]>([]);
 function convertToNotificationItem(message: any): NotificationItem {
