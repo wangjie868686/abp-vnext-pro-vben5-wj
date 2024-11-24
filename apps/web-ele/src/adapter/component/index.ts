@@ -27,6 +27,7 @@ import {
   ElTimePicker,
   ElTreeSelect,
   ElUpload,
+  ElDatePicker,
 } from 'element-plus';
 // ele 不支持类似antd一样的options
 // https://github.com/vbenjs/vue-vben-admin/issues/4619
@@ -67,6 +68,7 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
+  | 'ElDatePicker'
   | BaseFormComponentType;
 
 async function initComponentAdapter() {
@@ -96,6 +98,7 @@ async function initComponentAdapter() {
     TimePicker: ElTimePicker,
     TreeSelect: withDefaultPlaceholder(ElTreeSelect, 'select'),
     Upload: ElUpload,
+    ElDatePicker: ElDatePicker,
   };
 
   // 将组件注册到全局共享状态中

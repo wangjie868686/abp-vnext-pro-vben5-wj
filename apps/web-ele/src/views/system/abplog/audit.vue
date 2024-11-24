@@ -38,6 +38,7 @@ const gridOptions: VxeGridProps<any> = {
             startCreationTime: formValues.time[0],
             endCreationTime: formValues.time[1],
           };
+          delete formValues.time;
         }
         const { data } = await postAuditLogsPage({
           body: {
