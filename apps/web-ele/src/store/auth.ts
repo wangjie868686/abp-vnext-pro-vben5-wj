@@ -38,7 +38,6 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
-      debugger;
       //  判断是否租户登录
       if (params.tenant) {
         const tenantResult = await postTenantsFind({

@@ -18,7 +18,6 @@ client.setConfig({
 });
 
 client.instance.interceptors.request.use((request) => {
-  debugger;
   // 全局拦截请求发送前提交的参数
   const userStore = useUserStore();
   const token = userStore.userInfo?.token;

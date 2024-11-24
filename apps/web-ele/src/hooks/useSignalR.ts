@@ -1,7 +1,7 @@
 import { useUserStore } from '@vben/stores';
 
 import * as signalR from '@microsoft/signalr';
-import { notification } from 'ant-design-vue';
+import { ElNotification as notification } from 'element-plus';
 
 let connection: signalR.HubConnection;
 export function useSignalR() {
