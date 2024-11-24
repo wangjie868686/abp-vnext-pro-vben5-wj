@@ -13,6 +13,7 @@ import {
   postNotificationNotificationPage,
   postNotificationRead,
 } from '#/api-client';
+import { $t } from '#/locales';
 
 defineOptions({
   name: 'AbpNotifyItem',
@@ -33,12 +34,12 @@ const formOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'title',
-      label: '标题',
+      label: $t('abp.message.title'),
     },
     {
       component: 'Input',
       fieldName: 'content',
-      label: '内容',
+      label: $t('abp.message.content'),
     },
     {
       component: 'Select',
@@ -47,15 +48,15 @@ const formOptions: VbenFormProps = {
       componentProps: {
         options: [
           {
-            label: '警告',
+            label: $t('common.warning'),
             value: 10,
           },
           {
-            label: '正常',
+            label: $t('common.info'),
             value: 20,
           },
           {
-            label: '错误',
+            label: $t('common.error'),
             value: 30,
           },
         ],
@@ -65,15 +66,15 @@ const formOptions: VbenFormProps = {
     {
       component: 'Select',
       fieldName: 'read',
-      label: '是否已读',
+      label: $t('abp.message.isRead'),
       componentProps: {
         options: [
           {
-            label: '是',
+            label: $t('common.yes'),
             value: true,
           },
           {
-            label: '否',
+            label: $t('common.no'),
             value: false,
           },
         ],
@@ -86,34 +87,42 @@ const userStore = useUserStore();
 const gridOptions: VxeGridProps<any> = {
   checkboxConfig: {},
   columns: [
-    { title: '序号', type: 'seq', width: 50 },
-    { field: 'title', title: '标题', minWidth: '150' },
-    { field: 'content', title: '内容', minWidth: '150' },
+    { title: $t('common.seq'), type: 'seq', width: 50 },
+    { field: 'title', title: $t('abp.message.title'), minWidth: '150' },
+    { field: 'content', title: $t('abp.message.content'), minWidth: '150' },
     // { field: 'messageTypeName', title: '类型', minWidth: '150' },
     {
       field: 'messageLevelName',
-      title: '级别',
+      title: $t('abp.message.level'),
       minWidth: '150',
       slots: { default: 'messageLevel' },
     },
-    { field: 'senderUserName', title: '发送人', minWidth: '150' },
-    { field: 'receiveUserName', title: '接收人', minWidth: '150' },
+    {
+      field: 'senderUserName',
+      title: $t('abp.message.sender'),
+      minWidth: '150',
+    },
+    {
+      field: 'receiveUserName',
+      title: $t('abp.message.receiver'),
+      minWidth: '150',
+    },
     {
       field: 'read',
-      title: '是否已读',
+      title: $t('abp.message.isRead'),
       minWidth: '150',
       slots: { default: 'read' },
     },
     {
       field: 'creationTime',
-      title: '创建时间',
+      title: $t('common.createTime'),
       minWidth: '150',
       formatter: ({ cellValue }) => {
         return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss');
       },
     },
     {
-      title: '操作',
+      title: $t('common.action'),
       field: 'action',
       fixed: 'right',
       minWidth: '150',
@@ -149,23 +158,23 @@ const gridOptions: VxeGridProps<any> = {
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 
 const onRead = (row: any) => {
-  if (row.read) {
-    Message.info('该消息已读,不需要重复设置');
-    return;
-  }
+  // if (row.read) {
+  //   Message.info('该消息已读,不需要重复设置');
+  //   return;
+  // }
   Modal.confirm({
-    title: `确认设置已读吗？`,
+    title: $t('abp.message.confirmRead'),
     onOk: async () => {
       await postNotificationRead({ body: { id: row.id } });
       gridApi.reload();
-      Message.success('设置成功');
+      Message.success($t('common.success'));
     },
   });
 };
 </script>
 
 <template>
-  <Page auto-content-height title="消息列表">
+  <Page auto-content-height>
     <Grid>
       <template #messageLevel="{ row }">
         <Tag v-if="row.messageLevel === 10" color="yellow">
@@ -179,14 +188,14 @@ const onRead = (row: any) => {
         </Tag>
       </template>
       <template #read="{ row }">
-        <Tag v-if="row.read" color="green"> 已读 </Tag>
-        <Tag v-else color="red"> 未读 </Tag>
+        <Tag v-if="row.read" color="green">{{ $t('abp.message.read') }} </Tag>
+        <Tag v-else color="red"> {{ $t('abp.message.unread') }} </Tag>
       </template>
 
       <template #action="{ row }">
         <Space>
           <Button size="small" type="primary" @click="onRead(row)">
-            设置已读
+            {{ $t('abp.message.setRead') }}
           </Button>
         </Space>
       </template>
