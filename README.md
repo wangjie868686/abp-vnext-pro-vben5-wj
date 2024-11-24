@@ -1,152 +1,110 @@
-<div align="center"> <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="215" src="https://unpkg.com/@vbenjs/static-source@0.1.7/source/logo-v1.webp"> </a> <br> <br>
-
-[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
-
-<h1>Vue Vben Admin</h1>
-</div>
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vbenjs_vue-vben-admin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vbenjs_vue-vben-admin) ![codeql](https://github.com/vbenjs/vue-vben-admin/actions/workflows/codeql.yml/badge.svg) ![build](https://github.com/vbenjs/vue-vben-admin/actions/workflows/build.yml/badge.svg) ![ci](https://github.com/vbenjs/vue-vben-admin/actions/workflows/ci.yml/badge.svg) ![deploy](https://github.com/vbenjs/vue-vben-admin/actions/workflows/deploy.yml/badge.svg)
-
-**English** | [中文](./README.zh-CN.md) | [日本語](./README.ja-JP.md)
-
-## Introduction
-
-Vue Vben Admin is a free and open source middle and back-end template. Using the latest `vue3`, `vite`, `TypeScript` and other mainstream technology development, the out-of-the-box middle and back-end front-end solutions can also be used for learning reference.
-
-## Upgrade Notice
-
-This is the latest version, 5.0, and it is not compatible with previous versions. If you are starting a new project, it is recommended to use the latest version. If you wish to view the old version, please use the [v2 branch](https://github.com/vbenjs/vue-vben-admin/tree/v2).
-
-## Feature
-
-- **Latest Technology Stack**: Developed with cutting-edge front-end technologies like Vue 3 and Vite
-- **TypeScript**: A language for application-scale JavaScript
-- **Themes**: Multiple theme colors available with customizable options
-- **Internationalization**: Comprehensive built-in internationalization support
-- **Permissions**: Built-in solution for dynamic route-based permission generation
-
-## Preview
-
-- [Vben Admin](https://vben.pro/) - Full version Chinese site
-
-Test Account: vben/123456
-
 <p align="center">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview1.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview2.png">
-    <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview3.png">
+  <a href="https://github.com/WangJunZzz/abp-vnext-pro">
+      <img src="https://blog-resouce.oss-cn-shenzhen.aliyuncs.com/images/abp/06.jpg">
+  </a>
 </p>
 
-### Use Gitpod
+<h1 align="center">Abp Vnext Pro</h1>
 
-Open the project in Gitpod (free online dev environment for GitHub) and start coding immediately.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/vbenjs/vue-vben-admin)
 
-## Documentation
+## 🔗 链接
 
-[Document](https://doc.vben.pro/)
+- [AbpPro Vben2预览](http://182.43.18.151:44318/)
+- [AbpPro Vben5预览](http://182.43.18.151:44320/)
+- [代码生成器预览](http://182.43.18.151:44311/)
+- [文档地址](http://doc.cncore.club/)
+- [国内文档地址](http://doc.china.cncore.club:81/)
+- [视频教程](https://www.bilibili.com/video/BV1pt4y1E7aZ)
+- [代码生成器仓库地址](https://github.com/WangJunZzz/abp-vnext-pro-suite)
 
-## Install and use
 
-- Get the project code
+## 📦 快速开始
 
+- 安装Cli
 ```bash
-git clone https://github.com/vbenjs/vue-vben-admin.git
+dotnet tool install Lion.AbpPro.Cli -g
 ```
 
-- Installation dependencies
-
+- 更新Cli
 ```bash
-cd vue-vben-admin
-
-corepack enable
-
-pnpm install
+dotnet tool update Lion.AbpPro.Cli -g
 ```
 
-- run
+### 三个项目模板
+- 源码版本
 
 ```bash
-pnpm dev
+lion.abp new -t pro -c 公司名称 -p 项目名称 -v 版本(默认LastRelease) -o 默认当前控制台执行目录
 ```
 
-- build
+- nuget版本
 
 ```bash
-pnpm build
+lion.abp new -t pro.all -c 公司名称 -p 项目名称 -v 版本(默认LastRelease) -o 默认当前控制台执行目录
 ```
 
-## Change Log
 
-[CHANGELOG](https://github.com/vbenjs/vue-vben-admin/releases)
+- 模块
 
-## How to contribute
+```bash
+lion.abp new -t pro.module -c 公司名称 -p 项目名称 -v 版本(默认LastRelease) -o 默认当前控制台执行目录
+```
 
-You are very welcome to join！[Raise an issue](https://github.com/anncwb/vue-vben-admin/issues/new/choose) Or submit a Pull Request。
+
+## ✨ 系统功能
+
+- [x] 用户管理
+- [x] 角色管理
+- [x] 审计日志
+- [x] 后台任务
+- [x] 集成事件
+- [x] SinglaR 消息通知(站内信)
+- [x] 多语言
+- [x] 数据字典
+- [x] 容器化部署
+- [x] 单元测试
+- [x] ES 日志
+- [x] Setting 管理
+- [x] 多租户
+- [x] 文件管理
+
+
+## 🤝 如何贡献
+
+非常欢迎你的加入！提一个 Issue 或者提交一个 Pull Request。
 
 **Pull Request:**
 
-1. Fork code!
-2. Create your own branch: `git checkout -b feat/xxxx`
-3. Submit your changes: `git commit -am 'feat(function): add xxxxx'`
-4. Push your branch: `git push origin feat/xxxx`
-5. submit`pull request`
+1. Fork 代码!
+2. 创建自己的分支: `git checkout -b feat/xxxx`
+3. 提交你的修改: `git commit -am 'feat(function): add xxxxx'`
+4. 推送您的分支: `git push origin feat/xxxx`
+5. 提交`pull request`
 
-## Git Contribution submission specification
+## Git 贡献提交规范
 
-- reference [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) specification ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))
+- 参考
+  - `feat` 增加新功能
+  - `fix` 修复问题/BUG
+  - `style` 代码风格相关无影响运行结果的
+  - `perf` 优化/性能提升
+  - `refactor` 重构
+  - `revert` 撤销修改
+  - `test` 测试相关
+  - `docs` 文档/注释
+  - `chore` 依赖更新/脚手架配置修改等
+  - `workflow` 工作流改进
+  - `ci` 持续集成
+  - `types` 类型定义文件更改
+  - `wip` 开发中
 
-  - `feat` Add new features
-  - `fix` Fix the problem/BUG
-  - `style` The code style is related and does not affect the running result
-  - `perf` Optimization/performance improvement
-  - `refactor` Refactor
-  - `revert` Undo edit
-  - `test` Test related
-  - `docs` Documentation/notes
-  - `chore` Dependency update/scaffolding configuration modification etc.
-  - `ci` Continuous integration
-  - `types` Type definition file changes
-  - `wip` In development
+## ✒️交流
+- QQ 1群：<s>686933575(已满)</s> 
+- QQ 2群：862717726
 
-## Browser support
+## 💖赞助
+- Star就是对该项目的最大肯定!
+- 如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
+![](https://blog-resouce.oss-cn-shenzhen.aliyuncs.com/images/donate.png)
 
-The `Chrome 80+` browser is recommended for local development
-
-Support modern browsers, not IE
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| :-: | :-: | :-: | :-: | :-: |
-| not support | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
-
-## Maintainer
-
-[@Vben](https://github.com/anncwb)
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=vbenjs/vue-vben-admin&type=Date)](https://star-history.com/#vbenjs/vue-vben-admin&Date)
-
-## Donate
-
-If you think this project is helpful to you, you can help the author buy a cup of coffee to show your support!
-
-![donate](https://unpkg.com/@vbenjs/static-source@0.1.7/source/sponsor.png)
-
-<a style="display: block;width: 100px;height: 50px;line-height: 50px; color: #fff;text-align: center; background: #408aee;border-radius: 4px;" href="https://www.paypal.com/paypalme/cvvben">Paypal Me</a>
-
-## Contributor
-
-<a href="https://github.com/vbenjs/vue-vben-admin/graphs/contributors">
-  <img alt="Contributors"
-        src="https://opencollective.com/vbenjs/contributors.svg?button=false" />
-</a>
-
-## Discord
-
-- [Github Discussions](https://github.com/anncwb/vue-vben-admin/discussions)
-
-## License
-
-[MIT © Vben-2020](./LICENSE)
