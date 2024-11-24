@@ -86,26 +86,7 @@ const routes: RouteRecordRaw[] = [
       //     icon: 'ant-design:file-protect-outlined',
       //   },
       // },
-      // {
-      //   name: 'AboLanguage',
-      //   path: 'language',
-      //   component: () => import('#/views/system/abplanguage/language.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.language'),
-      //     authority: ['AbpIdentity.Languages'],
-      //     icon: 'ant-design:read-outlined',
-      //   },
-      // },
-      // {
-      //   name: 'AboLanguageText',
-      //   path: 'languagetext',
-      //   component: () => import('#/views/system/abplanguage/languagetext.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.languageText'),
-      //     authority: ['AbpIdentity.LanguageTexts'],
-      //     icon: 'ant-design:font-size-outlined',
-      //   },
-      // },
+
       // {
       //   name: 'DataDictionary',
       //   path: 'data-dictionary',
@@ -116,6 +97,27 @@ const routes: RouteRecordRaw[] = [
       //     icon: 'ant-design:table-outlined',
       //   },
       // },
+
+      {
+        name: 'AboLanguage',
+        path: 'language',
+        component: () => import('#/views/system/abplanguage/language.vue'),
+        meta: {
+          title: $t('abp.menu.language'),
+          authority: ['AbpIdentity.Languages'],
+          icon: 'ant-design:read-outlined',
+        },
+      },
+      {
+        name: 'AboLanguageText',
+        path: 'languagetext',
+        component: () => import('#/views/system/abplanguage/languagetext.vue'),
+        meta: {
+          title: $t('abp.menu.languageText'),
+          authority: ['AbpIdentity.LanguageTexts'],
+          icon: 'ant-design:font-size-outlined',
+        },
+      },
       {
         name: 'AbpNotification',
         path: 'notification',
