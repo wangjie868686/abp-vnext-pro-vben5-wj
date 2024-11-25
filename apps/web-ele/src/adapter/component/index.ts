@@ -28,7 +28,6 @@ import {
   ElTimePicker,
   ElTreeSelect,
   ElUpload,
-  ElDatePicker,
 } from 'element-plus';
 // ele 不支持类似antd一样的options
 // https://github.com/vbenjs/vue-vben-admin/issues/4619
