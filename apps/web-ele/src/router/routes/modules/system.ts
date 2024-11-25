@@ -26,16 +26,16 @@ const routes: RouteRecordRaw[] = [
           authority: ['AbpIdentity.Users'],
         },
       },
-      // {
-      //   name: 'abpRole',
-      //   path: 'role',
-      //   component: () => import('#/views/system/abprole/index.vue'),
-      //   meta: {
-      //     icon: 'oui:app-users-roles',
-      //     title: $t('abp.menu.role'),
-      //     authority: ['AbpIdentity.Roles'],
-      //   },
-      // },
+      {
+        name: 'abpRole',
+        path: 'role',
+        component: () => import('#/views/system/abprole/index.vue'),
+        meta: {
+          icon: 'oui:app-users-roles',
+          title: $t('abp.menu.role'),
+          authority: ['AbpIdentity.Roles'],
+        },
+      },
       // {
       //   name: 'OrganizationUnit',
       //   path: 'organizationUnit',
