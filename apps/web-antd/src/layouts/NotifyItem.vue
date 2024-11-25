@@ -44,7 +44,7 @@ const formOptions: VbenFormProps = {
     {
       component: 'Select',
       fieldName: 'messageLevel',
-      label: '级别',
+      label: $t('abp.message.level'),
       componentProps: {
         options: [
           {
