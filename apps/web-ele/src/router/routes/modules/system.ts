@@ -46,16 +46,16 @@ const routes: RouteRecordRaw[] = [
       //     icon: 'ant-design:team-outlined',
       //   },
       // },
-      // {
-      //   name: 'abpSetting',
-      //   path: 'setting',
-      //   component: () => import('#/views/system/abpsetting/index.vue'),
-      //   meta: {
-      //     icon: 'uil:setting',
-      //     title: $t('abp.menu.setting'),
-      //     authority: ['AbpIdentity.Setting'],
-      //   },
-      // },
+      {
+        name: 'abpSetting',
+        path: 'setting',
+        component: () => import('#/views/system/abpsetting/index.vue'),
+        meta: {
+          icon: 'uil:setting',
+          title: $t('abp.menu.setting'),
+          authority: ['AbpIdentity.Setting'],
+        },
+      },
       {
         name: 'abpfeature',
         path: 'Feature',

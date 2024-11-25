@@ -54,7 +54,7 @@ onMounted(async () => {
 });
 
 const save = async (item: any) => {
-  const features = item.features?.map((e) => {
+  const features = item.features?.map((e: any) => {
     let value = e.value;
     if (e.valueType.name === 'ToggleStringValueType') {
       value = e.convertvalue.toString();
