@@ -125,7 +125,7 @@ const editDataDictionary = (row: Record<string, any>) => {
 
 const deleteDataDictionary = async (row: Record<string, any>) => {
   Modal.confirm({
-    title: `${$t('common.confirmDelete')}${row.name} ?`,
+    title: `${$t('common.confirmDelete')}${row.displayText} ?`,
     async onOk() {
       await postDataDictionaryDeleteDataDictionaryType({
         body: { id: row.id },
@@ -265,7 +265,7 @@ const editDetailRow = (row: Record<string, any>) => {
 
 const removeDetailRow = async (row: Record<string, any>) => {
   Modal.confirm({
-    title: `${$t('common.confirmDelete')}${row.name} ?`,
+    title: `${$t('common.confirmDelete')}${row.displayText} ?`,
     async onOk() {
       await postDataDictionaryDelete({
         body: {
@@ -353,7 +353,7 @@ const removeDetailRow = async (row: Record<string, any>) => {
               <Button type="link" @click="editDetailRow(row)">
                 {{ $t('common.edit') }}
               </Button>
-              <Button type="link" @click="removeDetailRow(row)">
+              <Button type="link" danger @click="removeDetailRow(row)">
                 {{ $t('common.delete') }}
               </Button>
             </Space>
