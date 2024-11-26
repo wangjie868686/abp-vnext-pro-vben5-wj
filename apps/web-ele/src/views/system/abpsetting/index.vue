@@ -12,6 +12,7 @@ import {
   ElMessage as Message,
   ElTabPane as TabPane,
   ElTabs as Tabs,
+  ElCheckbox as Checkbox,
 } from 'element-plus';
 
 import { postSettingsAll, postSettingsUpdate } from '#/api-client';
