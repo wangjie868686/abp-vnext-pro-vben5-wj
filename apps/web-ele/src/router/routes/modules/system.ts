@@ -66,17 +66,16 @@ const routes: RouteRecordRaw[] = [
           authority: ['AbpIdentity.FeatureManagement'],
         },
       },
-
-      // {
-      //   name: 'DataDictionary',
-      //   path: 'data-dictionary',
-      //   component: () => import('#/views/system/abpdatadictionary/index.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.dataDictionary'),
-      //     authority: ['AbpIdentity.DataDictionaryManagement'],
-      //     icon: 'ant-design:table-outlined',
-      //   },
-      // },
+      {
+        name: 'DataDictionary',
+        path: 'data-dictionary',
+        component: () => import('#/views/system/abpdatadictionary/index.vue'),
+        meta: {
+          title: $t('abp.menu.dataDictionary'),
+          authority: ['AbpIdentity.DataDictionaryManagement'],
+          icon: 'ant-design:table-outlined',
+        },
+      },
       {
         name: 'AbpAuditLog',
         path: 'auditlog',
