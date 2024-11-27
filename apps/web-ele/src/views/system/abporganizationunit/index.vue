@@ -63,17 +63,23 @@ const contextMenuOptions = [
   { label: $t('common.delete'), key: 'delete' },
 ];
 
-function onRightClick(event) {
-  console.log(event);
+function onRightClick(event: MouseEvent, node: any, nodeRef: any) {
   event.preventDefault();
   event.stopPropagation();
+  
+  // 更新当前选中节点信息
+  currentSelectedKey.value = node.key;
+  parentDisplayName.value = node.label;
+
   if (!currentSelectedKey.value) {
     ElMessage({
       message: $t('abp.organizationunit.selectNode'),
       type: 'warning',
-    })
+    });
     return;
   }
+
+  // 设置右键菜单位置
   contextMenu.visible = true;
   contextMenu.x = event.clientX;
   contextMenu.y = event.clientY;
@@ -90,21 +96,28 @@ const onContextMenuSelect = async (key: string) => {
       break;
     }
     case 'delete': {
-      Modal.confirm({
-        title: `${$t('common.confirmDelete')}?`,
-        onOk: async () => {
-          await postOrganizationUnitsDelete({
-            body: {
-              id: currentSelectedKey.value,
-            },
-          });
-          ElMessage({
-            message: $t('common.success'),
-            type: 'success',
-          })
-          currentSelectedKey.value = '';
-          getTreeData();
-        },
+      ElMessageBox.confirm(
+        `${$t('common.confirmDelete')}?`,
+        $t('common.warning'),
+        {
+          confirmButtonText: $t('common.ok'),
+          cancelButtonText: $t('common.cancel'),
+          type: 'warning',
+        }
+      ).then(async () => {
+        await postOrganizationUnitsDelete({
+          body: {
+            id: currentSelectedKey.value,
+          },
+        });
+        ElMessage({
+          message: $t('common.success'),
+          type: 'success',
+        });
+        currentSelectedKey.value = '';
+        getTreeData();
+      }).catch(() => {
+        // 取消删除操作
       });
       break;
     }
@@ -151,7 +164,7 @@ const getParentKey = (
   let parentKey;
   for (const node of tree) {
     if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
+      if (node.children.some((item: { key: string | number }) => item.key === key)) {
         parentKey = node.key;
       } else if (getParentKey(key, node.children)) {
         parentKey = getParentKey(key, node.children);
@@ -161,34 +174,50 @@ const getParentKey = (
   return parentKey;
 };
 
-// 获取所有节点的key
-const getAllKeys = (tree: any): (number | string)[] => {
-  const keys: (number | string)[] = [];
-  const traverse = (nodes) => {
-    if (!nodes) return;
-    nodes.forEach((node) => {
-      if (node.key) {
-        keys.push(node.key);
-      }
-      if (node.children) {
-        traverse(node.children);
-      }
-    });
-  };
-  traverse(tree);
+// 获取所有节点的 key
+const getAllKeys = (nodes: any[]): (string | number)[] => {
+  let keys: (string | number)[] = [];
+  nodes.forEach(node => {
+    if (node.key) {
+      keys.push(node.key);
+    }
+    if (node.children && node.children.length) {
+      keys = keys.concat(getAllKeys(node.children));
+    }
+  });
   return keys;
 };
 
 // 展开所有节点
 const expandAll = () => {
-  expandedKeys.value = getAllKeys(gData.value);
-  autoExpandParent.value = true;
+  if (orgTreeRef.value) {
+    // 递归设置所有节点的展开状态
+    const setExpand = (data: any[]) => {
+      data.forEach(node => {
+        orgTreeRef.value!.store.nodesMap[node.key].expanded = true;
+        if (node.children && node.children.length) {
+          setExpand(node.children);
+        }
+      });
+    };
+    setExpand(gData.value);
+  }
 };
 
 // 折叠所有节点
 const collapseAll = () => {
-  expandedKeys.value = [];
-  autoExpandParent.value = true;
+  if (orgTreeRef.value) {
+    // 递归设置所有节点的折叠状态
+    const setCollapse = (data: any[]) => {
+      data.forEach(node => {
+        orgTreeRef.value!.store.nodesMap[node.key].expanded = false;
+        if (node.children && node.children.length) {
+          setCollapse(node.children);
+        }
+      });
+    };
+    setCollapse(gData.value);
+  }
 };
 
 interface Tree {
@@ -623,12 +652,8 @@ const onExpand = (keys: (string | number)[], info: any) => {
           :data="gData"
           :filter-node-method="filterNode"
           :highlight-current="true"
-          :auto-expand-parent="autoExpandParent"
-          :default-expanded-keys="expandedKeys"
           @node-contextmenu="onRightClick"
           @node-click="onSelect"
-
-          @expand="onExpand"
         >
           <template #title="{ title }">
             <span v-if="title.indexOf(searchValue) > -1">
