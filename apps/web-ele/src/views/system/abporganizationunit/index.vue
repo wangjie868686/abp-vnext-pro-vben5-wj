@@ -35,15 +35,11 @@ import {
 } from '#/api-client/index';
 import { $t } from '#/locales';
 
-import ContextMenu from './ContextMenu.vue';
+// import ContextMenu from './ContextMenu.vue';
 import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
 import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
-// const { isDark } = usePreferences();
-const expandedKeys = ref<(number | string)[]>([]);
 const searchValue = ref<string>('');
-const autoExpandParent = ref<boolean>(true);
 const gData = ref<Array<TreeOutput>>([]);
-
 const activeKey = ref('1');
 const currentSelectedKey = ref('');
 const parentDisplayName = ref('');
@@ -55,6 +51,7 @@ const contextMenu = reactive({
   visible: false,
   x: 0,
   y: 0,
+  node: null as any,
 });
 
 const contextMenuOptions = [
@@ -63,26 +60,18 @@ const contextMenuOptions = [
   { label: $t('common.delete'), key: 'delete' },
 ];
 
-function onRightClick(event: MouseEvent, node: any, nodeRef: any) {
+function onRightClick(event: MouseEvent, node: any) {
   event.preventDefault();
   event.stopPropagation();
-  
-  // 更新当前选中节点信息
+
   currentSelectedKey.value = node.key;
-  parentDisplayName.value = node.label;
+  parentDisplayName.value = node.label || node.title;
 
-  if (!currentSelectedKey.value) {
-    ElMessage({
-      message: $t('abp.organizationunit.selectNode'),
-      type: 'warning',
-    });
-    return;
-  }
-
-  // 设置右键菜单位置
+  // 设置右键菜单位置和节点信息
   contextMenu.visible = true;
   contextMenu.x = event.clientX;
   contextMenu.y = event.clientY;
+  contextMenu.node = node;
 }
 
 const onContextMenuSelect = async (key: string) => {
@@ -100,8 +89,6 @@ const onContextMenuSelect = async (key: string) => {
         `${$t('common.confirmDelete')}?`,
         $t('common.warning'),
         {
-          confirmButtonText: $t('common.ok'),
-          cancelButtonText: $t('common.cancel'),
           type: 'warning',
         }
       ).then(async () => {
@@ -133,8 +120,10 @@ const onContextMenuSelect = async (key: string) => {
   closeContextMenu();
 };
 
-const handleClickOutside = () => {
-  if (contextMenu.visible) {
+const handleClickOutside = (event: MouseEvent) => {
+  // 检查点击是否在菜单外部
+  const menu = document.querySelector('.context-menu');
+  if (contextMenu.visible && menu && !menu.contains(event.target as Node)) {
     closeContextMenu();
   }
 };
@@ -243,10 +232,12 @@ async function getTreeData() {
 onMounted(() => {
   getTreeData();
   document.addEventListener('click', handleClickOutside);
+  document.addEventListener('contextmenu', handleClickOutside);
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('contextmenu', handleClickOutside);
 });
 
 const [OrgTreeAddModal, orgTreeAddModalApi] = useVbenModal({
@@ -604,13 +595,6 @@ function removeUser(row: Record<string, any>) {
   })
 }
 
-// 添加 onExpand 方法处理节点展开/折叠
-const onExpand = (keys: (string | number)[], info: any) => {
-  expandedKeys.value = keys;
-  autoExpandParent.value = false;
-};
-
-
 </script>
 
 <template>
@@ -652,6 +636,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
           :data="gData"
           :filter-node-method="filterNode"
           :highlight-current="true"
+          :check-on-click-node="true"
           @node-contextmenu="onRightClick"
           @node-click="onSelect"
         >
@@ -718,14 +703,23 @@ const onExpand = (keys: (string | number)[], info: any) => {
 
     <OrgTreeAddModal @get-tree-data="getTreeData" />
     <OrgTreeEditModal @get-tree-data="getTreeData" />
-    <ContextMenu
+    <div
       v-if="contextMenu.visible"
-      :options="contextMenuOptions"
-      :x="contextMenu.x"
-      :y="contextMenu.y"
-      @close="closeContextMenu"
-      @select="onContextMenuSelect"
-    />
+      class="fixed bg-white shadow-md rounded-md py-2 z-50"
+      :style="{
+        left: contextMenu.x + 'px',
+        top: contextMenu.y + 'px'
+      }"
+    >
+      <div
+        v-for="option in contextMenuOptions"
+        :key="option.key"
+        class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+        @click="onContextMenuSelect(option.key)"
+      >
+        {{ option.label }}
+      </div>
+    </div>
   </Page>
 </template>
 
