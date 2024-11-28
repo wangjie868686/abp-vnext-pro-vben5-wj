@@ -1,7 +1,7 @@
-import type { RouteRecordRaw } from 'vue-router';
-
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
+import type { RouteRecordRaw } from 'vue-router';
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -72,6 +72,16 @@ const routes: RouteRecordRaw[] = [
           icon: 'ant-design:google-circle-filled',
           link: 'https://gitee.com/WangJunZzz/abp-vnext-pro',
           title: 'Gitee',
+        },
+      },
+      {
+        name: 'VbenGithub',
+        path: '/vben-admin/github',
+        component: IFrameView,
+        meta: {
+          icon: 'lucide:book-open-text',
+          link: 'https://element-plus-docs.bklab.cn/zh-CN/',
+          title: 'Element Plus',
         },
       },
     ],

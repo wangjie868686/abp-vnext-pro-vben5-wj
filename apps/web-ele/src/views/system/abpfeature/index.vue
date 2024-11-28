@@ -37,6 +37,7 @@ function processData(data: any) {
       }
     });
   });
+  console.log(data)
   return data;
 }
 onMounted(async () => {
@@ -54,6 +55,7 @@ onMounted(async () => {
 });
 
 const save = async (item: any) => {
+  debugger;
   const features = item.features?.map((e: any) => {
     let value = e.value;
     if (e.valueType.name === 'ToggleStringValueType') {
@@ -113,7 +115,7 @@ const save = async (item: any) => {
                       v-else-if="
                         formItem.valueType.name === 'ToggleStringValueType'
                       "
-                      v-model:checked="formItem.convertvalue"
+                      v-model = "formItem.convertvalue"
                     />
                   </FormItem>
                 </Col>
