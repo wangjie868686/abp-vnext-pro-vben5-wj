@@ -7,7 +7,8 @@ import '@vben/styles';
 import '@vben/styles/antd';
 
 import { useTitle } from '@vueuse/core';
-
+import JsonViewer from "vue3-json-viewer";
+import "vue3-json-viewer/dist/index.css";
 import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
@@ -31,6 +32,8 @@ async function bootstrap(namespace: string) {
 
   // 配置路由及路由守卫
   app.use(router);
+  // 配置 json-viewer
+  app.use(JsonViewer);
 
   // 动态更新标题
   watchEffect(() => {

@@ -13,3 +13,5 @@ export const MdiGoogle = createIconifyIcon('mdi:google');
 export const MdiQqchat = createIconifyIcon('mdi:qqchat');
 
 export const DownOutlined = createIconifyIcon('DownOutlined ');
+// 详情图标
+export const IconDocDetail = createIconifyIcon('icon-park-outline:doc-detail');

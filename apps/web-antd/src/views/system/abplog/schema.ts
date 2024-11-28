@@ -104,4 +104,11 @@ export const auditLogTableSchema: any = [
   },
   { field: 'correlationId', title: 'CorrelationId', minWidth: '150' },
   { field: 'exceptions', title: $t('abp.log.exception'), minWidth: '150' },
+  {
+    field: 'action',
+    fixed: 'right',
+    slots: { default: 'action' },
+    title: '操作',
+    width: 120,
+  },
 ];
