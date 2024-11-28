@@ -14,6 +14,7 @@ defineOptions({
   name: 'AbpAuditLog',
 });
 
+const { isDark } = usePreferences();
 const formOptions: VbenFormProps = {
   schema: auditLogQuerySchema,
   wrapperClass: 'grid-cols-5',
