@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 import { Page, useVbenDrawer, } from '@vben/common-ui';
@@ -7,7 +8,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postAuditLogsPage } from '#/api-client';
 import { ElButton as Button } from 'element-plus';
 import { auditLogQuerySchema, auditLogTableSchema } from './schema';
-import { ref } from 'vue';
+import { usePreferences } from '@vben/preferences';
 
 defineOptions({
   name: 'AbpAuditLog',
@@ -76,7 +77,7 @@ const viewDetail = (row: any) => {
       </template>
     </Grid>
     <Drawer class="w-[600px]" title="详情">
-      <JsonViewer class="h-full" :value="jsonData" copyable sort theme="light"/>
+      <JsonViewer class="h-full" :value="jsonData" copyable sort :theme="isDark ? 'dark' : 'light'"/>
     </Drawer>
   </Page>
 </template>
