@@ -130,15 +130,15 @@ export const editUserFormSchemaEdit: any = [
     componentProps: {},
     fieldName: 'password',
     label: $t('abp.user.password'),
-    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.password') }),
+    // rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.password') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'confirmPassword',
     label: $t('abp.user.comfirmPassword'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword') }),
+    // rules: z
+    //   .string()
+    //   .min(1, { message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword') }),
   },
 ];

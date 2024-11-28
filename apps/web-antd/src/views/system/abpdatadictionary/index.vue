@@ -265,7 +265,7 @@ const editDetailRow = (row: Record<string, any>) => {
 
 const removeDetailRow = async (row: Record<string, any>) => {
   Modal.confirm({
-    title: `${$t('common.confirmDelete')}${row.name} ?`,
+    title: `${$t('common.confirmDelete')}${row.displayText} ?`,
     async onOk() {
       await postDataDictionaryDelete({
         body: {

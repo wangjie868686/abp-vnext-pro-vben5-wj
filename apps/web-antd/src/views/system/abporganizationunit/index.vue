@@ -483,13 +483,14 @@ const unUsersOptions: VxeGridProps<any> = {
   },
   proxyConfig: {
     ajax: {
-      query: async ({ page }) => {
+      query: async ({ page }, formValues ) => {
         if (!currentSelectedKey.value) return;
         const { data } = await postOrganizationUnitsGetUnAddUsers({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
             organizationUnitId: currentSelectedKey.value,
+            ...formValues,
           },
         });
         return data;
