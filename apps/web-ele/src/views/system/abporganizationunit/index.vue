@@ -510,13 +510,14 @@ const unUsersOptions: VxeGridProps<any> = {
   },
   proxyConfig: {
     ajax: {
-      query: async ({ page }) => {
+      query: async ({ page }, formValues) => {
         if (!currentSelectedKey.value) return;
         const { data } = await postOrganizationUnitsGetUnAddUsers({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
             organizationUnitId: currentSelectedKey.value,
+            ...formValues,
           },
         });
         return data;
@@ -656,7 +657,7 @@ function removeUser(row: Record<string, any>) {
       <div class="col-span-8 xl:col-span-9">
         <div class="bg-card">
           <Tabs v-model="activeKey" class="px-3">
-            <TabPane key="1" :label="$t('abp.organizationunit.member')">
+            <TabPane name="1" :label="$t('abp.organizationunit.member')">
               <UserGrid>
                 <template #toolbar-actions>
                   <Button type="primary" :disabled="!currentSelectedKey" @click="addUsersModalApi.open">
@@ -670,7 +671,7 @@ function removeUser(row: Record<string, any>) {
                 </template>
               </UserGrid>
             </TabPane>
-            <TabPane key="2" :label="$t('abp.organizationunit.role')">
+            <TabPane name="2" :label="$t('abp.organizationunit.role')">
               <RolesGrid>
                 <template #toolbar-actions>
                   <Button type="primary" :disabled="!currentSelectedKey" @click="addRolesModalApi.open">

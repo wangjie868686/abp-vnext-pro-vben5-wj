@@ -30,6 +30,7 @@ const [Form, formApi] = useVbenForm({
       // 对应组件的参数
       componentProps: {
         placeholder: $t('common.pleaseInput'),
+        disabled: data.value.isEdit ? true : false,
       },
       // 字段名
       fieldName: 'code',
@@ -66,6 +67,14 @@ const [Modal, modalApi] = useVbenModal({
       if (data.value.isEdit) {
         formApi.setValues({ ...data.value.row });
       }
+      formApi.updateSchema([
+        {
+          componentProps: {
+            disabled: data.value.isEdit ? true : false,
+          },
+          fieldName: 'code',
+        },
+      ])
     }
   },
   onConfirm: async () => {
