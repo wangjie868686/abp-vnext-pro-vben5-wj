@@ -1,10 +1,10 @@
 import { useUserStore } from '@vben/stores';
 
-import { message as Message } from 'ant-design-vue';
 import axios from 'axios';
+import { ElMessage as Message } from 'element-plus';
 
 import { $t } from '#/locales';
-import { antdLocale } from '#/locales/index';
+import { elementLocale } from '#/locales/index';
 import { useAuthStore } from '#/store';
 
 const api = axios.create({
@@ -23,7 +23,7 @@ api.interceptors.request.use((request) => {
   // 设置请求头
   if (request.headers) {
     request.headers.__tenant = userStore.tenant?.tenantId;
-    request.headers['accept-language'] = antdLocale.value.locale;
+    request.headers['accept-language'] = elementLocale.value.name;
   }
   // 如果token过期，则跳转到登录页面
   if (token && userStore.checkUserLoginExpire()) {

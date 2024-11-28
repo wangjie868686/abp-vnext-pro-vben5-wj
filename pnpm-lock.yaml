@@ -687,6 +687,9 @@ importers:
 
   apps/web-ele:
     dependencies:
+      '@microsoft/signalr':
+        specifier: ^8.0.7
+        version: 8.0.7(encoding@0.1.13)
       '@vben/access':
         specifier: workspace:*
         version: link:../../packages/effects/access
@@ -732,6 +735,12 @@ importers:
       '@vueuse/core':
         specifier: 'catalog:'
         version: 11.3.0(vue@3.5.13(typescript@5.7.2))
+      axios:
+        specifier: ^1.7.7
+        version: 1.7.7
+      clipboard:
+        specifier: ^2.0.11
+        version: 2.0.11
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
@@ -744,10 +753,22 @@ importers:
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.2)
+      vue-request:
+        specifier: ^2.0.4
+        version: 2.0.4(vue@3.5.13(typescript@5.7.2))
       vue-router:
         specifier: 'catalog:'
         version: 4.4.5(vue@3.5.13(typescript@5.7.2))
+      vue3-json-viewer:
+        specifier: ^2.2.2
+        version: 2.2.2(vue@3.5.13(typescript@5.7.2))
     devDependencies:
+      '@hey-api/client-axios':
+        specifier: ^0.2.10
+        version: 0.2.10(axios@1.7.7)
+      '@hey-api/openapi-ts':
+        specifier: ^0.55.3
+        version: 0.55.3(magicast@0.3.5)(typescript@5.7.2)
       unplugin-element-plus:
         specifier: 'catalog:'
         version: 0.8.0(rollup@4.27.4)

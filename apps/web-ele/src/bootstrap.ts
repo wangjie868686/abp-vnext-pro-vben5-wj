@@ -5,7 +5,8 @@ import { preferences } from '@vben/preferences';
 import { initStores } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/ele';
-
+import JsonViewer from "vue3-json-viewer";
+import "vue3-json-viewer/dist/index.css";
 import { useTitle } from '@vueuse/core';
 
 import { $t, setupI18n } from '#/locales';
@@ -30,7 +31,8 @@ async function bootstrap(namespace: string) {
 
   // 配置路由及路由守卫
   app.use(router);
-
+  // 配置 json-viewer
+  app.use(JsonViewer);
   // 动态更新标题
   watchEffect(() => {
     if (preferences.app.dynamicTitle) {

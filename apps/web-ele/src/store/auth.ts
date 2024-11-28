@@ -6,10 +6,17 @@ import { useRouter } from 'vue-router';
 import { DEFAULT_HOME_PATH, LOGIN_PATH } from '@vben/constants';
 import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 
-import { ElNotification } from 'element-plus';
+import { ElNotification, ElMessage as Message } from 'element-plus';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import { getUserInfoApi, logoutApi } from '#/api';
+import {
+  type ApplicationAuthConfigurationDto,
+  type ApplicationConfigurationDto,
+  getApiAbpApplicationConfiguration,
+  postApiAppAccountLogin,
+  postTenantsFind,
+} from '#/api-client';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -31,23 +38,40 @@ export const useAuthStore = defineStore('auth', () => {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
     try {
+      //  判断是否租户登录
+      if (params.tenant) {
+        const tenantResult = await postTenantsFind({
+          body: {
+            name: params.tenant,
+          },
+        });
+        if (tenantResult.data?.success) {
+          userStore.setTenantInfo(tenantResult.data as any);
+        } else {
+          Message.error($t('abp.tenant.notExist'));
+          return;
+        }
+      }
+
       loginLoading.value = true;
-      const { accessToken } = await loginApi(params);
-
+      const { data = {} } = await postApiAppAccountLogin({
+        body: {
+          ...params,
+        },
+      });
       // 如果成功获取到 accessToken
-      if (accessToken) {
-        // 将 accessToken 存储到 accessStore 中
-        accessStore.setAccessToken(accessToken);
-
-        // 获取用户信息并存储到 accessStore 中
-        const [fetchUserInfoResult, accessCodes] = await Promise.all([
-          fetchUserInfo(),
-          getAccessCodesApi(),
-        ]);
-
-        userInfo = fetchUserInfoResult;
-
-        userStore.setUserInfo(userInfo);
+      if (data.token) {
+        accessStore.setAccessToken(data.token);
+        userInfo = data as any;
+        userStore.setUserInfo(userInfo as any);
+        const { data: authData } = await getApiAbpApplicationConfiguration({
+          query: { IncludeLocalizationResources: false },
+        });
+        const { auth } = authData as ApplicationConfigurationDto;
+        const accessCodes = Object.keys(
+          (auth as ApplicationAuthConfigurationDto)
+            .grantedPolicies as unknown as Record<string, any>,
+        );
         accessStore.setAccessCodes(accessCodes);
 
         if (accessStore.loginExpired) {
@@ -55,12 +79,11 @@ export const useAuthStore = defineStore('auth', () => {
         } else {
           onSuccess
             ? await onSuccess?.()
-            : await router.push(userInfo.homePath || DEFAULT_HOME_PATH);
+            : await router.push(DEFAULT_HOME_PATH);
         }
-
-        if (userInfo?.realName) {
+        if (userInfo?.userName) {
           ElNotification({
-            message: `${$t('authentication.loginSuccessDesc')}:${userInfo?.realName}`,
+            message: `${$t('authentication.loginSuccessDesc')}:${userInfo?.userName}`,
             title: $t('authentication.loginSuccess'),
             type: 'success',
           });

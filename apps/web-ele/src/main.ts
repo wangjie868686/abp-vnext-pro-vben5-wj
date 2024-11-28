@@ -1,8 +1,8 @@
 import { initPreferences } from '@vben/preferences';
 import { unmountGlobalLoading } from '@vben/utils';
-
 import { overridesPreferences } from './preferences';
-
+import client from '#/api-client-config/index';
+import clientblob from '#/api-client-config/index-blob';
 /**
  * 应用初始化完成之后再进行页面加载渲染
  */
