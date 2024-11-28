@@ -1,6 +1,5 @@
 import { initPreferences } from '@vben/preferences';
 import { unmountGlobalLoading } from '@vben/utils';
-
 import { overridesPreferences } from './preferences';
 import client from '#/api-client-config/index';
 import clientblob from '#/api-client-config/index-blob';

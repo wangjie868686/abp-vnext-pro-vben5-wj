@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
-
-import { Page } from '@vben/common-ui';
-
+import { Page, useVbenDrawer, } from '@vben/common-ui';
+import { IconDocDetail } from '@vben/icons';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postAuditLogsPage } from '#/api-client';
-
+import { ElButton as Button } from 'element-plus';
 import { auditLogQuerySchema, auditLogTableSchema } from './schema';
+import { ref } from 'vue';
 
 defineOptions({
   name: 'AbpAuditLog',
@@ -54,11 +54,30 @@ const gridOptions: VxeGridProps<any> = {
 };
 
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
+
+const jsonData = ref();
+const [Drawer, drawerApi] = useVbenDrawer();
+const viewDetail = (row: any) => {
+  console.log(row);
+  jsonData.value = row;
+  drawerApi.open();
+}
+
 </script>
 
 <template>
   <Page auto-content-height>
-    <Grid />
+    <Grid>
+      <template #action="{ row }">
+        <div class="flex items-center">
+          <IconDocDetail style="color: var(--el-color-primary);" />
+          <Button link type="primary" @click="viewDetail(row)">详情</Button>
+        </div>
+      </template>
+    </Grid>
+    <Drawer class="w-[600px]" title="详情">
+      <JsonViewer class="h-full" :value="jsonData" copyable sort theme="light"/>
+    </Drawer>
   </Page>
 </template>
 <style scoped></style>
