@@ -15,6 +15,7 @@ import {
   postTenantsDelete,
   postTenantsPage,
   postTenantsUpdate,
+  postTenantsAddOrUpdateConnectionString,
 } from '#/api-client';
 import { $t } from '#/locales';
 
@@ -24,6 +25,8 @@ import {
   querySchema,
   tableSchema,
 } from './schema';
+import FeatureManage from './FeatureManageModal.vue';
+import ConnectionString from './ConnectionStringModal.vue';
 
 defineOptions({
   name: 'AbpTenant',
@@ -153,6 +156,29 @@ const openAddModal = async () => {
   editRow.value = {};
   tenantModalApi.open();
 };
+
+const [FeatureManageModal, featureManageModalApi] = useVbenModal({
+  connectedComponent: FeatureManage,
+});
+
+const openFeatureManage = async (row: any) => {
+  featureManageModalApi.setData({
+    id: row.id,
+  });
+  featureManageModalApi.open();
+}
+
+const [ConnectionStringModal, connectionStringModalApi] = useVbenModal({
+  connectedComponent: ConnectionString,
+});
+
+const openConnectionStringModal = (row: any) => {
+  connectionStringModalApi.setData({
+    id: row.id,
+  });
+  connectionStringModalApi.open();
+}
+
 </script>
 
 <template>
@@ -180,6 +206,21 @@ const openAddModal = async () => {
             {{ $t('common.edit') }}
           </Button>
           <Button
+            size="small"
+            type="primary"
+            @click="openConnectionStringModal(row)"
+          >
+            {{ '连接字符串' }}
+          </Button>
+          <Button
+            size="small"
+            type="primary"
+            v-access:code="'AbpTenantManagement.Tenants.Update'"
+            @click="openFeatureManage(row)"
+          >
+            {{ '功能管理' }}
+          </Button>
+          <Button
             danger
             size="small"
             type="primary"
@@ -198,6 +239,8 @@ const openAddModal = async () => {
     >
       <component :is="editRow.id ? EditForm : AddForm" />
     </TenantModal>
+    <FeatureManageModal />
+    <ConnectionStringModal/>
   </Page>
 </template>
 
