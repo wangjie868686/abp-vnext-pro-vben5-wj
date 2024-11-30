@@ -1,10 +1,17 @@
 <script lang="ts" setup>
-import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { ref } from 'vue';
-import { Button, Modal, message, } from 'ant-design-vue';
-import { postTenantsPageConnectionString, postTenantsDeleteConnectionString, postTenantsAddOrUpdateConnectionString } from '#/api-client';
-import { $t } from '#/locales';
+
+import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
+
+import { Button, message, Modal } from 'ant-design-vue';
+
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  postTenantsDeleteConnectionString,
+  postTenantsPageConnectionString,
+} from '#/api-client';
+import { $t } from '#/locales';
+
 import AddEditModal from './AddEditModal.vue';
 
 const data = ref<Record<string, any>>({});
@@ -19,19 +26,22 @@ const [ConnectionString, modalApi] = useVbenModal({
 });
 
 const formOptions: VbenFormProps = {
-  schema: [{
-    component: 'Input',
-    componentProps: {
+  schema: [
+    {
+      component: 'Input',
+      componentProps: {},
+      fieldName: 'name',
+      label: $t('abp.tenant.connectionStringName'),
+      rules: 'required',
     },
-    fieldName: 'name',
-    label: '名称',
-  }, {
-    component: 'Input',
-    componentProps: {
+    {
+      component: 'Input',
+      componentProps: {},
+      fieldName: 'value',
+      label: $t('abp.tenant.connectionString'),
+      rules: 'required',
     },
-    fieldName: 'value',
-    label: '连接字符串',
-  },],
+  ],
 };
 const gridOptions: VxeGridProps<any> = {
   checkboxConfig: {
@@ -39,14 +49,14 @@ const gridOptions: VxeGridProps<any> = {
     labelField: 'name',
   },
   columns: [
-    { title: '序号', type: 'seq', width: 50 },
-    { field: 'name', title: '名称' },
-    { field: 'value', title: '连接字符串' },
+    { title: $t('common.seq'), type: 'seq', width: 50 },
+    { field: 'name', title: $t('abp.tenant.connectionStringName') },
+    { field: 'value', title: $t('abp.tenant.connectionString') },
     {
       field: 'action',
       fixed: 'right',
       slots: { default: 'action' },
-      title: '操作',
+      title: $t('common.action'),
       width: 120,
     },
   ],
@@ -93,24 +103,25 @@ const onDel = (row: any) => {
       message.success($t('common.deleteSuccess'));
     },
   });
-}
+};
 
 const [AddEditModalComponent, addEditModalApi] = useVbenModal({
   connectedComponent: AddEditModal,
 });
-
 </script>
 <template>
   <div>
-    <ConnectionString title="连接字符串" fullscreen>
+    <ConnectionString :title="$t('abp.tenant.connectionString')" fullscreen>
       <Grid>
         <template #toolbar-tools>
           <Button class="mr-2" type="primary" @click="addEditModalApi.open">
-            新增或编辑
+            {{ $t('abp.tenant.addorEdit') }}
           </Button>
         </template>
         <template #action="{ row }">
-          <Button danger type="link" @click="onDel(row)">删除</Button>
+          <Button danger type="link" @click="onDel(row)">
+            {{ $t('common.delete') }}
+          </Button>
         </template>
       </Grid>
     </ConnectionString>

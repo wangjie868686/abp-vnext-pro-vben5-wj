@@ -98,6 +98,10 @@
     "notExist": "租户不存在",
     "name": "租户名称",
     "adminEmail": "管理员邮箱",
-    "adminPassword": "管理员密码"
+    "adminPassword": "管理员密码",
+    "addorEdit": "新增或编辑",
+    "featureManagement": "功能管理",
+    "connectionStringName": "连接名称",
+    "connectionString": "连接字符串"
   }
 }
