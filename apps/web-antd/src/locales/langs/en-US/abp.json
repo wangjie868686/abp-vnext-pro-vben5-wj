@@ -98,6 +98,11 @@
     "notExist": "Tenant Does not exist",
     "name": "Tenant Name",
     "adminEmail": "Admin Email",
-    "adminPassword": "Admin Password"
+    "adminPassword": "Admin Password",
+    "mangeConnectionString": "MangeConnectionString",
+    "addorEdit": "AddorEdit",
+    "featureManagement": "FeatureManagement",
+    "connectionStringName": "ConnectionStringName",
+    "connectionString": "ConnectionString"
   }
 }

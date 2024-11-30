@@ -35,6 +35,7 @@ import { useSignalR } from '#/hooks/useSignalR';
 import { $t } from '#/locales';
 import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
+
 import NotifyItem from './NotifyItem.vue';
 
 const notifications = ref<NotificationItem[]>([]);
@@ -247,9 +248,8 @@ function handleViewAll() {
       <UserDropdown
         :avatar
         :menus
-        :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
-        tag-text="Pro"
+        :tag-text="userStore.tenant?.name"
+        :text="userStore.userInfo?.name"
         @logout="handleLogout"
       />
     </template>
