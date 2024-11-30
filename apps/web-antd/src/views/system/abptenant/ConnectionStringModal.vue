@@ -7,7 +7,7 @@ import { $t } from '#/locales';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import AddEditModal from './AddEditModal.vue';
 
-const data = ref();
+const data = ref<Record<string, any>>({});
 const [ConnectionString, modalApi] = useVbenModal({
   onOpenChange: async (isOpen: boolean) => {
     if (isOpen) {
