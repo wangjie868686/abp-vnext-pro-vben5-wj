@@ -26,6 +26,8 @@ const [ConnectionString, modalApi] = useVbenModal({
 });
 
 const formOptions: VbenFormProps = {
+  wrapperClass: 'grid-cols-12', // 表单外层样式，分成网格12列
+  actionWrapperClass: 'col-span-3', // 表单操作按钮，占3列
   schema: [
     {
       component: 'Input',
@@ -33,6 +35,8 @@ const formOptions: VbenFormProps = {
       fieldName: 'name',
       label: $t('abp.tenant.connectionStringName'),
       rules: 'required',
+      formItemClass: 'col-span-3', // 表单项样式，占3列
+      labelWidth: 180,
     },
     {
       component: 'Input',
@@ -40,6 +44,8 @@ const formOptions: VbenFormProps = {
       fieldName: 'value',
       label: $t('abp.tenant.connectionString'),
       rules: 'required',
+      formItemClass: 'col-span-6', // 表单项样式，占6列
+      labelWidth: 180,
     },
   ],
 };
@@ -68,7 +74,9 @@ const gridOptions: VxeGridProps<any> = {
   },
   height: 'auto',
   keepSource: true,
-  pagerConfig: {},
+  pagerConfig: {
+    enabled: false, // 隐藏分页器
+  },
   proxyConfig: {
     response: {
       total: 'totalCount',
