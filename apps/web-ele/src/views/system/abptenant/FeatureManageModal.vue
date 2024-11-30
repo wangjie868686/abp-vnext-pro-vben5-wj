@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { useVbenModal } from '@vben/common-ui';
 import { ref } from 'vue';
-import { Tabs, Divider, Checkbox, Col, Form, Input, Row, message as Message } from 'ant-design-vue';
+import { ElMessage, ElTabs, ElTabPane, ElDivider, ElCheckbox, ElCol, ElForm, ElInput, ElRow } from 'element-plus';
 import { postFeaturesList, postFeaturesUpdate, type FeatureGroupDto, } from '#/api-client';
 import { $t } from '#/locales';
-
 const activeKey = ref();
 const data = ref();
 const tabList = ref<FeatureGroupDto[]>([]);
@@ -52,7 +51,10 @@ const [Modal, modalApi] = useVbenModal({
         },
       },
     });
-    Message.success($t('common.editSuccess'));
+    ElMessage.success({
+      type:'success',
+      message: $t('common.editSuccess'),
+    });
   }
 });
 
@@ -75,22 +77,22 @@ const [Modal, modalApi] = useVbenModal({
 </script>
 <template>
   <Modal title="功能管理" fullscreen>
-    <Tabs v-model:activeKey="activeKey" tab-position="left">
-      <Tabs.TabPane v-for="tabItem in tabList" :key="tabItem.name!" :tab="tabItem.displayName">
+    <ElTabs v-model="activeKey" tab-position="left">
+      <ElTabPane v-for="tabItem in tabList" :name="tabItem.name!" :label="tabItem.displayName!">
         <div>{{tabItem.displayName}}</div>
-        <Divider class="my-3"></Divider>
+        <ElDivider style="margin: 10px 0;"></ElDivider>
         <Form :label-col="{ span: 6 }" :model="tabItem" style="max-width: 800px">
-          <Row>
-            <Col :span="24">
-            <Form.Item v-for="formItem in tabItem.features" :key="formItem.name!" :label="formItem.displayName"
-              class="mb-4">
-              <Input v-if="formItem.valueType!.name === 'FreeTextStringValueType'" v-model:value="formItem.value!" />
-              <Checkbox v-else-if="formItem.valueType!.name === 'ToggleStringValueType'" v-model:checked="formItem.convertvalue" />
-            </Form.Item>
-            </Col>
-          </Row>
+          <ElRow>
+            <ElCol :span="24">
+              <ElForm.FormItem v-for="formItem in tabItem.features" :key="formItem.name!" :label="formItem.displayName"
+                class="mb-4">
+                <ElInput v-if="formItem.valueType!.name === 'FreeTextStringValueType'" v-model="formItem.value!" />
+                <ElCheckbox v-else-if="formItem.valueType!.name === 'ToggleStringValueType'" v-model="formItem.convertvalue" />
+              </ElForm.FormItem>
+            </ElCol>
+          </ElRow>
         </Form>
-      </Tabs.TabPane>
-    </Tabs>
+      </ElTabPane>
+    </ElTabs>
   </Modal>
 </template>
