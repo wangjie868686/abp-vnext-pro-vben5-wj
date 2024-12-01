@@ -9,6 +9,9 @@ import { Button, Modal, Space } from 'ant-design-vue';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postProjectsDelete, postProjectsPage } from '#/api-client/index';
 import { $t } from '#/locales';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // 新增modal
 import AddModal from './AddModal.vue';
@@ -91,6 +94,15 @@ const handleDelete = (row: any) => {
     },
   });
 };
+
+const handleViewModel = (row: Record<string, any>) => {
+  router.push({
+    name: 'EntityModel',
+    query: {
+      projectId: row.id,
+    }
+  })
+}
 </script>
 
 <template>
@@ -105,6 +117,9 @@ const handleDelete = (row: any) => {
       </template>
 
       <template #action="{ row }">
+        <!-- <Button type="link" @click="handleViewModel(row)">
+            模型
+        </Button> -->
         <Button type="link" @click="handleEdit(row)">
           {{ $t('common.edit') }}
         </Button>

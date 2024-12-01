@@ -45,6 +45,18 @@ const routes: RouteRecordRaw[] = [
           // authority: ['AbpTenantManagement.Tenants'],
         },
       },
+      {
+        name: 'EntityModel',
+        path: 'entityModel',
+        component: () => import('#/views/code/project/projectEntityModel/index.vue'),
+        meta: {
+          icon: 'ph:user',
+          title: '实体',
+          hideInMenu: true,
+          // title: $t('abp.menu.code-genarate'),
+          // authority: ['AbpTenantManagement.Tenants'],
+        },
+      },
     ],
   },
 ];

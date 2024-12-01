@@ -31,5 +31,6 @@
   "mesage405": "请求方法错误！",
   "timeOut": "请求超时！",
   "expandAll": "展开全部",
-  "collapseAll": "折叠全部"
+  "collapseAll": "折叠全部",
+  "description": "描述"
 }
