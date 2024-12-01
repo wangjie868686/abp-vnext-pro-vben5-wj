@@ -17,7 +17,11 @@
     "languageText": "语言文本管理",
     "dataDictionary": "数据字典管理",
     "notification": "通告管理",
-    "message": "消息管理"
+    "message": "消息管理",
+    "code": "代码管理",
+    "code-project": "项目列表",
+    "code-template": "模板列表",
+    "code-genarate": "代码生成"
   },
   "user": {
     "user": "用户",
@@ -104,5 +108,13 @@
     "featureManagement": "功能管理",
     "connectionStringName": "连接名称",
     "connectionString": "连接字符串"
+  },
+  "code": {
+    "companyName": "公司名称",
+    "projectName": "项目名称",
+    "projectEnglishName": "项目英文名称",
+    "namespace": "命名空间",
+    "remark": "备注",
+    "templateName": "模板名称"
   }
 }

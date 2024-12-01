@@ -17,7 +17,11 @@
     "languageText": "LanguageTextManagement",
     "dataDictionary": "DataDictionaryManagement",
     "notification": "NotificationManagement",
-    "message": "MessageManagement"
+    "message": "MessageManagement",
+    "code": "CodeManagement",
+    "code-project": "ProjectList",
+    "code-template": "TemplateList",
+    "code-genarate": "CodeGenarate"
   },
   "user": {
     "user": "User",
@@ -104,5 +108,13 @@
     "featureManagement": "FeatureManagement",
     "connectionStringName": "ConnectionStringName",
     "connectionString": "ConnectionString"
+  },
+  "code": {
+    "companyName": "CompanyName",
+    "projectName": "ProjectName",
+    "projectEnglishName": "ProjectEnglishName",
+    "namespace": "Namespace",
+    "remark": "Remark",
+    "templateName": "TemplateName"
   }
 }
