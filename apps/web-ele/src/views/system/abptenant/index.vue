@@ -169,6 +169,8 @@ const openFeatureManage = async (row: any) => {
 }
 const [ConnectionStringModal, connectionStringModalApi] = useVbenModal({
   connectedComponent: ConnectionString,
+  showCancelButton: false,
+  showConfirmButton: false,
 });
 const openConnectionStringModal = (row: any) => {
   connectionStringModalApi.setData({
