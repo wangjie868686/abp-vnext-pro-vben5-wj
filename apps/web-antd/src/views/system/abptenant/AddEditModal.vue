@@ -30,7 +30,7 @@ const [Form, formApi] = useVbenForm({
       component: 'Input',
       componentProps: {},
       fieldName: 'value',
-      label: $t('abp.tenant.connectionStringName'),
+      label: $t('abp.tenant.connectionString'),
       rules: 'required',
     },
   ],

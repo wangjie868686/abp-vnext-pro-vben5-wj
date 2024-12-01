@@ -1,9 +1,27 @@
 <script lang="ts" setup>
-import { useVbenModal } from '@vben/common-ui';
 import { ref } from 'vue';
-import { ElMessage, ElTabs, ElTabPane, ElDivider, ElCheckbox, ElCol, ElForm, ElInput, ElRow } from 'element-plus';
-import { postFeaturesList, postFeaturesUpdate, type FeatureGroupDto, } from '#/api-client';
+
+import { useVbenModal } from '@vben/common-ui';
+
+import {
+  ElCheckbox,
+  ElCol,
+  ElDivider,
+  ElForm,
+  ElInput,
+  ElMessage,
+  ElRow,
+  ElTabPane,
+  ElTabs,
+} from 'element-plus';
+
+import {
+  type FeatureGroupDto,
+  postFeaturesList,
+  postFeaturesUpdate,
+} from '#/api-client';
 import { $t } from '#/locales';
+
 const activeKey = ref();
 const data = ref();
 const tabList = ref<FeatureGroupDto[]>([]);
@@ -11,19 +29,19 @@ const [Modal, modalApi] = useVbenModal({
   onOpenChange: async (isOpen: boolean) => {
     if (isOpen) {
       try {
-        modalApi.setState({loading: true});
+        modalApi.setState({ loading: true });
         data.value = modalApi.getData<Record<string, any>>();
         const { data: resp } = await postFeaturesList({
           body: {
-            providerName: "T",
-            providerKey: data.value?.id
-          }
+            providerName: 'T',
+            providerKey: data.value?.id,
+          },
         });
         const result = processData(resp) || [];
         tabList.value = result.groups;
         activeKey.value = tabList.value[0]?.name;
       } finally {
-        modalApi.setState({loading: false});
+        modalApi.setState({ loading: false });
       }
     }
   },
@@ -39,7 +57,7 @@ const [Modal, modalApi] = useVbenModal({
       return {
         name: e.name,
         value,
-      }
+      };
     });
 
     await postFeaturesUpdate({
@@ -52,17 +70,17 @@ const [Modal, modalApi] = useVbenModal({
       },
     });
     ElMessage.success({
-      type:'success',
+      type: 'success',
       message: $t('common.editSuccess'),
     });
-  }
+  },
 });
 
 /**
  * 后端返回的数据格式不是boolean类型，需要转换一下
  * @param data
  */
- function processData(data: any) {
+function processData(data: any) {
   data.groups.forEach((group: any) => {
     group.features.forEach((feature: any) => {
       if (feature.value === 'true') {
@@ -76,18 +94,38 @@ const [Modal, modalApi] = useVbenModal({
 }
 </script>
 <template>
-  <Modal title="功能管理" fullscreen>
+  <Modal :title="$t('abp.tenant.featureManagement')" fullscreen>
     <ElTabs v-model="activeKey" tab-position="left">
-      <ElTabPane v-for="tabItem in tabList" :name="tabItem.name!" :label="tabItem.displayName!">
-        <div>{{tabItem.displayName}}</div>
-        <ElDivider style="margin: 10px 0;"></ElDivider>
-        <Form :label-col="{ span: 6 }" :model="tabItem" style="max-width: 800px">
+      <ElTabPane
+        v-for="tabItem in tabList"
+        :label="tabItem.displayName!"
+        :name="tabItem.name!"
+      >
+        <div>{{ tabItem.displayName }}</div>
+        <ElDivider style="margin: 10px 0" />
+        <Form
+          :label-col="{ span: 6 }"
+          :model="tabItem"
+          style="max-width: 800px"
+        >
           <ElRow>
             <ElCol :span="24">
-              <ElForm.FormItem v-for="formItem in tabItem.features" :key="formItem.name!" :label="formItem.displayName"
-                class="mb-4">
-                <ElInput v-if="formItem.valueType!.name === 'FreeTextStringValueType'" v-model="formItem.value!" />
-                <ElCheckbox v-else-if="formItem.valueType!.name === 'ToggleStringValueType'" v-model="formItem.convertvalue" />
+              <ElForm.FormItem
+                v-for="formItem in tabItem.features"
+                :key="formItem.name!"
+                :label="formItem.displayName"
+                class="mb-4"
+              >
+                <ElInput
+                  v-if="formItem.valueType!.name === 'FreeTextStringValueType'"
+                  v-model="formItem.value!"
+                />
+                <ElCheckbox
+                  v-else-if="
+                    formItem.valueType!.name === 'ToggleStringValueType'
+                  "
+                  v-model="formItem.convertvalue"
+                />
               </ElForm.FormItem>
             </ElCol>
           </ElRow>

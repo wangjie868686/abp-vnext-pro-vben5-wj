@@ -17,7 +17,7 @@ export const tableSchema: any = [
     title: $t('common.action'),
     field: 'action',
     fixed: 'right',
-    width: '300',
+    width: '500',
     slots: { default: 'action' },
   },
 ];

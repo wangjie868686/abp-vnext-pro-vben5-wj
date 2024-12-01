@@ -23,14 +23,14 @@ import {
 } from '#/api-client';
 import { $t } from '#/locales';
 
+import ConnectionString from './ConnectionStringModal.vue';
+import FeatureManage from './FeatureManageModal.vue';
 import {
   addTenantFormSchema,
   editTenantFormSchemaEdit,
   querySchema,
   tableSchema,
 } from './schema';
-import FeatureManage from './FeatureManageModal.vue';
-import ConnectionString from './ConnectionStringModal.vue';
 
 defineOptions({
   name: 'AbpTenant',
@@ -166,7 +166,7 @@ const openFeatureManage = async (row: any) => {
     id: row.id,
   });
   featureManageModalApi.open();
-}
+};
 const [ConnectionStringModal, connectionStringModalApi] = useVbenModal({
   connectedComponent: ConnectionString,
   showCancelButton: false,
@@ -177,7 +177,7 @@ const openConnectionStringModal = (row: any) => {
     id: row.id,
   });
   connectionStringModalApi.open();
-}
+};
 </script>
 
 <template>
@@ -209,7 +209,7 @@ const openConnectionStringModal = (row: any) => {
             type="primary"
             @click="openConnectionStringModal(row)"
           >
-            {{ '连接字符串' }}
+            {{ $t('abp.tenant.connectionString') }}
           </Button>
           <Button
             size="small"
@@ -217,7 +217,7 @@ const openConnectionStringModal = (row: any) => {
             v-access:code="'AbpTenantManagement.Tenants.Update'"
             @click="openFeatureManage(row)"
           >
-            {{ '功能管理' }}
+            {{ $t('abp.tenant.featureManagement') }}
           </Button>
           <Button
             danger
@@ -239,7 +239,7 @@ const openConnectionStringModal = (row: any) => {
       <component :is="editRow.id ? EditForm : AddForm" />
     </TenantModal>
     <FeatureManageModal />
-    <ConnectionStringModal/>
+    <ConnectionStringModal />
   </Page>
 </template>
 

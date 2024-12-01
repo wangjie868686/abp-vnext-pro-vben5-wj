@@ -1,10 +1,17 @@
 <script lang="ts" setup>
-import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import { ref } from 'vue';
-import { ElMessage, ElMessageBox, ElButton as Button } from 'element-plus';
-import { postTenantsPageConnectionString, postTenantsDeleteConnectionString, postTenantsAddOrUpdateConnectionString } from '#/api-client';
-import { $t } from '#/locales';
+
+import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
+
+import { ElButton as Button, ElMessage, ElMessageBox } from 'element-plus';
+
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
+import {
+  postTenantsDeleteConnectionString,
+  postTenantsPageConnectionString,
+} from '#/api-client';
+import { $t } from '#/locales';
+
 import AddEditModal from './AddEditModal.vue';
 
 const data = ref<Record<string, any>>({});
@@ -21,23 +28,24 @@ const [ConnectionString, modalApi] = useVbenModal({
 const formOptions: VbenFormProps = {
   wrapperClass: 'grid-cols-12', // 表单外层样式，分成网格12列
   actionWrapperClass: 'col-span-3', // 表单操作按钮，占3列
-  schema: [{
-    component: 'Input',
-    componentProps: {
+  schema: [
+    {
+      component: 'Input',
+      componentProps: {},
+      fieldName: 'name',
+      label: $t('abp.tenant.connectionStringName'),
+      formItemClass: 'col-span-3', // 表单项样式，占3列
+      labelWidth: 180,
     },
-    fieldName: 'name',
-    label: '名称',
-    formItemClass: 'col-span-3', // 表单项样式，占3列
-    labelWidth: 180,
-  }, {
-    component: 'Input',
-    componentProps: {
+    {
+      component: 'Input',
+      componentProps: {},
+      fieldName: 'value',
+      label: $t('abp.tenant.connectionString'),
+      formItemClass: 'col-span-6', // 表单项样式，占6列
+      labelWidth: 180,
     },
-    fieldName: 'value',
-    label: '连接字符串',
-    formItemClass: 'col-span-6', // 表单项样式，占6列
-    labelWidth: 180,
-  },],
+  ],
 };
 const gridOptions: VxeGridProps<any> = {
   checkboxConfig: {
@@ -46,13 +54,13 @@ const gridOptions: VxeGridProps<any> = {
   },
   columns: [
     { title: '序号', type: 'seq', width: 50 },
-    { field: 'name', title: '名称' },
-    { field: 'value', title: '连接字符串' },
+    { field: 'name', title: $t('abp.tenant.connectionStringName') },
+    { field: 'value', title: $t('abp.tenant.connectionString') },
     {
       field: 'action',
       fixed: 'right',
       slots: { default: 'action' },
-      title: '操作',
+      title: $t('common.action'),
       width: 120,
     },
   ],
@@ -88,42 +96,40 @@ const gridOptions: VxeGridProps<any> = {
 };
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 const onDel = (row: any) => {
-  ElMessageBox.confirm(
-    `${$t('common.confirmDelete')}${row.name} ?`,
-    {
-      type: 'warning',
-    }
-  ).then(async () => {
+  ElMessageBox.confirm(`${$t('common.confirmDelete')}${row.name} ?`, {
+    type: 'warning',
+  }).then(async () => {
     await postTenantsDeleteConnectionString({
-        body: {
-          tenantId: row.tenantId,
-          name: row.name,
-        },
-      });
-      gridApi.reload();
-      ElMessage({
-        type:'success',
-        message: $t('common.deleteSuccess'),
-      })
-  })
-}
+      body: {
+        tenantId: row.tenantId,
+        name: row.name,
+      },
+    });
+    gridApi.reload();
+    ElMessage({
+      type: 'success',
+      message: $t('common.deleteSuccess'),
+    });
+  });
+};
 
 const [AddEditModalComponent, addEditModalApi] = useVbenModal({
   connectedComponent: AddEditModal,
 });
-
 </script>
 <template>
   <div>
-    <ConnectionString title="连接字符串" fullscreen>
+    <ConnectionString :title="$t('abp.tenant.connectionString')" fullscreen>
       <Grid>
         <template #toolbar-tools>
           <Button class="mr-2" type="primary" @click="addEditModalApi.open">
-            新增或编辑
+            {{ $t('abp.tenant.addorEdit') }}
           </Button>
         </template>
         <template #action="{ row }">
-          <Button type="danger" link @click="onDel(row)">删除</Button>
+          <Button link type="danger" @click="onDel(row)">
+            {{ $t('common.delete') }}
+          </Button>
         </template>
       </Grid>
     </ConnectionString>
