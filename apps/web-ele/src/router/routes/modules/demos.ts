@@ -18,6 +18,7 @@ const routes: RouteRecordRaw[] = [
       {
         meta: {
           title: $t('demos.elementPlus'),
+          icon: 'logos:element',
         },
         name: 'NaiveDemos',
         path: '/demos/element',

@@ -1,5 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
 
+import { SvgAntdvLogoIcon } from '@vben/icons';
+
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -72,6 +74,16 @@ const routes: RouteRecordRaw[] = [
           icon: 'ant-design:google-circle-filled',
           link: 'https://gitee.com/WangJunZzz/abp-vnext-pro',
           title: 'Gitee',
+        },
+      },
+      {
+        name: 'VbenGithub',
+        path: '/vben-admin/github',
+        component: IFrameView,
+        meta: {
+          icon: SvgAntdvLogoIcon,
+          link: 'https://www.antdv.com/components/overview-cn/',
+          title: 'Ant Design Vue',
         },
       },
     ],

@@ -1,7 +1,7 @@
-import { BasicLayout, IFrameView } from '#/layouts';
-import { $t } from '#/locales';
 import type { RouteRecordRaw } from 'vue-router';
 
+import { BasicLayout, IFrameView } from '#/layouts';
+import { $t } from '#/locales';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -79,7 +79,7 @@ const routes: RouteRecordRaw[] = [
         path: '/vben-admin/github',
         component: IFrameView,
         meta: {
-          icon: 'lucide:book-open-text',
+          icon: 'logos:element',
           link: 'https://element-plus-docs.bklab.cn/zh-CN/',
           title: 'Element Plus',
         },
