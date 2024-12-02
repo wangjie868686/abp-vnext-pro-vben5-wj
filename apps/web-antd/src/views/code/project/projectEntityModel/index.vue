@@ -32,6 +32,8 @@ import { useRoute } from 'vue-router';
 import ContextMenu from './ContextMenu.vue';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 import EntityAddEditModal from './EntityAddEditModal.vue';
+import AddEditEntity from './AddEditEntityModal.vue';
+
 // const { isDark } = usePreferences();
 const expandedKeys = ref<(number | string)[]>([]);
 const searchValue = ref<string>('');
@@ -72,11 +74,10 @@ function onRightClick({ event, node }) {
 const onContextMenuSelect = async (key: string) => {
   switch (key) {
     case 'add': {
-      orgTreeAddModalApi.setData({
-        parentDisplayName: parentDisplayName.value,
-        parentId: currentSelectedKey.value,
+      addEditEntityModalApi.setData({
+        isEdit: false,
       });
-      orgTreeAddModalApi.open();
+      addEditEntityModalApi.open();
       break;
     }
     case 'delete': {
@@ -220,26 +221,28 @@ const [AddOaggregateRootModal, addOaggregateRootModalApi] = useVbenModal({
   connectedComponent: AddOaggregateRoot,
 });
 
-
 const [EntityAddEditModalComponent, orgTreeEditModalApi] = useVbenModal({
   // 连接抽离的组件
   connectedComponent: EntityAddEditModal,
 });
 
+const [AddEditEntityModal, addEditEntityModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: AddEditEntity,
+});
 
 const propertyFormOptions: VbenFormProps = {
   schema: [
     {
       component: 'Input',
       fieldName: 'filter',
-      label: $t('abp.organizationunit.userName'),
+      label: '关键字',
       labelWidth: 50,
       componentProps: {
         allowClear: true,
       },
     },
   ],
-  wrapperClass: 'grid-cols-2',
   showDefaultActions: true,
   submitOnEnter: true,
   showCollapseButton: false,
@@ -247,17 +250,46 @@ const propertyFormOptions: VbenFormProps = {
 
 const propertyGridOptions: VxeGridProps<any> = {
   columns: [
-    // { type: 'radio', width: '50', },
     { type: 'seq', title: $t('common.seq'), width: '50' },
     {
-      field: 'userName',
-      title: $t('abp.organizationunit.userName'),
+      field: 'code',
+      title: $t('abp.dataDictionary.code'),
       minWidth: '200',
     },
     {
-      field: 'email',
-      title: $t('abp.organizationunit.email'),
+      field: 'description',
+      title: $t('common.description'),
       minWidth: '200',
+    },
+    {
+      field: 'dataTypeDescription',
+      title: $t('abp.message.type'),
+      minWidth: '150',
+    },
+    {
+      field: 'isRequired',
+      title: '是否必填',
+      minWidth: '150',
+    },
+    {
+      field: 'maxLength',
+      title: '最大长度',
+      minWidth: '150',
+    },
+    {
+      field: 'minLength',
+      title: '最小长度',
+      minWidth: '150',
+    },
+    {
+      field: 'decimalPrecision',
+      title: '精度(18,6)中的18',
+      minWidth: '150',
+    },
+    {
+      field: 'decimalScale',
+      title: '精度(18,6)中的6',
+      minWidth: '150',
     },
     {
       title: $t('common.action'),
@@ -313,9 +345,6 @@ const onExpand = (keys: (string | number)[], info: any) => {
     <div class="grid grid-cols-12 gap-4">
       <div class="bg-card col-span-4 xl:col-span-3">
         <div class="bg-card flex items-center justify-between p-3">
-          <span class="text-lg whitespace-nowrap">{{
-            $t('abp.organizationunit.organizationunit')
-          }}</span>
           <Button
             class="mx-3"
             size="small"
@@ -370,7 +399,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
         <div class="bg-card">
           <Tabs v-model:active-key="activeKey" class="px-3">
             <Tabs.TabPane key="1" :tab="'属性'">
-              <UserGrid>
+              <PropertyGrid>
                 <template #toolbar-tools>
                   <Button type="primary">
                     <!-- {{ $t('common.add') }} -->
@@ -382,7 +411,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
                     {{ $t('common.delete') }}
                   </Button>
                 </template>
-              </UserGrid>
+              </PropertyGrid>
             </Tabs.TabPane>
             <Tabs.TabPane key="2" :tab="'枚举'">
               <!-- <RolesGrid>
@@ -404,6 +433,7 @@ const onExpand = (keys: (string | number)[], info: any) => {
       </div>
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
+    <AddEditEntityModal />
     <EntityAddEditModalComponent @get-tree-data="getTreeData" />
     <ContextMenu
       v-if="contextMenu.visible"

@@ -117,9 +117,9 @@ const handleViewModel = (row: Record<string, any>) => {
       </template>
 
       <template #action="{ row }">
-        <!-- <Button type="link" @click="handleViewModel(row)">
+        <Button type="link" @click="handleViewModel(row)">
             模型
-        </Button> -->
+        </Button>
         <Button type="link" @click="handleEdit(row)">
           {{ $t('common.edit') }}
         </Button>
