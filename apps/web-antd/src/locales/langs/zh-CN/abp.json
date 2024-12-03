@@ -73,7 +73,9 @@
     "language": "语言名称",
     "showLanguage": "显示名称",
     "icon": "图标",
-    "resourceName": "资源名称"
+    "resourceName": "资源名称",
+    "value": "值",
+    "name": "名称"
   },
   "dataDictionary": {
     "codeName": "编码|名称",

@@ -2,15 +2,23 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { h } from 'vue';
+import { h, onMounted } from 'vue';
 
-import { Page } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 
-import { Tag } from 'ant-design-vue';
+import { Button, Space, Tag } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { postLanguageTextsPage } from '#/api-client';
+import {
+  postLanguageTextsAllResource,
+  postLanguageTextsPage,
+} from '#/api-client';
 
+// 新增modal
+import AddLanguageTextModal from './AddLanguageTextModal.vue';
+
+// 编辑modal
+import EditLanguageTextModal from './EditLanguageTextModal.vue';
 import { languageTextQuerySchema, languageTextTableSchema } from './schema';
 
 defineOptions({
@@ -19,6 +27,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: languageTextQuerySchema,
+  wrapperClass: 'grid-cols-4',
 };
 
 const gridOptions: VxeGridProps<any> = {
@@ -48,12 +57,71 @@ const gridOptions: VxeGridProps<any> = {
   },
 };
 
-const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
+const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
+
+onMounted(async () => {
+  const res = await postLanguageTextsAllResource();
+
+  gridApi.formApi.updateSchema([
+    {
+      componentProps: {
+        options: res?.data?.map((item) => ({
+          label: item.label,
+          value: item.value,
+        })),
+      },
+      fieldName: 'resourceName',
+    },
+  ]);
+});
+
+const [AddVbenLanguageTextModal, addModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: AddLanguageTextModal,
+});
+const [EditVbenLanguageTextModal, editModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: EditLanguageTextModal,
+});
+const handleAdd = () => {
+  addModalApi.open();
+};
+
+const handleEdit = async (row: Record<string, any>) => {
+  const formValues = await gridApi.formApi.getValues();
+  const cultureName = formValues.cultureName;
+  const record = { ...row, cultureName };
+  editModalApi.setData({
+    row: record,
+  });
+  editModalApi.open();
+};
 </script>
 
 <template>
   <Page auto-content-height>
     <Grid>
+      <template #toolbar-actions>
+        <Space>
+          <Button
+            type="primary"
+            v-access:code="'AbpIdentity.LanguageTexts.Create'"
+            @click="handleAdd"
+          >
+            {{ $t('common.add') }}
+          </Button>
+        </Space>
+      </template>
+
+      <template #action="{ row }">
+        <Button
+          type="primary"
+          v-access:code="'AbpIdentity.LanguageTexts.Update'"
+          @click="handleEdit(row)"
+        >
+          {{ $t('common.edit') }}
+        </Button>
+      </template>
       <template #isEnabled="{ row }">
         <component
           :is="
@@ -66,6 +134,8 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
         />
       </template>
     </Grid>
+    <AddVbenLanguageTextModal @reload="gridApi.reload" />
+    <EditVbenLanguageTextModal @reload="gridApi.reload" />
   </Page>
 </template>
 <style scoped></style>
