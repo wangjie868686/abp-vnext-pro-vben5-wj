@@ -18,19 +18,20 @@ const routes: RouteRecordRaw[] = [
       {
         meta: {
           title: $t('demos.naive'),
+          icon: 'logos:naiveui',
         },
         name: 'NaiveDemos',
         path: '/demos/naive',
         component: () => import('#/views/demos/naive/index.vue'),
       },
-      {
-        meta: {
-          title: $t('demos.table'),
-        },
-        name: 'Table',
-        path: '/demos/table',
-        component: () => import('#/views/demos/table/index.vue'),
-      },
+      // {
+      //   meta: {
+      //     title: $t('demos.table'),
+      //   },
+      //   name: 'Table',
+      //   path: '/demos/table',
+      //   component: () => import('#/views/demos/table/index.vue'),
+      // },
     ],
   },
 ];

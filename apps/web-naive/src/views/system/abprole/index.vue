@@ -2,13 +2,13 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
 import {
   NButton as Button,
-  NDropdown as Dropdown,
+  NSpace as Space,
   NTag as Tag,
   NTree as Tree,
 } from 'naive-ui';
@@ -52,9 +52,6 @@ const gridOptions: VxeGridProps<any> = {
   keepSource: true,
   pagerConfig: {},
   proxyConfig: {
-    response: {
-      total: 'totalCount',
-    },
     ajax: {
       query: async ({ page }, formValues) => {
         const { data } = await postRolesPage({
@@ -262,15 +259,8 @@ const updateAuth = async () => {
       </template>
 
       <template #isDefault="{ row }">
-        <component
-          :is="
-            h(
-              Tag,
-              { color: row.isDefault ? 'green' : 'red' },
-              row.isDefault ? $t('common.yes') : $t('common.no'),
-            )
-          "
-        />
+        <Tag v-if="row.isDefault" type="success"> {{ $t('common.yes') }} </Tag>
+        <Tag v-else type="error"> {{ $t('common.no') }} </Tag>
       </template>
 
       <template #action="{ row }">
@@ -283,24 +273,22 @@ const updateAuth = async () => {
           >
             {{ $t('common.edit') }}
           </Button>
-          <Dropdown>
-            <Button
-              size="small"
-              type="primary"
-              v-access:code="'AbpIdentity.Roles.ManagePermissions'"
-              @click="onAuth(row)"
-            >
-              {{ $t('abp.role.permissions') }}
-            </Button>
-            <Button
-              size="small"
-              type="error"
-              v-access:code="'AbpIdentity.Roles.Delete'"
-              @click="onDel(row)"
-            >
-              {{ $t('common.delete') }}
-            </Button>
-          </Dropdown>
+          <Button
+            size="small"
+            type="primary"
+            v-access:code="'AbpIdentity.Roles.ManagePermissions'"
+            @click="onAuth(row)"
+          >
+            {{ $t('abp.role.permissions') }}
+          </Button>
+          <Button
+            size="small"
+            type="error"
+            v-access:code="'AbpIdentity.Roles.Delete'"
+            @click="onDel(row)"
+          >
+            {{ $t('common.delete') }}
+          </Button>
         </Space>
       </template>
     </Grid>
