@@ -18,12 +18,13 @@ import {
   postEntityModelsTree,
   postEntityModelsPageProperty,
   postEntityModelsDeleteEntityModel,
+  postEnumTypesPage,
+  postEnumTypesPageProperty,
   type TreeOutput,
 } from '#/api-client/index';
 import { $t } from '#/locales';
 import { useRoute } from 'vue-router';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
-import EntityAddEditModal from './EntityAddEditModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
@@ -47,6 +48,10 @@ const contextMenuOptions = [
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ];
+
+onMounted(() => {
+  getTreeData();
+});
 
 // 定义一个异步函数，用于处理右键菜单的选择
 const onContextMenuSelect = async (key: string) => {
@@ -98,7 +103,6 @@ const onContextMenuSelect = async (key: string) => {
     }
   }
 };
-
 // 当右键菜单点击时，执行该函数
 const onContextMenuClick = (treeKey: string, nodeData: any, menuKey: any) => {
   // 将当前选中的树节点key赋值给currentSelectedKey
@@ -169,12 +173,24 @@ const collapseAll = () => {
   autoExpandParent.value = true;
 };
 
+// 添加 onExpand 方法处理节点展开/折叠
+const onExpand = (keys: (string | number)[], info: any) => {
+  expandedKeys.value = keys;
+  autoExpandParent.value = false;
+};
+
+async function getTreeData() {
+  const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId as string } });
+  gData.value = data;
+  dataList.value = [];
+  generateList(data as TreeProps['treeData']);
+}
+
 watch(searchValue, (value) => {
   if (!value) {
     expandedKeys.value = [];
     return;
   }
-  
   const expanded = dataList.value
     .map((item) => {
       if (typeof item.title === 'string' && item.title.toLowerCase().indexOf(value.toLowerCase()) > -1) {
@@ -190,27 +206,10 @@ watch(searchValue, (value) => {
   autoExpandParent.value = true;
 });
 
-async function getTreeData() {
-  const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId as string } });
-  gData.value = data;
-  dataList.value = [];
-  generateList(data as TreeProps['treeData']);
-}
-
-onMounted(() => {
-  getTreeData();
-});
-
 const [AddOaggregateRootModal, addOaggregateRootModalApi] = useVbenModal({
   // 连接抽离的组件
   connectedComponent: AddOaggregateRoot,
 });
-
-const [EntityAddEditModalComponent] = useVbenModal({
-  // 连接抽离的组件
-  connectedComponent: EntityAddEditModal,
-});
-
 const [AddEditEntityModal, addEditEntityModalApi] = useVbenModal({
   // 连接抽离的组件
   connectedComponent: AddEditEntity,
@@ -312,11 +311,141 @@ const [PropertyGrid, propertyGridApi] = useVbenVxeGrid({
   formOptions: propertyFormOptions,
 });
 
-// 添加 onExpand 方法处理节点展开/折叠
-const onExpand = (keys: (string | number)[], info: any) => {
-  expandedKeys.value = keys;
-  autoExpandParent.value = false;
+watch(currentSelectedKey, () => {
+  propertyGridApi.reload();
+})
+
+const enumFormOptions: VbenFormProps = {
+  schema: [
+    {
+      component: 'Input',
+      fieldName: 'filter',
+      label: '关键字',
+      labelWidth: 50,
+      componentProps: {
+        allowClear: true,
+      },
+    },
+  ],
+  showDefaultActions: true,
+  submitOnEnter: true,
+  showCollapseButton: false,
 };
+
+const enumGridOptions: VxeGridProps<any> = {
+  columns: [
+    { type: 'seq', title: $t('common.seq'), width: '50' },
+    {
+      field: 'code',
+      title: $t('abp.dataDictionary.code'),
+      minWidth: '200',
+    },
+    {
+      field: 'description',
+      title: $t('common.description'),
+      minWidth: '200',
+    },
+    {
+      title: $t('common.action'),
+      field: 'action',
+      fixed: 'right',
+      width: '150',
+      slots: { default: 'action' },
+    },
+  ],
+  minHeight: '800',
+  keepSource: true,
+  pagerConfig: {},
+  radioConfig: {
+    highlight: true,
+  },
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        const { data } = await postEnumTypesPage({
+          body: {
+            pageIndex: page.currentPage,
+            pageSize: page.pageSize,
+            id: currentSelectedKey.value,
+            ...formValues,
+          },
+        });
+        return data;
+      },
+    },
+  },
+};
+
+const [EnumGrid, enumGridApi] = useVbenVxeGrid({
+  gridOptions: enumGridOptions,
+  formOptions: enumFormOptions,
+});
+
+const enumPropertyFormOptions: VbenFormProps = {
+  schema: [
+    {
+      component: 'Input',
+      fieldName: 'filter',
+      label: '关键字',
+      labelWidth: 50,
+      componentProps: {
+        allowClear: true,
+      },
+    },
+  ],
+  showDefaultActions: true,
+  submitOnEnter: true,
+  showCollapseButton: false,
+};
+
+const enumPropertyGridOptions: VxeGridProps<any> = {
+  columns: [
+    { type: 'seq', title: $t('common.seq'), width: '50' },
+    {
+      field: 'code',
+      title: $t('abp.dataDictionary.code'),
+      minWidth: '200',
+    },
+    {
+      field: 'description',
+      title: $t('common.description'),
+      minWidth: '200',
+    },
+    {
+      title: $t('common.action'),
+      field: 'action',
+      fixed: 'right',
+      width: '150',
+      slots: { default: 'action' },
+    },
+  ],
+  minHeight: '800',
+  keepSource: true,
+  pagerConfig: {},
+  radioConfig: {
+    highlight: true,
+  },
+  proxyConfig: {
+    ajax: {
+      query: async ({ page }, formValues) => {
+        const { data } = await postEnumTypesPage({
+          body: {
+            pageIndex: page.currentPage,
+            pageSize: page.pageSize,
+            id: currentSelectedKey.value,
+            ...formValues,
+          },
+        });
+        return data;
+      },
+    },
+  },
+};
+
+const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
+  gridOptions: enumPropertyGridOptions,
+  formOptions: enumPropertyFormOptions,
+});
 
 </script>
 
@@ -398,19 +527,44 @@ const onExpand = (keys: (string | number)[], info: any) => {
               </PropertyGrid>
             </Tabs.TabPane>
             <Tabs.TabPane key="2" :tab="'枚举'">
-              <!-- <RolesGrid>
-                <template #toolbar-tools>
-                  <Button type="primary" :disabled="!currentSelectedKey" @click="addRolesModalApi.open">
-                    {{ $t('common.add') }}
-                  </Button>
-                </template>
+              <div class="grid grid-cols-12 gap-4">
+                <div class="bg-card col-span-6">
+                  <EnumGrid>
+                    <template #toolbar-tools>
+                      <Button type="primary" @click="">
+                        {{ '新增枚举' }}
+                      </Button>
+                    </template>
 
-                <template #action="{ row }">
-                  <Button type="link" @click="removeRole(row)">
-                    {{ $t('common.delete') }}
-                  </Button>
-                </template>
-              </RolesGrid> -->
+                    <template #action="{ row }">
+                      <Button type="link" @click="">
+                        {{ $t('common.edit') }}
+                      </Button>
+                      <Button danger type="link" @click="">
+                        {{ $t('common.delete') }}
+                      </Button>
+                    </template>
+                  </EnumGrid>
+                </div>
+                <div class="bg-card col-span-6">
+                  <EnumPropertyGrid>
+                    <template #toolbar-tools>
+                      <Button type="primary" @click="">
+                        {{ '新增枚举属性' }}
+                      </Button>
+                    </template>
+
+                    <template #action="{ row }">
+                      <Button type="link" @click="">
+                        {{ $t('common.edit') }}
+                      </Button>
+                      <Button danger type="link" @click="">
+                        {{ $t('common.delete') }}
+                      </Button>
+                    </template>
+                  </EnumPropertyGrid>
+                </div>
+              </div>
             </Tabs.TabPane>
           </Tabs>
         </div>

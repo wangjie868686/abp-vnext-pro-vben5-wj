@@ -23,32 +23,37 @@ const [Modal, modalApi] = useVbenModal({
     }
   },
   onConfirm: async () => {
-    if (data.value.isEdit) {
-      const { valid } = await editFormApi.validate();
-      if (!valid) return;
-      const editFormValues = await editFormApi.getValues();
-      const params = {
-        ...editFormValues,
-        id: data.value.id
-      } as UpdateEntityModelInput;
-      data.value.isRoot && delete params.relationalType;
-      await postEntityModelsUpdateEntityModel({
-        body: params
-      })
-    } else {
-      const { valid } = await addFormApi.validate();
-      if (!valid) return;
-      const addFormValues = await addFormApi.getValues();
-      await postEntityModelsCreateEntityModel({
-        body: {
-          ...addFormValues,
+    try {
+      modalApi.setState({ loading: true, confirmLoading: true});
+      if (data.value.isEdit) {
+        const { valid } = await editFormApi.validate();
+        if (!valid) return;
+        const editFormValues = await editFormApi.getValues();
+        const params = {
+          ...editFormValues,
           id: data.value.id
-        } as CreateEntityModelInput,
-      });
-      message.success('新增成功');
+        } as UpdateEntityModelInput;
+        data.value.isRoot && delete params.relationalType;
+        await postEntityModelsUpdateEntityModel({
+          body: params
+        })
+      } else {
+        const { valid } = await addFormApi.validate();
+        if (!valid) return;
+        const addFormValues = await addFormApi.getValues();
+        await postEntityModelsCreateEntityModel({
+          body: {
+            ...addFormValues,
+            id: data.value.id
+          } as CreateEntityModelInput,
+        });
+        message.success('新增成功');
+      }
+      modalApi.close();
+      emit('getTreeData');
+    } finally {
+      modalApi.setState({ loading: false, confirmLoading: false});
     }
-    modalApi.close();
-    emit('getTreeData');
   }
 });
 
