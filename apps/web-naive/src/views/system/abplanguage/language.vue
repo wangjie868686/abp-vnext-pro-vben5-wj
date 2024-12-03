@@ -2,24 +2,28 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+import { h } from 'vue';
+
 import { Page } from '@vben/common-ui';
+import { $t } from '@vben/locales';
+
+import { NTag as Tag } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { postIdentitySecurityLogsPage } from '#/api-client';
+import { postLanguagesPage } from '#/api-client';
 
-import { logQuerySchema, logTableSchema } from './schema';
+import { languageQuerySchema, languageTableSchema } from './schema';
 
 defineOptions({
-  name: 'AbpLoginLog',
+  name: 'Language',
 });
 
 const formOptions: VbenFormProps = {
-  schema: logQuerySchema,
-  wrapperClass: 'grid-cols-3',
+  schema: languageQuerySchema,
 };
 
 const gridOptions: VxeGridProps<any> = {
-  columns: logTableSchema,
+  columns: languageTableSchema,
   toolbarConfig: {
     custom: true,
   },
@@ -32,14 +36,7 @@ const gridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        if (formValues?.time?.length === 2) {
-          formValues = {
-            ...formValues,
-            startCreationTime: formValues.time[0],
-            endCreationTime: formValues.time[1],
-          };
-        }
-        const { data } = await postIdentitySecurityLogsPage({
+        const { data } = await postLanguagesPage({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
@@ -54,9 +51,22 @@ const gridOptions: VxeGridProps<any> = {
 
 const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 </script>
+
 <template>
   <Page auto-content-height>
-    <Grid />
+    <Grid>
+      <template #isEnabled="{ row }">
+        <component
+          :is="
+            h(
+              Tag,
+              { color: row.isEnabled ? 'green' : 'red' },
+              row.isEnabled ? $t('common.enabled') : $t('common.disabled'),
+            )
+          "
+        />
+      </template>
+    </Grid>
   </Page>
 </template>
 <style scoped></style>

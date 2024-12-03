@@ -3,8 +3,9 @@ import { ref } from 'vue';
 
 import { useVbenModal, type VbenFormProps } from '@vben/common-ui';
 
-import { ElButton as Button, ElMessage, ElMessageBox } from 'element-plus';
+import { NButton as Button } from 'naive-ui';
 
+import { dialog, message } from '#/adapter/naive';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   postTenantsDeleteConnectionString,
@@ -96,20 +97,21 @@ const gridOptions: VxeGridProps<any> = {
 };
 const [Grid, gridApi] = useVbenVxeGrid({ formOptions, gridOptions });
 const onDel = (row: any) => {
-  ElMessageBox.confirm(`${$t('common.confirmDelete')}${row.name} ?`, {
-    type: 'warning',
-  }).then(async () => {
-    await postTenantsDeleteConnectionString({
-      body: {
-        tenantId: row.tenantId,
-        name: row.name,
-      },
-    });
-    gridApi.reload();
-    ElMessage({
-      type: 'success',
-      message: $t('common.deleteSuccess'),
-    });
+  dialog.warning({
+    positiveText: $t('common.confirm'),
+    negativeText: $t('common.cancel'),
+    closable: false,
+    title: `${$t('common.confirmDelete')}${row.name} ?`,
+    onPositiveClick: async () => {
+      await postTenantsDeleteConnectionString({
+        body: {
+          tenantId: row.tenantId,
+          name: row.name,
+        },
+      });
+      gridApi.reload();
+      message.success($t('common.deleteSuccess'));
+    },
   });
 };
 
@@ -127,7 +129,7 @@ const [AddEditModalComponent, addEditModalApi] = useVbenModal({
           </Button>
         </template>
         <template #action="{ row }">
-          <Button link type="danger" @click="onDel(row)">
+          <Button type="warning" @click="onDel(row)">
             {{ $t('common.delete') }}
           </Button>
         </template>

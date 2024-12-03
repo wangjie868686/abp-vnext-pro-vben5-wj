@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Button } from 'ant-design-vue';
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
+
+import { ref } from 'vue';
+
 import { Page, useVbenDrawer } from '@vben/common-ui';
+import { IconDocDetail } from '@vben/icons';
+import { usePreferences } from '@vben/preferences';
+
+import { Button } from 'ant-design-vue';
+
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postAuditLogsPage } from '#/api-client';
-import { usePreferences } from '@vben/preferences';
+
 import { auditLogQuerySchema, auditLogTableSchema } from './schema';
-import { IconDocDetail } from '@vben/icons';
 
 defineOptions({
   name: 'AbpAuditLog',
@@ -17,7 +22,7 @@ defineOptions({
 const { isDark } = usePreferences();
 const formOptions: VbenFormProps = {
   schema: auditLogQuerySchema,
-  wrapperClass: 'grid-cols-5',
+  wrapperClass: 'grid-cols-3',
 };
 
 const gridOptions: VxeGridProps<any> = {
@@ -61,7 +66,7 @@ const [Drawer, drawerApi] = useVbenDrawer();
 const viewDetail = (row: any) => {
   jsonData.value = row;
   drawerApi.open();
-}
+};
 </script>
 
 <template>
@@ -70,12 +75,20 @@ const viewDetail = (row: any) => {
       <template #action="{ row }">
         <div class="flex items-center">
           <IconDocDetail style="color: var(--vxe-ui-font-primary-color)" />
-          <Button type="link" class="pl-1" @click="viewDetail(row)">详情</Button>
+          <Button class="pl-1" type="link" @click="viewDetail(row)">
+            {{ $t('abp.log.detail') }}
+          </Button>
         </div>
-      </template>9
+      </template>
     </Grid>
-    <Drawer class="w-[600px]" title="详情">
-      <JsonViewer class="h-full" :value="jsonData" copyable sort :theme="isDark ? 'dark' : 'light'" />
+    <Drawer :title="$t('abp.log.detail')" class="w-[600px]">
+      <JsonViewer
+        :theme="isDark ? 'dark' : 'light'"
+        :value="jsonData"
+        class="h-full"
+        copyable
+        sort
+      />
     </Drawer>
   </Page>
 </template>

@@ -8,7 +8,7 @@ import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconDocDetail } from '@vben/icons';
 import { usePreferences } from '@vben/preferences';
 
-import { ElButton as Button } from 'element-plus';
+import { NButton as Button } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postAuditLogsPage } from '#/api-client';
@@ -45,7 +45,6 @@ const gridOptions: VxeGridProps<any> = {
             startCreationTime: formValues.time[0],
             endCreationTime: formValues.time[1],
           };
-          delete formValues.time;
         }
         const { data } = await postAuditLogsPage({
           body: {
@@ -75,8 +74,8 @@ const viewDetail = (row: any) => {
     <Grid>
       <template #action="{ row }">
         <div class="flex items-center">
-          <IconDocDetail style="color: var(--el-color-primary)" />
-          <Button link type="primary" @click="viewDetail(row)">
+          <IconDocDetail style="color: var(--vxe-ui-font-primary-color)" />
+          <Button class="pl-1" type="link" @click="viewDetail(row)">
             {{ $t('abp.log.detail') }}
           </Button>
         </div>

@@ -1,25 +1,23 @@
-import type { VbenFormSchema } from '@vben/common-ui';
-
 import dayjs from 'dayjs';
 
 import { $t } from '#/locales';
 
 export const logQuerySchema: any = [
   {
-    component: 'ElDatePicker',
+    component: 'DatePicker',
     fieldName: 'time',
-    label: $t('abp.log.loginTime'),
+    label: $t('abp.log.executionTime'),
     componentProps: {
-      type: 'datetimerange', // 添加这个属性来启用日期范围选择
+      type: 'daterange', // 添加这个属性来启用日期范围选择
       startPlaceholder: '开始日期', // 添加占位符
       endPlaceholder: '结束日期', // 添加占位符
       valueFormat: 'YYYY-MM-DD',
-      // 'value-format': 'YYYY-MM-DD',
     },
-    // defaultValue: [
-    //   dayjs().subtract(0, 'day').format('YYYY-MM-DD'),
-    //   dayjs().format('YYYY-MM-DD'),
-    // ],
+
+    defaultValue: [
+      dayjs().subtract(0, 'day').format('YYYY-MM-DD'),
+      dayjs().format('YYYY-MM-DD'),
+    ],
   },
   {
     component: 'Input',
@@ -55,15 +53,16 @@ export const logTableSchema: any = [
   },
 ];
 
-export const auditLogQuerySchema: VbenFormSchema[] = [
+export const auditLogQuerySchema: any = [
   {
-    component: 'ElDatePicker',
+    component: 'DatePicker',
     fieldName: 'time',
-    label: $t('abp.log.executionTime'),
+    label: $t('abp.log.loginTime'),
     componentProps: {
-      type: 'daterange',
-      'range-separator': '至',
-      'value-format': 'YYYY-MM-DD',
+      type: 'daterange', // 添加这个属性来启用日期范围选择
+      startPlaceholder: '开始日期', // 添加占位符
+      endPlaceholder: '结束日期', // 添加占位符
+      valueFormat: 'YYYY-MM-DD',
     },
     defaultValue: [
       dayjs().subtract(0, 'day').format('YYYY-MM-DD'),
