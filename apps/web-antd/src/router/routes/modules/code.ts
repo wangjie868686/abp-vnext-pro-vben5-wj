@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
   {
     component: BasicLayout,
     meta: {
-      icon: 'ant-design:switcher-filled',
+      icon: 'ant-design:format-painter-filled',
       order: 3,
       title: $t('abp.menu.code'),
       // authority: ['AbpTenantManagement'],
@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
         path: 'project',
         component: () => import('#/views/code/project/index.vue'),
         meta: {
-          icon: 'ph:user',
+          icon: 'ant-design:profile-outlined',
           title: $t('abp.menu.code-project'),
           // authority: ['AbpTenantManagement.Tenants'],
         },
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
         path: 'template',
         component: () => import('#/views/code/template/index.vue'),
         meta: {
-          icon: 'ph:user',
+          icon: 'ant-design:file-markdown-filled',
           title: $t('abp.menu.code-template'),
           // authority: ['AbpTenantManagement.Tenants'],
         },
@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
         path: 'generate',
         component: () => import('#/views/code/generate/index.vue'),
         meta: {
-          icon: 'ph:user',
+          icon: 'ant-design:copyright-circle-filled',
           title: $t('abp.menu.code-genarate'),
           // authority: ['AbpTenantManagement.Tenants'],
         },
@@ -48,7 +48,8 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'EntityModel',
         path: 'entityModel',
-        component: () => import('#/views/code/project/projectEntityModel/index.vue'),
+        component: () =>
+          import('#/views/code/project/projectEntityModel/index.vue'),
         meta: {
           icon: 'ph:user',
           title: '实体',
