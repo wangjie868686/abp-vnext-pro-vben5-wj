@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TreeProps } from 'ant-design-vue';
 import type { DataNode } from 'ant-design-vue/es/tree';
-import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
 import {
   Button,
@@ -13,45 +13,34 @@ import {
   Tabs,
   Tree,
 } from 'ant-design-vue';
-
-import { useVbenForm } from '#/adapter/form';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
   postEntityModelsTree,
   postEntityModelsPageProperty,
-
-  postOrganizationUnitsAddRoleToOrganizationUnitAsync,
-  postOrganizationUnitsAddUserToOrganizationUnit,
-  postOrganizationUnitsCreate,
-  postOrganizationUnitsDelete,
-  postOrganizationUnitsGetUsers,
+  postEntityModelsDeleteEntityModel,
   type TreeOutput,
 } from '#/api-client/index';
 import { $t } from '#/locales';
 import { useRoute } from 'vue-router';
-import ContextMenu from './ContextMenu.vue';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 import EntityAddEditModal from './EntityAddEditModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
 
-// const { isDark } = usePreferences();
+// 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
+// 定义一个响应式变量，用于存储搜索框的值
 const searchValue = ref<string>('');
+// 定义一个响应式变量，用于控制是否自动展开父节点
 const autoExpandParent = ref<boolean>(true);
+// 定义一个响应式变量，用于存储树形数据
 const gData = ref<Array<TreeOutput>>([]);
-
+// 定义一个响应式变量，用于存储当前激活的tab
 const activeKey = ref('1');
+// 定义一个响应式的变量，用于存储当前选中的节点的key
 const currentSelectedKey = ref('');
-const parentDisplayName = ref('');
-const selectRoles = ref();
-const selectUsers = ref();
+// 定义一个响应式的变量，用于存储当前选中的节点
+const currentSelectedTreeNode = ref();
 const route = useRoute();
-console.log(route)
-const contextMenu = reactive({
-  visible: false,
-  x: 0,
-  y: 0,
-});
 
 const contextMenuOptions = [
   { label: $t('common.add'), key: 'add' },
@@ -59,67 +48,68 @@ const contextMenuOptions = [
   { label: $t('common.delete'), key: 'delete' },
 ];
 
-function onRightClick({ event, node }) {
-  event.preventDefault();
-  event.stopPropagation();
-  if (!currentSelectedKey.value) {
-    Message.warning($t('abp.organizationunit.selectNode'));
-    return;
-  }
-  contextMenu.visible = true;
-  contextMenu.x = event.clientX;
-  contextMenu.y = event.clientY;
-}
-
+// 定义一个异步函数，用于处理右键菜单的选择
 const onContextMenuSelect = async (key: string) => {
+  // 根据选择的key值，执行不同的操作
   switch (key) {
+    // 如果选择的key值为add，则打开添加编辑实体模态框
     case 'add': {
       addEditEntityModalApi.setData({
         isEdit: false,
+        id: currentSelectedKey.value,
       });
       addEditEntityModalApi.open();
       break;
     }
+    // 如果选择的key值为delete，则弹出确认框，确认后执行删除操作
     case 'delete': {
       Modal.confirm({
         title: `${$t('common.confirmDelete')}?`,
         onOk: async () => {
-          await postOrganizationUnitsDelete({
-            body: {
-              id: currentSelectedKey.value,
-            },
+          // 构造删除实体的参数
+          const params = {
+            id: currentSelectedTreeNode.value.key,
+            aggregateId: currentSelectedTreeNode.value?.parentId
+          };
+          // 如果没有父节点，则不传aggregateId
+          !currentSelectedTreeNode.value?.parentId && delete params.aggregateId;
+          await postEntityModelsDeleteEntityModel({
+            body: params
           });
           Message.success($t('common.success'));
           currentSelectedKey.value = '';
+          currentSelectedTreeNode.value = null;
           getTreeData();
         },
       });
       break;
     }
     case 'edit': {
-      orgTreeEditModalApi.setData({
-        displayName: parentDisplayName.value,
-        id: currentSelectedKey.value,
+      // 设置编辑实体模态框的数据
+      addEditEntityModalApi.setData({
+        isEdit: true, // 设置为编辑状态
+        isRoot: !currentSelectedTreeNode.value?.parentId, // 判断是否为根节点
+        id: currentSelectedKey.value, // 设置实体id
+        row: currentSelectedTreeNode.value, // 设置实体数据
       });
-      orgTreeEditModalApi.open();
+      // 打开编辑实体模态框
+      addEditEntityModalApi.open();
       break;
     }
   }
-  closeContextMenu();
 };
 
-const handleClickOutside = () => {
-  if (contextMenu.visible) {
-    closeContextMenu();
-  }
-};
-
-const closeContextMenu = () => {
-  contextMenu.visible = false;
+// 当右键菜单点击时，执行该函数
+const onContextMenuClick = (treeKey: string, nodeData: any, menuKey: any) => {
+  // 将当前选中的树节点key赋值给currentSelectedKey
+  currentSelectedKey.value = treeKey;
+  // 将当前选中的树节点数据赋值给currentSelectedTreeNode
+  currentSelectedTreeNode.value = nodeData;
+  // 调用onContextMenuSelect函数，传入menuKey
+  onContextMenuSelect(menuKey);
 };
 
 const dataList = ref<DataNode[]>([]);
-
 const generateList = (data: TreeProps['treeData']) => {
   if (!data) return;
   for (const node of data) {
@@ -201,7 +191,7 @@ watch(searchValue, (value) => {
 });
 
 async function getTreeData() {
-  const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId} });
+  const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId as string } });
   gData.value = data;
   dataList.value = [];
   generateList(data as TreeProps['treeData']);
@@ -209,11 +199,6 @@ async function getTreeData() {
 
 onMounted(() => {
   getTreeData();
-  document.addEventListener('click', handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
 });
 
 const [AddOaggregateRootModal, addOaggregateRootModalApi] = useVbenModal({
@@ -221,7 +206,7 @@ const [AddOaggregateRootModal, addOaggregateRootModalApi] = useVbenModal({
   connectedComponent: AddOaggregateRoot,
 });
 
-const [EntityAddEditModalComponent, orgTreeEditModalApi] = useVbenModal({
+const [EntityAddEditModalComponent] = useVbenModal({
   // 连接抽离的组件
   connectedComponent: EntityAddEditModal,
 });
@@ -327,17 +312,12 @@ const [PropertyGrid, propertyGridApi] = useVbenVxeGrid({
   formOptions: propertyFormOptions,
 });
 
-const onSelect = (keys: string[], event: any) => {
-  currentSelectedKey.value = keys[0] ?? '';
-  parentDisplayName.value = event.node.title;
-  if (!keys[0]) return;
-};
-
 // 添加 onExpand 方法处理节点展开/折叠
 const onExpand = (keys: (string | number)[], info: any) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
+
 </script>
 
 <template>
@@ -351,7 +331,6 @@ const onExpand = (keys: (string | number)[], info: any) => {
             type="primary"
             @click="addOaggregateRootModalApi.open"
           >
-            <!-- {{ $t('abp.organizationunit.add') }} -->
               <div class="flex items-center">
                 <span class="icon-[material-symbols--add-circle-outline]"></span>
                 <span class="ml-1">新增聚合根</span>
@@ -376,21 +355,26 @@ const onExpand = (keys: (string | number)[], info: any) => {
           :auto-expand-parent="autoExpandParent"
           :block-node="true"
           :expanded-keys="expandedKeys"
-          :tree-data="gData"
+          :tree-data="gData as DataNode[]"
           class="mt-3"
           @expand="onExpand"
-          @right-click="onRightClick"
-          @select="onSelect"
         >
-          <template #title="{ title }">
-            <span v-if="title.indexOf(searchValue) > -1">
+          <template #title="{ title, key: treeKey, data: nodeData }">
+            <Dropdown :trigger="['contextmenu']">
+            <span class="w-full block" v-if="title.indexOf(searchValue) > -1">
               {{ title.substring(0, title.indexOf(searchValue)) }}
               <span style="color: #f50">{{ searchValue }}</span>
               {{
                 title.substring(title.indexOf(searchValue) + searchValue.length)
               }}
             </span>
-            <span v-else>{{ title }}</span>
+            <span class="w-full block" v-else>{{ title }}</span>
+            <template #overlay>
+              <Menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, nodeData, menuKey)">
+                <Menu.Item v-for="item in contextMenuOptions" :key="item.key">{{ item.label }}</Menu.Item>
+              </Menu>
+            </template>
+          </Dropdown>
           </template>
         </Tree>
       </div>
@@ -433,16 +417,8 @@ const onExpand = (keys: (string | number)[], info: any) => {
       </div>
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
-    <AddEditEntityModal />
+    <AddEditEntityModal @getTreeData="getTreeData" />
     <EntityAddEditModalComponent @get-tree-data="getTreeData" />
-    <ContextMenu
-      v-if="contextMenu.visible"
-      :options="contextMenuOptions"
-      :x="contextMenu.x"
-      :y="contextMenu.y"
-      @close="closeContextMenu"
-      @select="onContextMenuSelect"
-    />
   </Page>
 </template>
 
