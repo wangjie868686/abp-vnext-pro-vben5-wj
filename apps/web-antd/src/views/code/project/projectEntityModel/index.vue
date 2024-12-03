@@ -26,6 +26,7 @@ import { $t } from '#/locales';
 import { useRoute } from 'vue-router';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
+import AddEntityProperty from './AddEntityPropertyModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
@@ -34,7 +35,7 @@ const searchValue = ref<string>('');
 // 定义一个响应式变量，用于控制是否自动展开父节点
 const autoExpandParent = ref<boolean>(true);
 // 定义一个响应式变量，用于存储树形数据
-const gData = ref<Array<TreeOutput>>([]);
+const gData = ref<Array<DataNode>>([]);
 // 定义一个响应式变量，用于存储当前激活的tab
 const activeKey = ref('1');
 // 定义一个响应式的变量，用于存储当前选中的节点的key
@@ -179,9 +180,15 @@ const onExpand = (keys: (string | number)[], info: any) => {
   autoExpandParent.value = false;
 };
 
+const onSelect = (keys: any[], event: any) => {
+  currentSelectedKey.value = keys[0] ?? '';
+  // parentDisplayName.value = event.node.title;
+  if (!keys[0]) return;
+};
+
 async function getTreeData() {
   const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId as string } });
-  gData.value = data;
+  gData.value = data as DataNode[];
   dataList.value = [];
   generateList(data as TreeProps['treeData']);
 }
@@ -292,6 +299,7 @@ const propertyGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
+        if (!currentSelectedKey.value) return
         const { data } = await postEntityModelsPageProperty({
           body: {
             pageIndex: page.currentPage,
@@ -447,6 +455,17 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
   formOptions: enumPropertyFormOptions,
 });
 
+const [AddEntityPropertyModal, addEntityPropertyModalApi] = useVbenModal({
+  connectedComponent: AddEntityProperty,
+});
+
+const openAddEntityPropertyModal = () => {
+  addEntityPropertyModalApi.setData({
+    entityModelId: currentSelectedKey.value,
+  });
+  addEntityPropertyModalApi.open();
+}
+
 </script>
 
 <template>
@@ -481,29 +500,30 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
           </Dropdown>
         </div>
         <Tree
+          class="mt-3"
           :auto-expand-parent="autoExpandParent"
           :block-node="true"
           :expanded-keys="expandedKeys"
-          :tree-data="gData as DataNode[]"
-          class="mt-3"
+          :tree-data="gData"
           @expand="onExpand"
+          @select="onSelect"
         >
           <template #title="{ title, key: treeKey, data: nodeData }">
             <Dropdown :trigger="['contextmenu']">
-            <span class="w-full block" v-if="title.indexOf(searchValue) > -1">
-              {{ title.substring(0, title.indexOf(searchValue)) }}
-              <span style="color: #f50">{{ searchValue }}</span>
-              {{
-                title.substring(title.indexOf(searchValue) + searchValue.length)
-              }}
-            </span>
-            <span class="w-full block" v-else>{{ title }}</span>
-            <template #overlay>
-              <Menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, nodeData, menuKey)">
-                <Menu.Item v-for="item in contextMenuOptions" :key="item.key">{{ item.label }}</Menu.Item>
-              </Menu>
-            </template>
-          </Dropdown>
+              <span class="w-full block" v-if="title.indexOf(searchValue) > -1">
+                {{ title.substring(0, title.indexOf(searchValue)) }}
+                <span style="color: #f50">{{ searchValue }}</span>
+                {{
+                  title.substring(title.indexOf(searchValue) + searchValue.length)
+                }}
+              </span>
+              <span class="w-full block" v-else>{{ title }}</span>
+              <template #overlay>
+                <Menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, nodeData, menuKey)">
+                  <Menu.Item v-for="item in contextMenuOptions" :key="item.key">{{ item.label }}</Menu.Item>
+                </Menu>
+              </template>
+            </Dropdown>
           </template>
         </Tree>
       </div>
@@ -514,7 +534,7 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
             <Tabs.TabPane key="1" :tab="'属性'">
               <PropertyGrid>
                 <template #toolbar-tools>
-                  <Button type="primary">
+                  <Button type="primary" :disabled="!currentSelectedKey" @click="openAddEntityPropertyModal">
                     <!-- {{ $t('common.add') }} -->
                       新增实体属性
                   </Button>
@@ -572,7 +592,7 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
     <AddEditEntityModal @getTreeData="getTreeData" />
-    <EntityAddEditModalComponent @get-tree-data="getTreeData" />
+    <AddEntityPropertyModal />
   </Page>
 </template>
 

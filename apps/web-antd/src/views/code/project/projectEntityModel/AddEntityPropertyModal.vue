@@ -4,40 +4,36 @@ import { useVbenModal } from '@vben/common-ui';
 import { ref } from 'vue';
 import { message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
-import { postEntityModelsCreateEntityModel, postEntityModelsUpdateEntityModel, type CreateEntityModelInput, type UpdateEntityModelInput } from '#/api-client/index';
+import {
+  postEntityModelsCreateEntityModel,
+  postDataTypesList,
+  type CreateEntityModelInput,
+} from '#/api-client/index';
 
 const emit = defineEmits(['getTreeData']);
 
 const data = ref<Record<string, any>>({});
+const dataTypeList = ref<any[]>();
+
+// 获取数据类型列表
+async function getOptions() {
+  const { data: List } = await postDataTypesList({ body: { entityModelId: data.value.entityModelId }});
+  dataTypeList.value = List;
+  console.log(dataTypeList.value)
+  return List;
+}
+
+
 const [Modal, modalApi] = useVbenModal({
   onOpenChange: (isOpen: boolean) => {
     if (isOpen) {
       data.value = modalApi.getData<Record<string, any>>();
-      if (data.value.isEdit) {
-        const { row } = data.value;
-        editFormApi.setValues({
-          ...row,
-          relationalType: String(row.relationalType),
-        });
-      }
+      getOptions();
     }
   },
   onConfirm: async () => {
     try {
-      modalApi.setState({ loading: true, confirmLoading: true});
-      if (data.value.isEdit) {
-        const { valid } = await editFormApi.validate();
-        if (!valid) return;
-        const editFormValues = await editFormApi.getValues();
-        const params = {
-          ...editFormValues,
-          id: data.value.id
-        } as UpdateEntityModelInput;
-        data.value.isRoot && delete params.relationalType;
-        await postEntityModelsUpdateEntityModel({
-          body: params
-        })
-      } else {
+      modalApi.setState({ loading: true, confirmLoading: true });
         const { valid } = await addFormApi.validate();
         if (!valid) return;
         const addFormValues = await addFormApi.getValues();
@@ -48,11 +44,10 @@ const [Modal, modalApi] = useVbenModal({
           } as CreateEntityModelInput,
         });
         message.success('新增成功');
-      }
       modalApi.close();
       emit('getTreeData');
     } finally {
-      modalApi.setState({ loading: false, confirmLoading: false});
+      modalApi.setState({ loading: false, confirmLoading: false });
     }
   }
 });
@@ -66,7 +61,6 @@ const [AddForm, addFormApi] = useVbenForm({
   layout: 'horizontal',
   schema: [
     {
-      // 组件需要在 #/adapter.ts内注册，并加上类型
       component: 'Input',
       fieldName: 'code',
       label: '编码',
@@ -80,66 +74,29 @@ const [AddForm, addFormApi] = useVbenForm({
     },
     {
       component: 'Select',
-      fieldName: 'relationalType',
-      label: '关系',
-      rules: 'required',
-      componentProps: {
-        options: [
-          { label: '一对一', value: '10' },
-          { label: '一对多', value: '20' },
-        ]
-      },
+      fieldName: 'dataTypeId',
+      label: '数据类型',
+      componentProps: () => ({
+        options: dataTypeList.value,
+        'field-names': { label: 'description', value: 'id' }
+      }),
+    },
+    {
+      component: 'Switch',
+      fieldName: 'isRequired',
+      label: '必填',
+      formItemClass: 'w-[100px]'
     },
   ],
   wrapperClass: 'grid-cols-1',
   showDefaultActions: false,
 });
 
-const [EditForm, editFormApi] = useVbenForm({
-  commonConfig: {
-    componentProps: {
-      class: 'w-full',
-    },
-  },
-  layout: 'horizontal',
-  schema: [
-    {
-      // 组件需要在 #/adapter.ts内注册，并加上类型
-      component: 'Input',
-      fieldName: 'code',
-      label: '编码',
-      rules: 'required',
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'description',
-      label: '描述',
-      rules: 'required',
-    },
-    {
-      component: 'Select',
-      fieldName: 'relationalType',
-      label: '关系',
-      rules: 'required',
-      componentProps: {
-        options: [
-          { label: '一对一', value: '10' },
-          { label: '一对多', value: '20' },
-        ]
-      },
-      dependencies: {
-        triggerFields: ['relationalType'],
-        if: () => !data.value.isRoot
-      }
-    },
-  ],
-  wrapperClass: 'grid-cols-1',
-  showDefaultActions: false,
-});
 
 </script>
 <template>
   <Modal :title="data.isEdit ? '编辑实体' : '新增实体'" "> 
-    <component :is="data.isEdit ? EditForm : AddForm" />
+    <AddForm>
+    </AddForm>
   </Modal>
 </template>
