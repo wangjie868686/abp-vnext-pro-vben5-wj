@@ -203,7 +203,7 @@ const updateAuth = async () => {
   try {
     authDrawerApi.setState({ loading: true, confirmLoading: true });
     const permissions = [] as any;
-    defaultCheckedKeys.value.checked.forEach((item: any) => {
+    defaultCheckedKeys.value.forEach((item: any) => {
       if (item.toString().includes('.')) {
         permissions.push({
           name: item,
@@ -301,10 +301,11 @@ const updateAuth = async () => {
     </AddModal>
     <AuthDrawer :title="$t('abp.role.permissions')" class="w-[500px]">
       <Tree
-        v-model:checked-keys="defaultCheckedKeys"
         :check-strictly="true"
-        :tree-data="authTree"
+        :data="authTree"
+        :default-checked-keys="defaultCheckedKeys"
         checkable
+        label-field="title"
         @check="handleCheck"
       />
     </AuthDrawer>

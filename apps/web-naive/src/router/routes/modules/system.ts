@@ -15,17 +15,17 @@ const routes: RouteRecordRaw[] = [
     name: 'system',
     path: '/system',
     children: [
-      // {
-      //   name: 'abpUser',
-      //   path: 'user',
-      //   component: () => import('#/views/system/abpUser/index.vue'),
-      //   meta: {
-      //     // affixTab: true,
-      //     icon: 'ph:user',
-      //     title: $t('abp.menu.user'),
-      //     authority: ['AbpIdentity.Users'],
-      //   },
-      // },
+      {
+        name: 'abpUser',
+        path: 'user',
+        component: () => import('#/views/system/abpUser/index.vue'),
+        meta: {
+          // affixTab: true,
+          icon: 'ph:user',
+          title: $t('abp.menu.user'),
+          authority: ['AbpIdentity.Users'],
+        },
+      },
       {
         name: 'abpRole',
         path: 'role',

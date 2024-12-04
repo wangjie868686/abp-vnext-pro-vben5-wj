@@ -18,6 +18,8 @@
   "yes": "是",
   "no": "否",
   "confirmDelete": "确认删除",
+  "confirmEnable": "确认启用",
+  "confirmDisable": "确认禁用",
   "warning": "警告",
   "info": "正常",
   "error": "错误",
