@@ -21,14 +21,16 @@ import {
   postEntityModelsDeleteEntityModel,
   postEnumTypesPage,
   postEnumTypesPageProperty,
+  postEnumTypesDeleteEnumType,
   postEntityModelsDeleteEntityModelProperty,
-  type TreeOutput,
 } from '#/api-client/index';
 import { $t } from '#/locales';
 import { useRoute } from 'vue-router';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
 import AddEditEntityProperty from './AddEditEntityPropertyModal.vue';
+import AddEditEnumComponent from './AddEditEnumModal.vue';
+import AddEditEnumPropertyComponent from './AddEditEnumPropertyModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
@@ -350,7 +352,7 @@ const enumFormOptions: VbenFormProps = {
 
 const enumGridOptions: VxeGridProps<any> = {
   columns: [
-    { type: 'seq', title: $t('common.seq'), width: '50' },
+    { type: 'radio', title: $t('common.seq'), width: '50' },
     {
       field: 'code',
       title: $t('abp.dataDictionary.code'),
@@ -392,9 +394,20 @@ const enumGridOptions: VxeGridProps<any> = {
   },
 };
 
+const currentEnumTypeId = ref<string>('');
+const enumGridEvent = {
+  radioChange: (values: any) => {
+    currentEnumTypeId.value = values.row.id;
+    enumPropertyGridApi.reload({
+      id: values.row.id,
+    });
+  }
+}
+
 const [EnumGrid, enumGridApi] = useVbenVxeGrid({
   gridOptions: enumGridOptions,
   formOptions: enumFormOptions,
+  gridEvents: enumGridEvent,
 });
 
 const enumPropertyFormOptions: VbenFormProps = {
@@ -447,7 +460,7 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        const { data } = await postEnumTypesPage({
+        const { data } = await postEnumTypesPageProperty({
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
@@ -503,6 +516,73 @@ const handleEditEntityModelProperty = async (row: Record<string, any>) => {
   addEditEntityPropertyModalApi.open();
 }
 
+const [AddEditEnumModal, addEditEnumModalApi] = useVbenModal({
+  connectedComponent: AddEditEnumComponent,
+});
+
+const handleAddEnum = () => {
+  addEditEnumModalApi.setData({
+    entityModelId: currentSelectedKey.value,
+    projectId: route.query.projectId,
+    isEdit: false,
+  });
+  addEditEnumModalApi.open();
+}
+
+const handleEditEnum = (row: Record<string, any>) => {
+  addEditEnumModalApi.setData({
+    isEdit: true,
+    row,
+  });
+  addEditEnumModalApi.open();
+}
+
+const handleDeleteEnum = async (row: Record<string, any>) => {
+  Modal.confirm({
+    title: `${$t('common.confirmDelete')}?`,
+    onOk: async () => {
+      await postEnumTypesDeleteEnumType({
+        body: { id: row.id },
+      });
+      message.success($t('common.deleteSuccess'));
+      enumGridApi.reload();
+    },
+  });
+}
+
+const [AddEditEnumPropertyModal, addEditEnumPropertyModalApi] = useVbenModal({
+  connectedComponent: AddEditEnumPropertyComponent,
+});
+
+const handleAddEnumProperty = () => {
+  addEditEnumPropertyModalApi.setData({
+    enumTypeId: currentEnumTypeId.value,
+    isEdit: false,
+  });
+  addEditEnumPropertyModalApi.open();
+}
+
+const handleEditEnumProperty = (row: Record<string, any>) => {
+  addEditEnumPropertyModalApi.setData({
+    isEdit: true,
+    enumTypeId: currentEnumTypeId.value,
+    row,
+  });
+  addEditEnumPropertyModalApi.open();
+}
+
+const handleDeleteEnumProperty = async (row: Record<string, any>) => {
+  Modal.confirm({
+    title: `${$t('common.confirmDelete')}?`,
+    onOk: async () => {
+      await postEnumTypesDeleteEnumType({
+        body: { id: row.id },
+      });
+      message.success($t('common.deleteSuccess'));
+      enumGridApi.reload();
+    },
+  });
+}
 </script>
 
 <template>
@@ -591,16 +671,16 @@ const handleEditEntityModelProperty = async (row: Record<string, any>) => {
                 <div class="bg-card col-span-6">
                   <EnumGrid>
                     <template #toolbar-tools>
-                      <Button type="primary" @click="">
+                      <Button type="primary" @click="handleAddEnum">
                         {{ '新增枚举' }}
                       </Button>
                     </template>
 
                     <template #action="{ row }">
-                      <Button type="link" @click="">
+                      <Button type="link" @click="handleEditEnum(row)">
                         {{ $t('common.edit') }}
                       </Button>
-                      <Button danger type="link" @click="">
+                      <Button danger type="link" @click="handleDeleteEnum(row)">
                         {{ $t('common.delete') }}
                       </Button>
                     </template>
@@ -609,16 +689,16 @@ const handleEditEntityModelProperty = async (row: Record<string, any>) => {
                 <div class="bg-card col-span-6">
                   <EnumPropertyGrid>
                     <template #toolbar-tools>
-                      <Button type="primary" @click="">
+                      <Button type="primary" @click="handleAddEnumProperty">
                         {{ '新增枚举属性' }}
                       </Button>
                     </template>
 
                     <template #action="{ row }">
-                      <Button type="link" @click="">
+                      <Button type="link" @click="handleEditEnumProperty(row)">
                         {{ $t('common.edit') }}
                       </Button>
-                      <Button danger type="link" @click="">
+                      <Button danger type="link" @click="handleDeleteEnumProperty(row)">
                         {{ $t('common.delete') }}
                       </Button>
                     </template>
@@ -632,7 +712,9 @@ const handleEditEntityModelProperty = async (row: Record<string, any>) => {
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
     <AddEditEntityModal @getTreeData="getTreeData" />
-    <AddEditEntityPropertyModal @reload-property-grid="propertyGridApi.reload" />
+    <AddEditEntityPropertyModal @reload="propertyGridApi.reload" />
+    <AddEditEnumModal @reload="enumGridApi.reload" />
+    <AddEditEnumPropertyModal @reload="enumPropertyGridApi.reload" />
   </Page>
 </template>
 

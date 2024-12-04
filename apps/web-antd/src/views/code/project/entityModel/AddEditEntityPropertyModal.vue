@@ -12,7 +12,7 @@ import {
   type UpdateEntityModelPropertyInput,
 } from '#/api-client/index';
 
-const emit = defineEmits(['reload-property-grid']);
+const emit = defineEmits(['reload']);
 const data = ref<Record<string, any>>({});
 const dataTypeList = ref<any[]>();
 
@@ -67,7 +67,7 @@ const [Modal, modalApi] = useVbenModal({
         }
         message.success(data.value.isEdit ? '编辑成功' : '新增成功');
         modalApi.close();
-        emit('reload-property-grid');
+        emit('reload');
     } finally {
       modalApi.setState({ loading: false, confirmLoading: false });
     }
