@@ -56,16 +56,16 @@ const routes: RouteRecordRaw[] = [
           authority: ['AbpIdentity.Setting'],
         },
       },
-      // {
-      //   name: 'abpfeature',
-      //   path: 'Feature',
-      //   component: () => import('#/views/system/abpfeature/index.vue'),
-      //   meta: {
-      //     icon: 'ant-design:tool-outlined',
-      //     title: $t('abp.menu.feature'),
-      //     authority: ['AbpIdentity.FeatureManagement'],
-      //   },
-      // },
+      {
+        name: 'abpfeature',
+        path: 'Feature',
+        component: () => import('#/views/system/abpfeature/index.vue'),
+        meta: {
+          icon: 'ant-design:tool-outlined',
+          title: $t('abp.menu.feature'),
+          authority: ['AbpIdentity.FeatureManagement'],
+        },
+      },
       {
         name: 'AbpAuditLog',
         path: 'auditlog',

@@ -6,8 +6,8 @@ import { useVbenModal } from '@vben/common-ui';
 import {
   NCheckbox as Checkbox,
   NCol as Col,
-  NDivider as Divider,
   NForm as Form,
+  NFormItem as FormItem,
   NInput as Input,
   NRow as Row,
   NTabPane as TabPane,
@@ -92,15 +92,15 @@ function processData(data: any) {
 </script>
 <template>
   <Modal :title="$t('abp.tenant.featureManagement')" fullscreen>
-    <Tabs v-model="activeKey" tab-position="left">
+    <Tabs v-model:active-key="activeKey" tab-position="left">
       <TabPane
         v-for="tabItem in tabList"
         :key="tabItem.name!"
         :name="tabItem.name!"
         :tab="tabItem.displayName!"
       >
-        <div>{{ tabItem.displayName }}</div>
-        <Divider style="margin: 10px 0" />
+        <!-- <div>{{ tabItem.displayName }}</div>
+        <Divider style="margin: 10px 0" /> -->
         <Form
           :label-col="{ span: 6 }"
           :model="tabItem"
@@ -108,11 +108,12 @@ function processData(data: any) {
         >
           <Row>
             <Col :span="24">
-              <Form.FormItem
+              <FormItem
                 v-for="formItem in tabItem.features"
                 :key="formItem.name!"
-                :label="formItem.displayName"
-                class="mb-4"
+                :label="formItem.displayName!"
+                label-placement="left"
+                label-width="auto"
               >
                 <Input
                   v-if="formItem.valueType!.name === 'FreeTextStringValueType'"
@@ -122,9 +123,9 @@ function processData(data: any) {
                   v-else-if="
                     formItem.valueType!.name === 'ToggleStringValueType'
                   "
-                  v-model="formItem.convertvalue"
+                  v-model:checked="formItem.convertvalue"
                 />
-              </Form.FormItem>
+              </FormItem>
             </Col>
           </Row>
         </Form>
