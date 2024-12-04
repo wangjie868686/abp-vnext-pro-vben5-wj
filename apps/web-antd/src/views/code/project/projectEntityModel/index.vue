@@ -540,7 +540,10 @@ const openAddEntityPropertyModal = () => {
                   </Button>
                 </template>
                 <template #action="{ row }">
-                  <Button type="link">
+                  <Button type="link" @click="">
+                    {{ $t('common.edit') }}
+                  </Button>
+                  <Button danger type="link" @click="">
                     {{ $t('common.delete') }}
                   </Button>
                 </template>
@@ -592,7 +595,7 @@ const openAddEntityPropertyModal = () => {
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
     <AddEditEntityModal @getTreeData="getTreeData" />
-    <AddEntityPropertyModal />
+    <AddEntityPropertyModal @reload-property-grid="propertyGridApi.reload" />
   </Page>
 </template>
 
