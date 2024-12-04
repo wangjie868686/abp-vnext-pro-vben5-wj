@@ -301,10 +301,10 @@ const updateAuth = async () => {
     </AddModal>
     <AuthDrawer :title="$t('abp.role.permissions')" class="w-[500px]">
       <Tree
-        :check-strictly="true"
+        v-model:checked-keys="defaultCheckedKeys"
         :data="authTree"
-        :default-checked-keys="defaultCheckedKeys"
         checkable
+        expand-on-click
         label-field="title"
         @check="handleCheck"
       />

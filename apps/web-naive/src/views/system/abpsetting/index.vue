@@ -85,7 +85,7 @@ const save = async (settingValue: Record<string, any>) => {
   <Page :title="$t('abp.menu.setting')" auto-content-heightclass="pb-5">
     <Spin :show="loading">
       <div class="bg-card px-8">
-        <Tabs :default-value="activeName" tab-position="bar">
+        <Tabs :default-value="activeName" placement="left">
           <TabPane
             v-for="(paneItem, index) in allSetting"
             :key="index"

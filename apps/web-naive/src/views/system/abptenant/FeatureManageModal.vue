@@ -22,7 +22,7 @@ import {
 } from '#/api-client';
 import { $t } from '#/locales';
 
-const activeKey = ref();
+const activeKey = ref('AbpPro');
 const data = ref();
 const tabList = ref<FeatureGroupDto[]>([]);
 const [Modal, modalApi] = useVbenModal({
@@ -39,7 +39,8 @@ const [Modal, modalApi] = useVbenModal({
         });
         const result = processData(resp) || [];
         tabList.value = result.groups;
-        activeKey.value = tabList.value[0]?.name;
+        activeKey.value = tabList.value[0]?.name!;
+        console.log(activeKey.value);
       } finally {
         modalApi.setState({ loading: false });
       }
@@ -92,15 +93,13 @@ function processData(data: any) {
 </script>
 <template>
   <Modal :title="$t('abp.tenant.featureManagement')" fullscreen>
-    <Tabs v-model:active-key="activeKey" tab-position="left">
+    <Tabs :default-value="activeKey" placement="left">
       <TabPane
         v-for="tabItem in tabList"
         :key="tabItem.name!"
         :name="tabItem.name!"
         :tab="tabItem.displayName!"
       >
-        <!-- <div>{{ tabItem.displayName }}</div>
-        <Divider style="margin: 10px 0" /> -->
         <Form
           :label-col="{ span: 6 }"
           :model="tabItem"

@@ -83,7 +83,7 @@ const save = async (item: any) => {
   <Page :title="$t('abp.menu.feature')" auto-content-height class="pb-5">
     <Spin :spinning="loading" tip="loading...">
       <div class="bg-card px-8">
-        <Tabs v-model:active-key="activeName" tab-position="left">
+        <Tabs :default-value="activeName" placement="left">
           <TabPane
             v-for="(paneItem, index) in allFeature?.groups"
             :key="index"
