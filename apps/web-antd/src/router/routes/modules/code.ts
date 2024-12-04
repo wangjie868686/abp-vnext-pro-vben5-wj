@@ -49,7 +49,7 @@ const routes: RouteRecordRaw[] = [
         name: 'EntityModel',
         path: 'entityModel',
         component: () =>
-          import('#/views/code/project/projectEntityModel/index.vue'),
+          import('#/views/code/project/entityModel/index.vue'),
         meta: {
           icon: 'ph:user',
           title: '实体',

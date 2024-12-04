@@ -12,6 +12,7 @@ import {
   Modal,
   Tabs,
   Tree,
+  message,
 } from 'ant-design-vue';
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
@@ -20,13 +21,14 @@ import {
   postEntityModelsDeleteEntityModel,
   postEnumTypesPage,
   postEnumTypesPageProperty,
+  postEntityModelsDeleteEntityModelProperty,
   type TreeOutput,
 } from '#/api-client/index';
 import { $t } from '#/locales';
 import { useRoute } from 'vue-router';
 import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
-import AddEntityProperty from './AddEntityPropertyModal.vue';
+import AddEditEntityProperty from './AddEditEntityPropertyModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
@@ -223,6 +225,9 @@ const [AddEditEntityModal, addEditEntityModalApi] = useVbenModal({
 });
 
 const propertyFormOptions: VbenFormProps = {
+  resetButtonOptions: {
+    show: false,
+  },
   schema: [
     {
       component: 'Input',
@@ -324,6 +329,9 @@ watch(currentSelectedKey, () => {
 })
 
 const enumFormOptions: VbenFormProps = {
+  resetButtonOptions: {
+    show: false,
+  },
   schema: [
     {
       component: 'Input',
@@ -390,6 +398,9 @@ const [EnumGrid, enumGridApi] = useVbenVxeGrid({
 });
 
 const enumPropertyFormOptions: VbenFormProps = {
+  resetButtonOptions: {
+    show: false,
+  },
   schema: [
     {
       component: 'Input',
@@ -455,15 +466,41 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
   formOptions: enumPropertyFormOptions,
 });
 
-const [AddEntityPropertyModal, addEntityPropertyModalApi] = useVbenModal({
-  connectedComponent: AddEntityProperty,
+const [AddEditEntityPropertyModal, addEditEntityPropertyModalApi] = useVbenModal({
+  connectedComponent: AddEditEntityProperty,
 });
 
 const openAddEntityPropertyModal = () => {
-  addEntityPropertyModalApi.setData({
+  addEditEntityPropertyModalApi.setData({
     entityModelId: currentSelectedKey.value,
+    isEdit: false,
   });
-  addEntityPropertyModalApi.open();
+  addEditEntityPropertyModalApi.open();
+}
+
+const handleDeleteEntityModelProperty = async (row: Record<string, any>) => {
+  Modal.confirm({
+    title: `${$t('common.confirmDelete')}?`,
+    onOk: async () => {
+      await postEntityModelsDeleteEntityModelProperty({
+        body: {
+          propertyId: row.id,
+          id: currentSelectedKey.value,
+        },
+      });
+      message.success($t('common.deleteSuccess'));
+      propertyGridApi.reload();
+    },
+  });
+}
+
+const handleEditEntityModelProperty = async (row: Record<string, any>) => {
+  addEditEntityPropertyModalApi.setData({
+    entityModelId: currentSelectedKey.value,
+    isEdit: true,
+    row,
+  });
+  addEditEntityPropertyModalApi.open();
 }
 
 </script>
@@ -540,10 +577,10 @@ const openAddEntityPropertyModal = () => {
                   </Button>
                 </template>
                 <template #action="{ row }">
-                  <Button type="link" @click="">
+                  <Button type="link" @click="handleEditEntityModelProperty(row)">
                     {{ $t('common.edit') }}
                   </Button>
-                  <Button danger type="link" @click="">
+                  <Button danger type="link" @click="handleDeleteEntityModelProperty(row)">
                     {{ $t('common.delete') }}
                   </Button>
                 </template>
@@ -595,7 +632,7 @@ const openAddEntityPropertyModal = () => {
     </div>
     <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
     <AddEditEntityModal @getTreeData="getTreeData" />
-    <AddEntityPropertyModal @reload-property-grid="propertyGridApi.reload" />
+    <AddEditEntityPropertyModal @reload-property-grid="propertyGridApi.reload" />
   </Page>
 </template>
 
