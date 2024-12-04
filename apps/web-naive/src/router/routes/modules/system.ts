@@ -106,16 +106,16 @@ const routes: RouteRecordRaw[] = [
           icon: 'ant-design:font-size-outlined',
         },
       },
-      // {
-      //   name: 'DataDictionary',
-      //   path: 'data-dictionary',
-      //   component: () => import('#/views/system/abpdatadictionary/index.vue'),
-      //   meta: {
-      //     title: $t('abp.menu.dataDictionary'),
-      //     authority: ['AbpIdentity.DataDictionaryManagement'],
-      //     icon: 'ant-design:table-outlined',
-      //   },
-      // },
+      {
+        name: 'DataDictionary',
+        path: 'data-dictionary',
+        component: () => import('#/views/system/abpdatadictionary/index.vue'),
+        meta: {
+          title: $t('abp.menu.dataDictionary'),
+          authority: ['AbpIdentity.DataDictionaryManagement'],
+          icon: 'ant-design:table-outlined',
+        },
+      },
       {
         name: 'AbpNotification',
         path: 'notification',
