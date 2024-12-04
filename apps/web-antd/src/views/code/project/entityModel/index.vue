@@ -436,12 +436,17 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
     {
       field: 'code',
       title: $t('abp.dataDictionary.code'),
-      minWidth: '200',
+      minWidth: '100',
+    },
+    {
+      field: 'code',
+      title: '值',
+      minWidth: '100',
     },
     {
       field: 'description',
       title: $t('common.description'),
-      minWidth: '200',
+      minWidth: '150',
     },
     {
       title: $t('common.action'),
@@ -464,7 +469,7 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
           body: {
             pageIndex: page.currentPage,
             pageSize: page.pageSize,
-            id: currentSelectedKey.value,
+            id: currentEnumTypeId.value,
             ...formValues,
           },
         });
