@@ -22,6 +22,7 @@ import {
   postEnumTypesPage,
   postEnumTypesPageProperty,
   postEnumTypesDeleteEnumType,
+  postEnumTypesDeleteEnumTypeProperty,
   postEntityModelsDeleteEntityModelProperty,
 } from '#/api-client/index';
 import { $t } from '#/locales';
@@ -380,6 +381,7 @@ const enumGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
+        if (!currentSelectedKey.value) return
         const { data } = await postEnumTypesPage({
           body: {
             pageIndex: page.currentPage,
@@ -465,6 +467,7 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
+        if (!currentEnumTypeId.value) return
         const { data } = await postEnumTypesPageProperty({
           body: {
             pageIndex: page.currentPage,
@@ -547,7 +550,7 @@ const handleDeleteEnum = async (row: Record<string, any>) => {
     title: `${$t('common.confirmDelete')}?`,
     onOk: async () => {
       await postEnumTypesDeleteEnumType({
-        body: { id: row.id },
+        body: { id: row.id, entityModelId: currentSelectedKey.value },
       });
       message.success($t('common.deleteSuccess'));
       enumGridApi.reload();
@@ -580,11 +583,11 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
   Modal.confirm({
     title: `${$t('common.confirmDelete')}?`,
     onOk: async () => {
-      await postEnumTypesDeleteEnumType({
-        body: { id: row.id },
+      await postEnumTypesDeleteEnumTypeProperty({
+        body: { id: row.id, enumTypeId: currentEnumTypeId.value },
       });
       message.success($t('common.deleteSuccess'));
-      enumGridApi.reload();
+      enumPropertyGridApi.reload();
     },
   });
 }
