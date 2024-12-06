@@ -54,9 +54,18 @@ const routes: RouteRecordRaw[] = [
           icon: 'ph:user',
           title: '实体',
           hideInMenu: true,
-          // title: $t('abp.menu.code-genarate'),
-          // authority: ['AbpTenantManagement.Tenants'],
         },
+      },
+      {
+        name: 'TemplateDetail',
+        path: 'templateDetail',
+        component: () =>
+          import('#/views/code/template/TemplateDetail.vue'),
+          meta: {
+            icon: 'ph:user',
+            title: '模板明细',
+            hideInMenu: true,
+          },
       },
     ],
   },

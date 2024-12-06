@@ -9,12 +9,15 @@ import { Button, Modal, Space } from 'ant-design-vue';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postTemplatesDelete, postTemplatesPage } from '#/api-client/index';
 import { $t } from '#/locales';
-
+import { useRouter } from 'vue-router';
 // 新增modal
 import AddModal from './AddModal.vue';
 // 编辑modal
 import EditModal from './EditModal.vue';
+import CopyModaComponent from './CopyModal.vue';
 import { querySchema, tableSchema } from './schema';
+
+const router = useRouter();
 
 const formOptions: VbenFormProps = {
   // 默认展开
@@ -91,6 +94,30 @@ const handleDelete = (row: any) => {
     },
   });
 };
+
+const [CopyModal, copyModalApi] = useVbenModal({
+  connectedComponent: CopyModaComponent,
+});
+
+const handleCopy = (row: Record<string, any>) => {
+  copyModalApi.setData({
+    id: row.id,
+  });
+  copyModalApi.open();
+};
+
+const handleViewDetail = (row: Record<string, any>) => {
+  // TODO 跳转到模板详情页面
+  alert(JSON.stringify(row));
+  router.push({
+    name: 'TemplateDetail',
+    query: {
+      projectId: row.id,
+    }
+  })
+};
+
+
 </script>
 
 <template>
@@ -105,6 +132,12 @@ const handleDelete = (row: any) => {
       </template>
 
       <template #action="{ row }">
+        <Button type="link" @click="handleViewDetail(row)">
+          明细
+        </Button>
+        <Button type="link" @click="handleCopy(row)">
+          复制
+        </Button>
         <Button type="link" @click="handleEdit(row)">
           {{ $t('common.edit') }}
         </Button>
@@ -115,6 +148,7 @@ const handleDelete = (row: any) => {
     </Grid>
     <AddVbenModal @reload="gridApi.reload" />
     <EditVbenModal @reload="gridApi.reload" />
+    <CopyModal @reload="gridApi.reload" />
   </Page>
 </template>
 <style scoped></style>
