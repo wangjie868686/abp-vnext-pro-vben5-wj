@@ -72,27 +72,40 @@ export const addUserFormSchema: any = [
     componentProps: {},
     fieldName: 'phoneNumber',
     label: $t('abp.user.phone'),
-    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.phone') }),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.phone') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'password',
     label: $t('abp.user.password'),
-    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.password') }),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.password') }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'confirmPassword',
     label: $t('abp.user.comfirmPassword'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword') }),
+    rules: z.string().min(1, {
+      message: $t('common.pleaseInput') + $t('abp.user.comfirmPassword'),
+    }),
   },
 ];
 
 export const editUserFormSchemaEdit: any = [
+  {
+    component: 'Input',
+    fieldName: 'isActive',
+    label: 'isActive',
+    dependencies: {
+      show: () => false,
+      triggerFields: ['isActive'],
+    },
+  },
   {
     component: 'Input',
     componentProps: {},
@@ -123,7 +136,9 @@ export const editUserFormSchemaEdit: any = [
     componentProps: {},
     fieldName: 'phoneNumber',
     label: $t('abp.user.phone'),
-    rules: z.string().min(1, { message: $t('common.pleaseInput') + $t('abp.user.phone') }),
+    rules: z
+      .string()
+      .min(1, { message: $t('common.pleaseInput') + $t('abp.user.phone') }),
   },
   {
     component: 'Input',
