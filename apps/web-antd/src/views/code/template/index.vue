@@ -107,12 +107,10 @@ const handleCopy = (row: Record<string, any>) => {
 };
 
 const handleViewDetail = (row: Record<string, any>) => {
-  // TODO 跳转到模板详情页面
-  alert(JSON.stringify(row));
   router.push({
     name: 'TemplateDetail',
     query: {
-      projectId: row.id,
+      templateId: row.id,
     }
   })
 };

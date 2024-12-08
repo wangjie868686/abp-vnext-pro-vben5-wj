@@ -75,7 +75,7 @@ const viewDetail = (row: any) => {
       </template>9
     </Grid>
     <Drawer class="w-[600px]" title="详情">
-      <JsonViewer class="h-full" :value="jsonData" copyable sort :theme="isDark ? 'dark' : 'light'" />
+      <JsonViewer class="h-full" :value="jsonData" copyable sort line-numbers :theme="isDark ? 'dark' : 'light'" />
     </Drawer>
   </Page>
 </template>
