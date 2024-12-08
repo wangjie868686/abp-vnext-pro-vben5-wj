@@ -10,12 +10,12 @@ import {
   Tree,
   message,
 } from 'ant-design-vue';
-import { postTemplatesTree, postTemplatesDeleteDetail } from '#/api-client/index';
+import { postTemplatesTree, postTemplatesDeleteDetail, postTemplatesCreateDetail, postTemplatesControlType, type CreateTemplateDetailInput } from '#/api-client/index';
 import AddEditTemplateModal from './AddEditTemplateModal.vue';
 import { useRoute } from 'vue-router';
 import type { DataNode, TreeProps } from 'ant-design-vue/es/tree';
 import { $t } from '@vben/locales';
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenForm, useVbenModal } from '@vben/common-ui';
 import { usePreferences } from '@vben/preferences';
 
 const { isDark } = usePreferences();
@@ -37,7 +37,8 @@ const jsonData = ref();
 const route = useRoute();
 
 const contextMenuOptions = [
-  { label: $t('common.add'), key: 'add' },
+  { label: '新增文件夹', key: 'addFolder' },
+  { label: '新增文件', key: 'addfile' },
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ];
@@ -51,12 +52,12 @@ const onContextMenuSelect = async (key: string) => {
   // 根据选择的key值，执行不同的操作
   switch (key) {
     // 如果选择的key值为add，则打开添加编辑实体模态框
-    case 'add': {
-      // addEditEntityModalApi.setData({
-      //   isEdit: false,
-      //   id: currentSelectedKey.value,
-      // });
-      // addEditEntityModalApi.open();
+    case 'addFolder': {
+      openCreateDetailModal(key);
+      break;
+    }
+    case 'addfile': {
+      openCreateDetailModal(key);
       break;
     }
     case 'delete': {
@@ -212,6 +213,101 @@ const openTemplateModal = () => {
   addEditModalApi.open();
 }
 
+const [CreateDetailModal, createDetailModalApi] = useVbenModal({
+  onOpenChange: (isOpen: boolean) => {
+    if (isOpen) {
+      getControlTypeList();
+    }
+  },
+  onConfirm: async () => {
+    try {
+      createDetailModalApi.setState({ loading: true, confirmLoading: true});
+      const { valid } = await createDetailFormApi.validate();
+      if (!valid) return;
+      const formValues = await createDetailFormApi.getValues();
+      let params: CreateTemplateDetailInput = {} 
+      if (isFloder.value) {
+        // 创建文件夹
+        params = {
+          ...formValues,
+          templateId: route.query.templateId as string,
+          parentId: currentSelectedKey.value,
+          templateType: 10
+        }
+      } else {
+        // 创建文件
+        params = {
+          ...formValues,
+          templateId: route.query.templateId as string,
+          parentId: currentSelectedKey.value,
+          templateType: 20,
+        }
+      }
+      await postTemplatesCreateDetail({ body: params })
+      message.success($t('common.addSuccess'));
+      createDetailModalApi.close();
+      getTreeData();
+    } finally {
+      createDetailModalApi.setState({ loading: false, confirmLoading: false});
+    }
+  }
+});
+
+const controlTypeList = ref<any[]>();
+const isFloder = ref<boolean>(false);
+const getControlTypeList = async () => {
+  const { data = [] } = await postTemplatesControlType();
+  controlTypeList.value = data;
+};
+
+const [CreateDetailForm, createDetailFormApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  layout: 'horizontal',
+  schema: [
+    {
+      component: 'Select',
+      fieldName: 'controlType',
+      label: '模板策略',
+      componentProps: () => {
+        return {
+          options: controlTypeList.value,
+          fieldNames: { label: 'key', value: 'value' }
+        }
+      },
+      dependencies: {
+        triggerFields: ['templateType'],
+        if: () => {
+          return !isFloder.value;
+        }
+      }
+    },
+    {
+      component: 'Input',
+      fieldName: 'name',
+      label: '名称',
+      rules: 'required',
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'description',
+      label: '描述',
+      rules: 'required',
+    },
+   
+  ],
+  wrapperClass: 'grid-cols-1',
+  showDefaultActions: false,
+});
+
+const openCreateDetailModal = (key: string) => {
+  isFloder.value = key === 'addFolder';
+  createDetailModalApi.open();
+}
+
 </script>
 
 <template>
@@ -279,6 +375,9 @@ const openTemplateModal = () => {
       </div>
 
       <AddEditModal @getTreeData="getTreeData" />
+      <CreateDetailModal title="新增模板">
+        <CreateDetailForm />
+      </CreateDetailModal>
     </div>
 </template>
 
