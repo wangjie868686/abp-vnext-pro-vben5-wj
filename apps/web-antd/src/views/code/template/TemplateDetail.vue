@@ -17,6 +17,7 @@ import type { DataNode, TreeProps } from 'ant-design-vue/es/tree';
 import { $t } from '@vben/locales';
 import { useVbenForm, useVbenModal } from '@vben/common-ui';
 import { usePreferences } from '@vben/preferences';
+import CodeEditor from './CodeEditor.vue';
 
 const { isDark } = usePreferences();
 // 定义一个响应式变量，用于存储展开的节点
@@ -33,7 +34,7 @@ const activeKey = ref('1');
 const currentSelectedKey = ref('');
 // 定义一个响应式的变量，用于存储当前选中的节点
 const currentSelectedTreeNode = ref();
-const jsonData = ref();
+const codeText = ref();
 const route = useRoute();
 
 const contextMenuOptions = [
@@ -169,8 +170,9 @@ const onExpand = (keys: (string | number)[], info: any) => {
 
 const onSelect = (keys: any[], event: any) => {
   currentSelectedKey.value = keys[0] ?? '';
-  jsonData.value = event.node.content || {};
-  jsonData.value = JSON.parse(JSON.stringify(jsonData.value));
+  codeText.value = event.node.content || '';
+  // codeText.value = JSON.parse(JSON.stringify(codeText.value));
+  console.log(codeText.value, '---');
   if (!keys[0]) return;
 };
 
@@ -370,7 +372,8 @@ const openCreateDetailModal = (key: string) => {
 
       <div class="col-span-8 xl:col-span-9 bg-card">
         <div class="bg-card">
-          <JsonViewer class="h-full" :value="jsonData" copyable sort line-numbers :theme="isDark ? 'dark' : 'light'" />
+          <CodeEditor v-model="codeText"</CodeEditor>
+          <!-- <JsonViewer class="h-full" :value="codeText" copyable sort line-numbers :theme="isDark ? 'dark' : 'light'" /> -->
         </div>
       </div>
 
