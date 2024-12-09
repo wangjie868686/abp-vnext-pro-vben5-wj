@@ -1,37 +1,42 @@
 <script setup lang="ts">
 import type { TreeProps } from 'ant-design-vue';
 import type { DataNode } from 'ant-design-vue/es/tree';
-import { onMounted, reactive, ref, watch } from 'vue';
+
+import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
+
 import {
   Button,
   Dropdown,
   Input,
   Menu,
   message as Message,
+  message,
   Modal,
   Tabs,
   Tree,
-  message,
 } from 'ant-design-vue';
+
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
-  postEntityModelsTree,
-  postEntityModelsPageProperty,
   postEntityModelsDeleteEntityModel,
-  postEnumTypesPage,
-  postEnumTypesPageProperty,
+  postEntityModelsDeleteEntityModelProperty,
+  postEntityModelsPageProperty,
+  postEntityModelsTree,
   postEnumTypesDeleteEnumType,
   postEnumTypesDeleteEnumTypeProperty,
-  postEntityModelsDeleteEntityModelProperty,
+  postEnumTypesPage,
+  postEnumTypesPageProperty,
 } from '#/api-client/index';
 import { $t } from '#/locales';
-import { useRoute } from 'vue-router';
-import AddOaggregateRoot from './AddOaggregateRootModal.vue';
+
 import AddEditEntity from './AddEditEntityModal.vue';
 import AddEditEntityProperty from './AddEditEntityPropertyModal.vue';
 import AddEditEnumComponent from './AddEditEnumModal.vue';
 import AddEditEnumPropertyComponent from './AddEditEnumPropertyModal.vue';
+import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
@@ -80,12 +85,12 @@ const onContextMenuSelect = async (key: string) => {
           // 构造删除实体的参数
           const params = {
             id: currentSelectedTreeNode.value.key,
-            aggregateId: currentSelectedTreeNode.value?.parentId
+            aggregateId: currentSelectedTreeNode.value?.parentId,
           };
           // 如果没有父节点，则不传aggregateId
           !currentSelectedTreeNode.value?.parentId && delete params.aggregateId;
           await postEntityModelsDeleteEntityModel({
-            body: params
+            body: params,
           });
           Message.success($t('common.success'));
           currentSelectedKey.value = '';
@@ -132,9 +137,9 @@ const generateList = (data: TreeProps['treeData']) => {
 };
 
 const getParentKey = (
-  key: string | number,
+  key: number | string,
   tree: TreeProps['treeData'],
-): string | number | undefined => {
+): number | string | undefined => {
   if (!tree) return undefined;
   let parentKey;
   for (const node of tree) {
@@ -180,7 +185,7 @@ const collapseAll = () => {
 };
 
 // 添加 onExpand 方法处理节点展开/折叠
-const onExpand = (keys: (string | number)[], info: any) => {
+const onExpand = (keys: (number | string)[], info: any) => {
   expandedKeys.value = keys;
   autoExpandParent.value = false;
 };
@@ -192,7 +197,9 @@ const onSelect = (keys: any[], event: any) => {
 };
 
 async function getTreeData() {
-  const { data = [] } = await postEntityModelsTree({ body: { projectId: route.query.projectId as string } });
+  const { data = [] } = await postEntityModelsTree({
+    body: { projectId: route.query.projectId as string },
+  });
   gData.value = data as DataNode[];
   dataList.value = [];
   generateList(data as TreeProps['treeData']);
@@ -205,15 +212,19 @@ watch(searchValue, (value) => {
   }
   const expanded = dataList.value
     .map((item) => {
-      if (typeof item.title === 'string' && item.title.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+      if (
+        typeof item.title === 'string' &&
+        item.title.toLowerCase().includes(value.toLowerCase())
+      ) {
         return getParentKey(item.key, gData.value as TreeProps['treeData']);
       }
       return null;
     })
-    .filter((item, i, self): item is string | number => 
-      item !== null && item !== undefined && self.indexOf(item) === i
+    .filter(
+      (item, i, self): item is number | string =>
+        item !== null && item !== undefined && self.indexOf(item) === i,
     );
-    
+
   expandedKeys.value = expanded;
   autoExpandParent.value = true;
 });
@@ -307,7 +318,7 @@ const propertyGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        if (!currentSelectedKey.value) return
+        if (!currentSelectedKey.value) return;
         const { data } = await postEntityModelsPageProperty({
           body: {
             pageIndex: page.currentPage,
@@ -329,7 +340,7 @@ const [PropertyGrid, propertyGridApi] = useVbenVxeGrid({
 
 watch(currentSelectedKey, () => {
   propertyGridApi.reload();
-})
+});
 
 const enumFormOptions: VbenFormProps = {
   resetButtonOptions: {
@@ -381,7 +392,7 @@ const enumGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        if (!currentSelectedKey.value) return
+        if (!currentSelectedKey.value) return;
         const { data } = await postEnumTypesPage({
           body: {
             pageIndex: page.currentPage,
@@ -403,8 +414,8 @@ const enumGridEvent = {
     enumPropertyGridApi.reload({
       id: values.row.id,
     });
-  }
-}
+  },
+};
 
 const [EnumGrid, enumGridApi] = useVbenVxeGrid({
   gridOptions: enumGridOptions,
@@ -467,7 +478,7 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
   proxyConfig: {
     ajax: {
       query: async ({ page }, formValues) => {
-        if (!currentEnumTypeId.value) return
+        if (!currentEnumTypeId.value) return;
         const { data } = await postEnumTypesPageProperty({
           body: {
             pageIndex: page.currentPage,
@@ -487,17 +498,22 @@ const [EnumPropertyGrid, enumPropertyGridApi] = useVbenVxeGrid({
   formOptions: enumPropertyFormOptions,
 });
 
-const [AddEditEntityPropertyModal, addEditEntityPropertyModalApi] = useVbenModal({
-  connectedComponent: AddEditEntityProperty,
-});
+const [AddEditEntityPropertyModal, addEditEntityPropertyModalApi] =
+  useVbenModal({
+    connectedComponent: AddEditEntityProperty,
+  });
 
 const openAddEntityPropertyModal = () => {
+  if (!currentSelectedKey.value) {
+    message.error('请先选择实体');
+    return;
+  }
   addEditEntityPropertyModalApi.setData({
     entityModelId: currentSelectedKey.value,
     isEdit: false,
   });
   addEditEntityPropertyModalApi.open();
-}
+};
 
 const handleDeleteEntityModelProperty = async (row: Record<string, any>) => {
   Modal.confirm({
@@ -513,7 +529,7 @@ const handleDeleteEntityModelProperty = async (row: Record<string, any>) => {
       propertyGridApi.reload();
     },
   });
-}
+};
 
 const handleEditEntityModelProperty = async (row: Record<string, any>) => {
   addEditEntityPropertyModalApi.setData({
@@ -522,20 +538,24 @@ const handleEditEntityModelProperty = async (row: Record<string, any>) => {
     row,
   });
   addEditEntityPropertyModalApi.open();
-}
+};
 
 const [AddEditEnumModal, addEditEnumModalApi] = useVbenModal({
   connectedComponent: AddEditEnumComponent,
 });
 
 const handleAddEnum = () => {
+  if (!currentSelectedKey.value) {
+    message.error('请先选择实体');
+    return;
+  }
   addEditEnumModalApi.setData({
     entityModelId: currentSelectedKey.value,
     projectId: route.query.projectId,
     isEdit: false,
   });
   addEditEnumModalApi.open();
-}
+};
 
 const handleEditEnum = (row: Record<string, any>) => {
   addEditEnumModalApi.setData({
@@ -543,7 +563,7 @@ const handleEditEnum = (row: Record<string, any>) => {
     row,
   });
   addEditEnumModalApi.open();
-}
+};
 
 const handleDeleteEnum = async (row: Record<string, any>) => {
   Modal.confirm({
@@ -556,19 +576,23 @@ const handleDeleteEnum = async (row: Record<string, any>) => {
       enumGridApi.reload();
     },
   });
-}
+};
 
 const [AddEditEnumPropertyModal, addEditEnumPropertyModalApi] = useVbenModal({
   connectedComponent: AddEditEnumPropertyComponent,
 });
 
 const handleAddEnumProperty = () => {
+  if (!currentEnumTypeId.value) {
+    message.error('请先选择枚举');
+    return;
+  }
   addEditEnumPropertyModalApi.setData({
     enumTypeId: currentEnumTypeId.value,
     isEdit: false,
   });
   addEditEnumPropertyModalApi.open();
-}
+};
 
 const handleEditEnumProperty = (row: Record<string, any>) => {
   addEditEnumPropertyModalApi.setData({
@@ -577,7 +601,7 @@ const handleEditEnumProperty = (row: Record<string, any>) => {
     row,
   });
   addEditEnumPropertyModalApi.open();
-}
+};
 
 const handleDeleteEnumProperty = async (row: Record<string, any>) => {
   Modal.confirm({
@@ -590,7 +614,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
       enumPropertyGridApi.reload();
     },
   });
-}
+};
 </script>
 
 <template>
@@ -604,10 +628,10 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
             type="primary"
             @click="addOaggregateRootModalApi.open"
           >
-              <div class="flex items-center">
-                <span class="icon-[material-symbols--add-circle-outline]"></span>
-                <span class="ml-1">新增聚合根</span>
-              </div>
+            <div class="flex items-center">
+              <span class="icon-[material-symbols--add-circle-outline]"></span>
+              <span class="ml-1">新增聚合根</span>
+            </div>
           </Button>
           <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
           <Dropdown class="ml-1">
@@ -625,27 +649,36 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
           </Dropdown>
         </div>
         <Tree
-          class="mt-3"
           :auto-expand-parent="autoExpandParent"
           :block-node="true"
           :expanded-keys="expandedKeys"
           :tree-data="gData"
+          class="mt-3"
           @expand="onExpand"
           @select="onSelect"
         >
           <template #title="{ title, key: treeKey, data: nodeData }">
             <Dropdown :trigger="['contextmenu']">
-              <span class="w-full block" v-if="title.indexOf(searchValue) > -1">
+              <span v-if="title.indexOf(searchValue) > -1" class="block w-full">
                 {{ title.substring(0, title.indexOf(searchValue)) }}
                 <span style="color: #f50">{{ searchValue }}</span>
                 {{
-                  title.substring(title.indexOf(searchValue) + searchValue.length)
+                  title.substring(
+                    title.indexOf(searchValue) + searchValue.length,
+                  )
                 }}
               </span>
-              <span class="w-full block" v-else>{{ title }}</span>
+              <span v-else class="block w-full">{{ title }}</span>
               <template #overlay>
-                <Menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, nodeData, menuKey)">
-                  <Menu.Item v-for="item in contextMenuOptions" :key="item.key">{{ item.label }}</Menu.Item>
+                <Menu
+                  @click="
+                    ({ key: menuKey }) =>
+                      onContextMenuClick(treeKey, nodeData, menuKey)
+                  "
+                >
+                  <Menu.Item v-for="item in contextMenuOptions" :key="item.key">
+                    {{ item.label }}
+                  </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
@@ -656,25 +689,36 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
       <div class="col-span-8 xl:col-span-9">
         <div class="bg-card">
           <Tabs v-model:active-key="activeKey" class="px-3">
-            <Tabs.TabPane key="1" :tab="'属性'">
+            <Tabs.TabPane key="1" tab="属性">
               <PropertyGrid>
                 <template #toolbar-tools>
-                  <Button type="primary" :disabled="!currentSelectedKey" @click="openAddEntityPropertyModal">
+                  <Button
+                    :disabled="!currentSelectedKey"
+                    type="primary"
+                    @click="openAddEntityPropertyModal"
+                  >
                     <!-- {{ $t('common.add') }} -->
-                      新增实体属性
+                    新增实体属性
                   </Button>
                 </template>
                 <template #action="{ row }">
-                  <Button type="link" @click="handleEditEntityModelProperty(row)">
+                  <Button
+                    type="link"
+                    @click="handleEditEntityModelProperty(row)"
+                  >
                     {{ $t('common.edit') }}
                   </Button>
-                  <Button danger type="link" @click="handleDeleteEntityModelProperty(row)">
+                  <Button
+                    danger
+                    type="link"
+                    @click="handleDeleteEntityModelProperty(row)"
+                  >
                     {{ $t('common.delete') }}
                   </Button>
                 </template>
               </PropertyGrid>
             </Tabs.TabPane>
-            <Tabs.TabPane key="2" :tab="'枚举'">
+            <Tabs.TabPane key="2" tab="枚举">
               <div class="grid grid-cols-12 gap-4">
                 <div class="bg-card col-span-6">
                   <EnumGrid>
@@ -706,7 +750,11 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
                       <Button type="link" @click="handleEditEnumProperty(row)">
                         {{ $t('common.edit') }}
                       </Button>
-                      <Button danger type="link" @click="handleDeleteEnumProperty(row)">
+                      <Button
+                        danger
+                        type="link"
+                        @click="handleDeleteEnumProperty(row)"
+                      >
                         {{ $t('common.delete') }}
                       </Button>
                     </template>
@@ -718,8 +766,11 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
         </div>
       </div>
     </div>
-    <AddOaggregateRootModal :projectId="route.query.projectId" @getTreeData="getTreeData" />
-    <AddEditEntityModal @getTreeData="getTreeData" />
+    <AddOaggregateRootModal
+      :project-id="route.query.projectId"
+      @get-tree-data="getTreeData"
+    />
+    <AddEditEntityModal @get-tree-data="getTreeData" />
     <AddEditEntityPropertyModal @reload="propertyGridApi.reload" />
     <AddEditEnumModal @reload="enumGridApi.reload" />
     <AddEditEnumPropertyModal @reload="enumPropertyGridApi.reload" />

@@ -2,6 +2,8 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+import { useRouter } from 'vue-router';
+
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Button, Modal, Space } from 'ant-design-vue';
@@ -9,12 +11,11 @@ import { Button, Modal, Space } from 'ant-design-vue';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postTemplatesDelete, postTemplatesPage } from '#/api-client/index';
 import { $t } from '#/locales';
-import { useRouter } from 'vue-router';
 // 新增modal
 import AddModal from './AddModal.vue';
+import CopyModaComponent from './CopyModal.vue';
 // 编辑modal
 import EditModal from './EditModal.vue';
-import CopyModaComponent from './CopyModal.vue';
 import { querySchema, tableSchema } from './schema';
 
 const router = useRouter();
@@ -111,11 +112,9 @@ const handleViewDetail = (row: Record<string, any>) => {
     name: 'TemplateDetail',
     query: {
       templateId: row.id,
-    }
-  })
+    },
+  });
 };
-
-
 </script>
 
 <template>
@@ -130,12 +129,8 @@ const handleViewDetail = (row: Record<string, any>) => {
       </template>
 
       <template #action="{ row }">
-        <Button type="link" @click="handleViewDetail(row)">
-          明细
-        </Button>
-        <Button type="link" @click="handleCopy(row)">
-          复制
-        </Button>
+        <Button type="link" @click="handleViewDetail(row)"> 明细 </Button>
+        <Button type="link" @click="handleCopy(row)"> 复制 </Button>
         <Button type="link" @click="handleEdit(row)">
           {{ $t('common.edit') }}
         </Button>

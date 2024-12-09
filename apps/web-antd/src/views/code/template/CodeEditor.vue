@@ -1,27 +1,26 @@
-<template>
-  <div ref="editor" class="code-editor"></div>
-</template>
-
-<script>
+<!-- <script>
 import { onMounted, ref, watch } from 'vue';
+
 import CodeMirror from 'codemirror';
+
+import 'codemirror/mode/javascript/javascript';
+
 // 引入必要的样式和语言包
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material-darker.css';
-import 'codemirror/mode/javascript/javascript';
 
 export default {
   name: 'CodeEditor',
   props: {
     value: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   setup(props, { emit }) {
     const editor = ref(null);
     let cmInstance = null;
-
+    debugger;
     onMounted(() => {
       cmInstance = CodeMirror(editor.value, {
         value: props.value,
@@ -39,22 +38,29 @@ export default {
     });
 
     // 当 props.value 改变时同步到 CodeMirror 实例
-    watch(() => props.value, (newValue) => {
-      if (cmInstance && newValue !== cmInstance.getValue()) {
-        cmInstance.setValue(newValue);
-      }
-    });
+    watch(
+      () => props.value,
+      (newValue) => {
+        if (cmInstance && newValue !== cmInstance.getValue()) {
+          cmInstance.setValue(newValue);
+        }
+      },
+    );
 
     return {
-      editor
+      editor,
     };
-  }
+  },
 };
 </script>
+
+<template>
+  <div ref="editor" class="code-editor"></div>
+</template>
 
 <style scoped>
 /* 添加一些样式以确保编辑器正确显示 */
 .code-editor {
   height: 300px;
 }
-</style>
+</style> -->

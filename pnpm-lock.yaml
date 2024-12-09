@@ -660,8 +660,11 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       codemirror:
-        specifier: ^5.65.16
+        specifier: ^5.65.18
         version: 5.65.18
+      codemirror-editor-vue3:
+        specifier: ^2.8.0
+        version: 2.8.0(codemirror@5.65.18)(diff-match-patch@1.0.5)(vue@3.5.13(typescript@5.7.2))
       dayjs:
         specifier: 'catalog:'
         version: 1.11.13
@@ -5010,6 +5013,13 @@ packages:
     resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
     engines: {node: '>=0.10.0'}
 
+  codemirror-editor-vue3@2.8.0:
+    resolution: {integrity: sha512-ebYGNhBpLmQNLguXzNyMMkn6K8v3lcS5/Ncvdn6YS4bLGEHE67MfsJIS/WV0L7I6WavUuFlY/Rs/AJKChIwSwg==}
+    peerDependencies:
+      codemirror: ^5
+      diff-match-patch: ^1.0.5
+      vue: ^3.5.13
+
   codemirror@5.65.18:
     resolution: {integrity: sha512-Gaz4gHnkbHMGgahNt3CA5HBk5lLQBqmD/pBgeB4kQU6OedZmqMBjlRF0LSrp2tJ4wlLNPm2FfaUd1pDy0mdlpA==}
 
@@ -5528,6 +5538,9 @@ packages:
 
   didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
+
+  diff-match-patch@1.0.5:
+    resolution: {integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==}
 
   dijkstrajs@1.0.3:
     resolution: {integrity: sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==}
@@ -13669,6 +13682,12 @@ snapshots:
 
   cluster-key-slot@1.1.2: {}
 
+  codemirror-editor-vue3@2.8.0(codemirror@5.65.18)(diff-match-patch@1.0.5)(vue@3.5.13(typescript@5.7.2)):
+    dependencies:
+      codemirror: 5.65.18
+      diff-match-patch: 1.0.5
+      vue: 3.5.13(typescript@5.7.2)
+
   codemirror@5.65.18: {}
 
   color-convert@2.0.1:
@@ -14196,6 +14215,8 @@ snapshots:
   detect-libc@2.0.3: {}
 
   didyoumean@1.2.2: {}
+
+  diff-match-patch@1.0.5: {}
 
   dijkstrajs@1.0.3: {}
 

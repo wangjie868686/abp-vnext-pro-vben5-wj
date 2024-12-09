@@ -48,8 +48,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'EntityModel',
         path: 'entityModel',
-        component: () =>
-          import('#/views/code/project/entityModel/index.vue'),
+        component: () => import('#/views/code/project/entityModel/index.vue'),
         meta: {
           icon: 'ph:user',
           title: '实体',
@@ -59,13 +58,22 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'TemplateDetail',
         path: 'templateDetail',
-        component: () =>
-          import('#/views/code/template/TemplateDetail.vue'),
-          meta: {
-            icon: 'ph:user',
-            title: '模板明细',
-            hideInMenu: true,
-          },
+        component: () => import('#/views/code/template/TemplateDetail.vue'),
+        meta: {
+          icon: 'ph:user',
+          title: '模板明细',
+          hideInMenu: true,
+        },
+      },
+      {
+        name: 'preview',
+        path: 'Preview',
+        component: () => import('#/views/code/generate/preview.vue'),
+        meta: {
+          icon: 'ph:user',
+          title: '预览',
+          hideInMenu: true,
+        },
       },
     ],
   },

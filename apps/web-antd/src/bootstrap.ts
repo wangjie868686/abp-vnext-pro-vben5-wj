@@ -7,13 +7,17 @@ import '@vben/styles';
 import '@vben/styles/antd';
 
 import { useTitle } from '@vueuse/core';
-import JsonViewer from "vue3-json-viewer";
-import "vue3-json-viewer/dist/index.css";
+// https://github.com/rennzhang/codemirror-editor-vue3
+import { InstallCodeMirror } from 'codemirror-editor-vue3';
+import JsonViewer from 'vue3-json-viewer';
+
 import { $t, setupI18n } from '#/locales';
 
 import { initComponentAdapter } from './adapter/component';
 import App from './app.vue';
 import { router } from './router';
+
+import 'vue3-json-viewer/dist/index.css';
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器
@@ -44,7 +48,7 @@ async function bootstrap(namespace: string) {
       useTitle(pageTitle);
     }
   });
-
+  app.use(InstallCodeMirror);
   app.mount('#app');
 }
 

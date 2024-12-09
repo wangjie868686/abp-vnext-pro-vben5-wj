@@ -15,10 +15,9 @@ export const querySchema = [
 export const tableSchema: any = [
   { title: $t('common.seq'), type: 'seq', width: 50 },
   { field: 'companyName', title: $t('abp.code.companyName'), minWidth: '150' },
-  { field: 'name', title: $t('abp.code.projectName'), minWidth: '150' },
   {
     field: 'projectName',
-    title: $t('abp.code.projectEnglishName'),
+    title: $t('abp.code.projectName'),
     minWidth: '150',
   },
 
@@ -54,38 +53,26 @@ export const addFormSchema: any = [
   {
     component: 'Input',
     componentProps: {},
-    fieldName: 'name',
-    label: $t('abp.code.projectName'),
-    rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.projectName'),
-    }),
-  },
-  {
-    component: 'Input',
-    componentProps: {},
     fieldName: 'projectName',
-    label: $t('abp.code.projectEnglishName'),
+    label: $t('abp.code.projectName'),
     rules: z.string().min(1, {
       message: $t('common.pleaseInput') + $t('abp.code.projectEnglishName'),
     }),
   },
-  {
-    component: 'Input',
-    componentProps: {},
-    fieldName: 'nameSpace',
-    label: $t('abp.code.namespace'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
-  },
+  // {
+  //   component: 'Input',
+  //   componentProps: {},
+  //   fieldName: 'nameSpace',
+  //   label: $t('abp.code.namespace'),
+  //   rules: z
+  //     .string()
+  //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
+  // },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'remark',
     label: $t('abp.code.remark'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.code.remark') }),
   },
 ];
 
@@ -112,37 +99,25 @@ export const editFormSchema: any = [
   {
     component: 'Input',
     componentProps: {},
-    fieldName: 'name',
-    label: $t('abp.code.projectName'),
-    rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.projectName'),
-    }),
-  },
-  {
-    component: 'Input',
-    componentProps: {},
     fieldName: 'projectName',
-    label: $t('abp.code.projectEnglishName'),
+    label: $t('abp.code.projectName'),
     rules: z.string().min(1, {
       message: $t('common.pleaseInput') + $t('abp.code.projectEnglishName'),
     }),
   },
-  {
-    component: 'Input',
-    componentProps: {},
-    fieldName: 'nameSpace',
-    label: $t('abp.code.namespace'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
-  },
+  // {
+  //   component: 'Input',
+  //   componentProps: {},
+  //   fieldName: 'nameSpace',
+  //   label: $t('abp.code.namespace'),
+  //   rules: z
+  //     .string()
+  //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
+  // },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'remark',
     label: $t('abp.code.remark'),
-    rules: z
-      .string()
-      .min(1, { message: $t('common.pleaseInput') + $t('abp.code.remark') }),
   },
 ];

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
 
@@ -9,6 +10,7 @@ import { useVbenForm } from '#/adapter/form';
 import { postProjectsAll, postTemplatesAll } from '#/api-client/index';
 import fileRequest from '#/api-client-config/index-blob';
 
+const router = useRouter();
 const [BaseForm, baseFormApi] = useVbenForm({
   // 所有表单项共用，可单独在表单内覆盖
   commonConfig: {
@@ -113,10 +115,13 @@ async function onSubmit() {
 
 async function onPreview() {
   baseFormApi.setState({ resetButtonOptions: { loading: true } });
-
-  // todo
-  message.success({
-    content: `form values: ${JSON.stringify(await baseFormApi.getValues())}`,
+  const formValues = await baseFormApi.getValues();
+  router.push({
+    name: 'preview',
+    query: {
+      templateId: formValues.templateId,
+      projectId: formValues.projectId,
+    },
   });
 }
 </script>
