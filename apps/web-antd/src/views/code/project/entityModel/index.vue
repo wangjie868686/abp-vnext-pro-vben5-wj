@@ -450,7 +450,7 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
       minWidth: '100',
     },
     {
-      field: 'code',
+      field: 'value',
       title: '值',
       minWidth: '100',
     },

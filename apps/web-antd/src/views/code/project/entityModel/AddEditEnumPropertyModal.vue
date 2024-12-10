@@ -24,6 +24,24 @@ const [Form, formApi] = useVbenForm({
   schema: [
     {
       component: 'Input',
+      fieldName: 'id',
+      label: 'id',
+      dependencies: {
+        show: () => false,
+        triggerFields: ['id'],
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'enumTypeId',
+      label: 'enumTypeId',
+      dependencies: {
+        show: () => false,
+        triggerFields: ['enumTypeId'],
+      },
+    },
+    {
+      component: 'Input',
       fieldName: 'code',
       label: '编码',
       rules: 'required',
@@ -50,9 +68,10 @@ const [Modal, modalApi] = useVbenModal({
     if (isOpen) {
       data.value = modalApi.getData<Record<string, any>>();
       if (data.value.isEdit) {
-        const { row } = data.value;
+        const { row, enumTypeId } = data.value;
         formApi.setValues({
           ...row,
+          enumTypeId,
         });
       }
     }

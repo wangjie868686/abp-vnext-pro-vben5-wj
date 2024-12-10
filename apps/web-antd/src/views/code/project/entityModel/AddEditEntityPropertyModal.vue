@@ -68,6 +68,7 @@ const [Form, formApi] = useVbenForm({
       component: 'Switch',
       fieldName: 'isRequired',
       label: '必填',
+      defaultValue: true,
       formItemClass: 'col-span-2 w-[100px]',
     },
     {
@@ -75,6 +76,7 @@ const [Form, formApi] = useVbenForm({
       fieldName: 'maxLength',
       label: '最大长度',
       rules: 'required',
+      defaultValue: 128,
       dependencies: {
         triggerFields: ['dataTypeId'],
         if: () => currentDataType.value === 'string',
@@ -85,12 +87,13 @@ const [Form, formApi] = useVbenForm({
       component: 'InputNumber',
       fieldName: 'minLength',
       label: '最小长度',
+      defaultValue: 0,
       dependencies: {
         triggerFields: ['dataTypeId'],
         if: () => currentDataType.value === 'string',
       },
       componentProps: {
-        min: 1,
+        min: 0,
       },
       formItemClass: 'col-span-1',
     },
@@ -153,12 +156,14 @@ const [Modal, modalApi] = useVbenModal({
               ...addFormValues,
               id: data.value.entityModelId,
               propertyId: data.value.row.id,
+              enumTypeId: addFormValues.dataTypeId,
             } as UpdateEntityModelPropertyInput,
           })
         : postEntityModelsCreateEntityModelProperty({
             body: {
               ...addFormValues,
               id: data.value.entityModelId,
+              enumTypeId: addFormValues.dataTypeId,
             } as CreateEntityModelPropertyInput,
           }));
       message.success(data.value.isEdit ? '编辑成功' : '新增成功');
