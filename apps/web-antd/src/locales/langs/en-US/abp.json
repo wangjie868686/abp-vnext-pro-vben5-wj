@@ -17,7 +17,14 @@
     "languageText": "LanguageTextManagement",
     "dataDictionary": "DataDictionaryManagement",
     "notification": "NotificationManagement",
-    "message": "MessageManagement"
+    "message": "MessageManagement",
+    "code": "CodeManagement",
+    "code-project": "ProjectList",
+    "code-template": "TemplateList",
+    "code-genarate": "CodeGenarate",
+    "code-entity": "Entity",
+    "code-template-detail": "TemplateDetail",
+    "code-Preview": "Preview"
   },
   "user": {
     "user": "User",
@@ -106,5 +113,30 @@
     "featureManagement": "FeatureManagement",
     "connectionStringName": "ConnectionStringName",
     "connectionString": "ConnectionString"
+  },
+  "code": {
+    "companyName": "CompanyName",
+    "projectName": "ProjectName",
+    "projectEnglishName": "ProjectEnglishName",
+    "namespace": "Namespace",
+    "remark": "Remark",
+    "templateName": "TemplateName",
+    "model": "Model",
+    "property": "Property",
+    "enum": "Enum",
+    "isRequired": "IsRequired",
+    "maxLength": "MaxLength",
+    "minLength": "MinLength",
+    "decimalPrecision18": "Accuracy (18,6) of 18",
+    "decimalPrecision6": "Accuracy (18,6) of 6",
+    "pleaseSelectEntity": "Please select entity",
+    "pleaseSelectEnum": "Please select enum",
+    "detail": "Detail",
+    "copy": "Copy",
+    "addFolder": "AddFolder",
+    "addFile": "AddFile",
+    "desc": "Description",
+    "name": "Name",
+    "templateType": "TemplateType"
   }
 }

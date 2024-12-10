@@ -2,13 +2,14 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { message, Button, Space, Modal, } from 'ant-design-vue';
-
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { useVbenModal } from '@vben/common-ui';
 
-import { getExampleTableApi } from './mock';
+import { Button, message, Modal, Space } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+
 import AddEditModal from './AddEditModal.vue';
+import { getExampleTableApi } from './mock';
 
 interface RowType {
   category: string;
@@ -126,11 +127,10 @@ const [ActionModal, modalApi] = useVbenModal({
   connectedComponent: AddEditModal,
 });
 
-
 const handleAdd = () => {
   modalApi.setData({
     isEdit: false,
-  })
+  });
   modalApi.open();
 };
 
@@ -142,7 +142,7 @@ const handleEdit = (row: Record<string, any>) => {
   modalApi.setData({
     isEdit: true,
     row,
-  })
+  });
   modalApi.open();
 };
 
@@ -161,16 +161,10 @@ const handleDelete = (row: any) => {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button
-            type="primary"
-            @click="handleAdd"
-          >
+          <Button type="primary" @click="handleAdd">
             {{ $t('common.add') }}
           </Button>
-          <Button
-            type="primary"
-            @click="handleExport"
-          >
+          <Button type="primary" @click="handleExport">
             {{ $t('common.export') }}
           </Button>
         </Space>
