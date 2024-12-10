@@ -1,17 +1,76 @@
-<!--新增编辑实体Modal-->
 <script lang="ts" setup>
-import { useVbenModal } from '@vben/common-ui';
 import { ref } from 'vue';
+
+import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
-import { postTemplatesControlType, postTemplatesCreateDetail, postTemplatesUpdateDetail, 
-  type CreateEntityModelInput, } from '#/api-client/index';
+import {
+  postTemplatesControlType,
+  postTemplatesCreateDetail,
+  postTemplatesUpdateDetail,
+} from '#/api-client/index';
+import { $t } from '#/locales';
 
 const emit = defineEmits(['getTreeData']);
 
 const data = ref<Record<string, any>>({});
 const controlTypeList = ref<any[]>();
-
+const [Form, formApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  layout: 'horizontal',
+  schema: [
+    {
+      component: 'Select',
+      fieldName: 'templateType',
+      label: '类型',
+      componentProps: () => {
+        return {
+          options: [
+            { label: '文件夹', value: 10 },
+            { label: '文件', value: 20 },
+          ],
+        };
+      },
+    },
+    {
+      component: 'Select',
+      fieldName: 'controlType',
+      label: $t('abp.code.templateType'),
+      componentProps: () => {
+        return {
+          options: controlTypeList.value,
+          fieldNames: { label: 'key', value: 'value' },
+        };
+      },
+      dependencies: {
+        triggerFields: ['templateType'],
+        if: (values) => {
+          return values.templateType === 20;
+        },
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'name',
+      label: $t('abp.code.name'),
+      rules: 'required',
+    },
+    {
+      component: 'Textarea',
+      fieldName: 'description',
+      label: $t('abp.code.desc'),
+      rules: 'required',
+    },
+  ],
+  wrapperClass: 'grid-cols-1',
+  showDefaultActions: false,
+});
 const getControlTypeList = async () => {
   const { data = [] } = await postTemplatesControlType();
   controlTypeList.value = data;
@@ -32,7 +91,7 @@ const [Modal, modalApi] = useVbenModal({
   },
   onConfirm: async () => {
     try {
-      modalApi.setState({ loading: true, confirmLoading: true});
+      modalApi.setState({ loading: true, confirmLoading: true });
       const { valid } = await formApi.validate();
       if (!valid) return;
       const formValues = await formApi.getValues();
@@ -42,86 +101,28 @@ const [Modal, modalApi] = useVbenModal({
             ...formValues,
             templateId: data.value.templateId,
             templateDetailId: data.value.templateDetailId,
-          }
-        })
-        message.success('编辑成功');
+          },
+        });
+        message.success($t('common.editSuccess'));
       } else {
         await postTemplatesCreateDetail({
           body: {
             ...formValues,
-            templateId: data.value.templateId
+            templateId: data.value.templateId,
           },
         });
-        message.success('新增成功');
+        message.success($t('common.addSuccess'));
       }
       modalApi.close();
       emit('getTreeData');
     } finally {
-      modalApi.setState({ loading: false, confirmLoading: false});
+      modalApi.setState({ loading: false, confirmLoading: false });
     }
-  }
-});
-
-const [Form, formApi] = useVbenForm({
-  commonConfig: {
-    componentProps: {
-      class: 'w-full',
-    },
   },
-  layout: 'horizontal',
-  schema: [
-  {
-      component: 'Select',
-      fieldName: 'templateType',
-      label: '类型',
-      componentProps: () => {
-        return {
-          options: [
-            { label: '文件夹', value: 10 },
-            { label: '文件', value: 20 },
-          ]
-        }
-      },
-    },
-    {
-      component: 'Select',
-      fieldName: 'controlType',
-      label: '模板策略',
-      componentProps: () => {
-        return {
-          options: controlTypeList.value,
-          fieldNames: { label: 'key', value: 'value' }
-        }
-      },
-      dependencies: {
-        triggerFields: ['templateType'],
-        if: (values) => {
-          return values.templateType === 20;
-        }
-      }
-    },
-    {
-      component: 'Input',
-      fieldName: 'name',
-      label: '名称',
-      rules: 'required',
-    },
-    {
-      component: 'Textarea',
-      fieldName: 'description',
-      label: '描述',
-      rules: 'required',
-    },
-   
-  ],
-  wrapperClass: 'grid-cols-1',
-  showDefaultActions: false,
 });
-
-
 </script>
 <template>
-  <Modal :title="data.isEdit ? '编辑模板' : '新增模板'" "> 
+  <Modal :title="data.isEdit ? $t('common.edit') : $t('common.add')">
     <Form />
   </Modal>
 </template>

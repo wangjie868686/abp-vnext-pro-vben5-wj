@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
       icon: 'ant-design:format-painter-filled',
       order: 3,
       title: $t('abp.menu.code'),
-      // authority: ['AbpTenantManagement'],
+      authority: ['AbpCode'],
     },
     name: 'code',
     path: '/code',
@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'ant-design:profile-outlined',
           title: $t('abp.menu.code-project'),
-          // authority: ['AbpTenantManagement.Tenants'],
+          authority: ['AbpCode.CodeManagement.Project'],
         },
       },
       {
@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'ant-design:file-markdown-filled',
           title: $t('abp.menu.code-template'),
-          // authority: ['AbpTenantManagement.Tenants'],
+          authority: ['AbpCode.CodeManagement.Template'],
         },
       },
       {
@@ -42,7 +42,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           icon: 'ant-design:copyright-circle-filled',
           title: $t('abp.menu.code-genarate'),
-          // authority: ['AbpTenantManagement.Tenants'],
+          authority: ['AbpCode.CodeManagement.Generator'],
         },
       },
       {
@@ -50,8 +50,8 @@ const routes: RouteRecordRaw[] = [
         path: 'entityModel',
         component: () => import('#/views/code/project/entityModel/index.vue'),
         meta: {
-          icon: 'ph:user',
-          title: '实体',
+          icon: 'ant-design:file-markdown-filled',
+          title: $t('abp.menu.code-entity'),
           hideInMenu: true,
         },
       },
@@ -60,8 +60,8 @@ const routes: RouteRecordRaw[] = [
         path: 'templateDetail',
         component: () => import('#/views/code/template/TemplateDetail.vue'),
         meta: {
-          icon: 'ph:user',
-          title: '模板明细',
+          icon: 'ant-design:file-markdown-filled',
+          title: $t('abp.menu.code-template-detail'),
           hideInMenu: true,
         },
       },
@@ -70,8 +70,8 @@ const routes: RouteRecordRaw[] = [
         path: 'Preview',
         component: () => import('#/views/code/generate/preview.vue'),
         meta: {
-          icon: 'ph:user',
-          title: '预览',
+          icon: 'ant-design:file-markdown-filled',
+          title: $t('abp.menu.code-Preview'),
           hideInMenu: true,
         },
       },

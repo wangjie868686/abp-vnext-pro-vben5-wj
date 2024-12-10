@@ -29,8 +29,6 @@ const [BaseForm, baseFormApi] = useVbenForm({
     content: '预览',
   },
   wrapperClass: 'grid-cols-1',
-  // 垂直布局，label和input在不同行，值为vertical
-  // 水平布局，label和input在同一行
   layout: 'horizontal',
   schema: [
     {
@@ -39,7 +37,6 @@ const [BaseForm, baseFormApi] = useVbenForm({
         allowClear: true,
         filterOption: true,
         options: [],
-        placeholder: '请选择',
         showSearch: true,
       },
       fieldName: 'projectId',
@@ -52,7 +49,6 @@ const [BaseForm, baseFormApi] = useVbenForm({
         allowClear: true,
         filterOption: true,
         options: [],
-        placeholder: '请选择',
         showSearch: true,
       },
       fieldName: 'templateId',
@@ -67,7 +63,7 @@ onMounted(async () => {
     {
       componentProps: {
         options: res?.data?.map((item) => ({
-          label: item.name,
+          label: item.projectName,
           value: item.id,
         })),
       },

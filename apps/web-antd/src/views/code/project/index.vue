@@ -2,6 +2,8 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+import { useRouter } from 'vue-router';
+
 import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Button, Modal, Space } from 'ant-design-vue';
@@ -9,15 +11,14 @@ import { Button, Modal, Space } from 'ant-design-vue';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postProjectsDelete, postProjectsPage } from '#/api-client/index';
 import { $t } from '#/locales';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 // 新增modal
 import AddModal from './AddModal.vue';
 // 编辑modal
 import EditModal from './EditModal.vue';
 import { querySchema, tableSchema } from './schema';
+
+const router = useRouter();
 
 const formOptions: VbenFormProps = {
   // 默认展开
@@ -100,9 +101,9 @@ const handleViewModel = (row: Record<string, any>) => {
     name: 'EntityModel',
     query: {
       projectId: row.id,
-    }
-  })
-}
+    },
+  });
+};
 </script>
 
 <template>
@@ -110,20 +111,37 @@ const handleViewModel = (row: Record<string, any>) => {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button type="primary" @click="handleAdd">
+          <Button
+            type="primary"
+            v-access:code="'AbpCode.CodeManagement.Project.Create'"
+            @click="handleAdd"
+          >
             {{ $t('common.add') }}
           </Button>
         </Space>
       </template>
 
       <template #action="{ row }">
-        <Button type="link" @click="handleViewModel(row)">
-            模型
+        <Button
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Project.Model'"
+          @click="handleViewModel(row)"
+        >
+          {{ $t('abp.code.model') }}
         </Button>
-        <Button type="link" @click="handleEdit(row)">
+        <Button
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Project.Update'"
+          @click="handleEdit(row)"
+        >
           {{ $t('common.edit') }}
         </Button>
-        <Button danger type="link" @click="handleDelete(row)">
+        <Button
+          danger
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Project.Delete'"
+          @click="handleDelete(row)"
+        >
           {{ $t('common.delete') }}
         </Button>
       </template>

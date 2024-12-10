@@ -37,8 +37,6 @@ const searchValue = ref<string>('');
 const autoExpandParent = ref<boolean>(true);
 // 定义一个响应式变量，用于存储树形数据
 const gData = ref<Array<DataNode>>([]);
-// 定义一个响应式变量，用于存储当前激活的tab
-const activeKey = ref('1');
 // 定义一个响应式的变量，用于存储当前选中的节点的key
 const currentSelectedKey = ref('');
 // 定义一个响应式的变量，用于存储当前选中的节点
@@ -47,8 +45,8 @@ const codeText = ref();
 const route = useRoute();
 
 const contextMenuOptions = [
-  { label: '新增文件夹', key: 'addFolder' },
-  { label: '新增文件', key: 'addfile' },
+  { label: $t('abp.code.addFolder'), key: 'addFolder' },
+  { label: $t('abp.code.addFile'), key: 'addfile' },
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ];
@@ -198,7 +196,7 @@ const saveContent = async () => {
     content: codeText.value,
   };
   await postTemplatesUpdateDetailContent({ body: params });
-  message.success('保存成功');
+  message.success($t('common.editSuccess'));
 };
 async function getTreeData() {
   const { data = [] } = await postTemplatesTree({
@@ -327,7 +325,6 @@ const [CreateDetailForm, createDetailFormApi] = useVbenForm({
       component: 'Textarea',
       fieldName: 'description',
       label: '描述',
-      rules: 'required',
     },
   ],
   wrapperClass: 'grid-cols-1',
@@ -347,7 +344,9 @@ const openCreateDetailModal = (key: string) => {
         <Button class="mx-3" size="small" type="primary">
           <div class="flex items-center">
             <span class="icon-[material-symbols--add-circle-outline]"></span>
-            <span class="ml-1" @click="openTemplateModal">创建</span>
+            <span class="ml-1" @click="openTemplateModal">{{
+              $t('common.add')
+            }}</span>
           </div>
         </Button>
         <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
@@ -409,14 +408,14 @@ const openCreateDetailModal = (key: string) => {
           type="primary"
           @click="saveContent"
         >
-          保存
+          {{ $t('common.save') }}
         </Button>
         <Codemirror v-model:value="codeText" />
       </div>
     </div>
 
     <AddEditModal @get-tree-data="getTreeData" />
-    <CreateDetailModal title="新增模板">
+    <CreateDetailModal :title="$t('common.add')">
       <CreateDetailForm />
     </CreateDetailModal>
   </div>

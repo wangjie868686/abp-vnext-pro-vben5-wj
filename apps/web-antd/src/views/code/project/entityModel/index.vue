@@ -32,11 +32,11 @@ import {
 } from '#/api-client/index';
 import { $t } from '#/locales';
 
+import AddAggregateRoot from './AddAggregateRootModal.vue';
 import AddEditEntity from './AddEditEntityModal.vue';
 import AddEditEntityProperty from './AddEditEntityPropertyModal.vue';
 import AddEditEnumComponent from './AddEditEnumModal.vue';
 import AddEditEnumPropertyComponent from './AddEditEnumPropertyModal.vue';
-import AddOaggregateRoot from './AddOaggregateRootModal.vue';
 
 // 定义一个响应式变量，用于存储展开的节点
 const expandedKeys = ref<(number | string)[]>([]);
@@ -63,7 +63,14 @@ const contextMenuOptions = [
 onMounted(() => {
   getTreeData();
 });
-
+const [AddAggregateRootModal, addAggregateRootModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: AddAggregateRoot,
+});
+const [AddEditEntityModal, addEditEntityModalApi] = useVbenModal({
+  // 连接抽离的组件
+  connectedComponent: AddEditEntity,
+});
 // 定义一个异步函数，用于处理右键菜单的选择
 const onContextMenuSelect = async (key: string) => {
   // 根据选择的key值，执行不同的操作
@@ -193,7 +200,7 @@ const onExpand = (keys: (number | string)[], info: any) => {
 const onSelect = (keys: any[], event: any) => {
   currentSelectedKey.value = keys[0] ?? '';
   // parentDisplayName.value = event.node.title;
-  if (!keys[0]) return;
+  if (!keys[0]) return '';
 };
 
 async function getTreeData() {
@@ -229,15 +236,6 @@ watch(searchValue, (value) => {
   autoExpandParent.value = true;
 });
 
-const [AddOaggregateRootModal, addOaggregateRootModalApi] = useVbenModal({
-  // 连接抽离的组件
-  connectedComponent: AddOaggregateRoot,
-});
-const [AddEditEntityModal, addEditEntityModalApi] = useVbenModal({
-  // 连接抽离的组件
-  connectedComponent: AddEditEntity,
-});
-
 const propertyFormOptions: VbenFormProps = {
   resetButtonOptions: {
     show: false,
@@ -246,7 +244,7 @@ const propertyFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '关键字',
+      label: $t('common.keyword'),
       labelWidth: 50,
       componentProps: {
         allowClear: true,
@@ -278,27 +276,27 @@ const propertyGridOptions: VxeGridProps<any> = {
     },
     {
       field: 'isRequired',
-      title: '是否必填',
+      title: $t('abp.code.isRequired'),
       minWidth: '150',
     },
     {
       field: 'maxLength',
-      title: '最大长度',
+      title: $t('abp.code.maxLength'),
       minWidth: '150',
     },
     {
       field: 'minLength',
-      title: '最小长度',
+      title: $t('abp.code.minLength'),
       minWidth: '150',
     },
     {
       field: 'decimalPrecision',
-      title: '精度(18,6)中的18',
+      title: $t('abp.code.decimalPrecision18'),
       minWidth: '150',
     },
     {
       field: 'decimalScale',
-      title: '精度(18,6)中的6',
+      title: $t('abp.code.decimalPrecision6'),
       minWidth: '150',
     },
     {
@@ -350,7 +348,7 @@ const enumFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '关键字',
+      label: $t('common.keyword'),
       labelWidth: 50,
       componentProps: {
         allowClear: true,
@@ -431,7 +429,7 @@ const enumPropertyFormOptions: VbenFormProps = {
     {
       component: 'Input',
       fieldName: 'filter',
-      label: '关键字',
+      label: $t('common.keyword'),
       labelWidth: 50,
       componentProps: {
         allowClear: true,
@@ -546,7 +544,7 @@ const [AddEditEnumModal, addEditEnumModalApi] = useVbenModal({
 
 const handleAddEnum = () => {
   if (!currentSelectedKey.value) {
-    message.error('请先选择实体');
+    message.error($t('abp.code.pleaseSelectEntity'));
     return;
   }
   addEditEnumModalApi.setData({
@@ -584,7 +582,7 @@ const [AddEditEnumPropertyModal, addEditEnumPropertyModalApi] = useVbenModal({
 
 const handleAddEnumProperty = () => {
   if (!currentEnumTypeId.value) {
-    message.error('请先选择枚举');
+    message.error($t('abp.code.pleaseSelectEnum'));
     return;
   }
   addEditEnumPropertyModalApi.setData({
@@ -626,11 +624,11 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
             class="mx-3"
             size="small"
             type="primary"
-            @click="addOaggregateRootModalApi.open"
+            @click="addAggregateRootModalApi.open"
           >
             <div class="flex items-center">
               <span class="icon-[material-symbols--add-circle-outline]"></span>
-              <span class="ml-1">新增聚合根</span>
+              <span class="ml-1"> {{ $t('common.add') }}</span>
             </div>
           </Button>
           <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
@@ -689,7 +687,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
       <div class="col-span-8 xl:col-span-9">
         <div class="bg-card">
           <Tabs v-model:active-key="activeKey" class="px-3">
-            <Tabs.TabPane key="1" tab="属性">
+            <Tabs.TabPane key="1" :tab="$t('abp.code.property')">
               <PropertyGrid>
                 <template #toolbar-tools>
                   <Button
@@ -697,8 +695,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
                     type="primary"
                     @click="openAddEntityPropertyModal"
                   >
-                    <!-- {{ $t('common.add') }} -->
-                    新增实体属性
+                    {{ $t('common.add') }}
                   </Button>
                 </template>
                 <template #action="{ row }">
@@ -718,13 +715,13 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
                 </template>
               </PropertyGrid>
             </Tabs.TabPane>
-            <Tabs.TabPane key="2" tab="枚举">
+            <Tabs.TabPane key="2" :tab="$t('abp.code.enum')">
               <div class="grid grid-cols-12 gap-4">
                 <div class="bg-card col-span-6">
                   <EnumGrid>
                     <template #toolbar-tools>
                       <Button type="primary" @click="handleAddEnum">
-                        {{ '新增枚举' }}
+                        {{ $t('common.add') }}
                       </Button>
                     </template>
 
@@ -742,7 +739,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
                   <EnumPropertyGrid>
                     <template #toolbar-tools>
                       <Button type="primary" @click="handleAddEnumProperty">
-                        {{ '新增枚举属性' }}
+                        {{ $t('common.add') }}
                       </Button>
                     </template>
 
@@ -766,7 +763,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
         </div>
       </div>
     </div>
-    <AddOaggregateRootModal
+    <AddAggregateRootModal
       :project-id="route.query.projectId"
       @get-tree-data="getTreeData"
     />

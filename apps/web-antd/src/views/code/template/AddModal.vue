@@ -19,8 +19,6 @@ const [Form, formApi] = useVbenForm({
     },
   },
   showDefaultActions: false,
-  // 垂直布局，label和input在不同行，值为vertical
-  // 水平布局，label和input在同一行
   layout: 'horizontal',
   schema: addFormSchema,
   wrapperClass: 'grid-cols-1',
@@ -37,7 +35,7 @@ const [Modal, modalApi] = useVbenModal({
       // 获取表单值
       const values = await formApi.getValues();
       // 编辑
-      await postTemplatesCreate ({ body: { ...values } });
+      await postTemplatesCreate({ body: { ...values } });
       message.success($t('common.addSuccess'));
       emit('reload');
       modalApi.close();

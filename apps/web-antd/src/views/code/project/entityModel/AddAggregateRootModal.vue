@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import { message } from 'ant-design-vue';
 import { useVbenModal } from '@vben/common-ui';
-import { useVbenForm, z } from '#/adapter/form';
+
+import { message } from 'ant-design-vue';
+
+import { useVbenForm } from '#/adapter/form';
 import { postEntityModelsCreateAggregate } from '#/api-client/index';
 import { $t } from '#/locales';
 
-const emit = defineEmits(['getTreeData']);
 const props = defineProps({
   projectId: {
     type: String,
     required: true,
   },
-})
-
+});
+const emit = defineEmits(['getTreeData']);
 const [Form, formApi] = useVbenForm({
   commonConfig: {
     componentProps: {
@@ -67,7 +68,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 </script>
 <template>
-  <Modal :title="'新增聚合根'">
+  <Modal title="新增聚合根">
     <Form />
   </Modal>
 </template>

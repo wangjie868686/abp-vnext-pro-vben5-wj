@@ -122,19 +122,44 @@ const handleViewDetail = (row: Record<string, any>) => {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button type="primary" @click="handleAdd">
+          <Button
+            type="primary"
+            v-access:code="'AbpCode.CodeManagement.Template.Create'"
+            @click="handleAdd"
+          >
             {{ $t('common.add') }}
           </Button>
         </Space>
       </template>
 
       <template #action="{ row }">
-        <Button type="link" @click="handleViewDetail(row)"> 明细 </Button>
-        <Button type="link" @click="handleCopy(row)"> 复制 </Button>
-        <Button type="link" @click="handleEdit(row)">
+        <Button
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Template.Update'"
+          @click="handleViewDetail(row)"
+        >
+          {{ $t('abp.code.detail') }}
+        </Button>
+        <Button
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Template.Copy'"
+          @click="handleCopy(row)"
+        >
+          {{ $t('abp.code.copy') }}
+        </Button>
+        <Button
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Template.Update'"
+          @click="handleEdit(row)"
+        >
           {{ $t('common.edit') }}
         </Button>
-        <Button danger type="link" @click="handleDelete(row)">
+        <Button
+          danger
+          type="link"
+          v-access:code="'AbpCode.CodeManagement.Template.Delete'"
+          @click="handleDelete(row)"
+        >
           {{ $t('common.delete') }}
         </Button>
       </template>

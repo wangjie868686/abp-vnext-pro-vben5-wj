@@ -1,81 +1,34 @@
 <!--新增编辑实体属性Modal-->
 <script lang="ts" setup>
-import { useVbenModal } from '@vben/common-ui';
 import { ref } from 'vue';
+
+import { useVbenModal } from '@vben/common-ui';
+
 import { message } from 'ant-design-vue';
+
 import { useVbenForm } from '#/adapter/form';
 import {
+  type CreateEntityModelPropertyInput,
+  postDataTypesList,
   postEntityModelsCreateEntityModelProperty,
   postEntityModelsUpdateEntityModelProperty,
-  postDataTypesList,
-  type CreateEntityModelPropertyInput,
   type UpdateEntityModelPropertyInput,
 } from '#/api-client/index';
 
 const emit = defineEmits(['reload']);
 const data = ref<Record<string, any>>({});
 const dataTypeList = ref<any[]>();
+const currentDataType = ref<string>();
+const specialTypeList = new Set(['decimal', 'float']);
 
 // 获取数据类型列表
 async function getOptions() {
-  const { data: List } = await postDataTypesList({ body: { entityModelId: data.value.entityModelId }});
+  const { data: List } = await postDataTypesList({
+    body: { entityModelId: data.value.entityModelId },
+  });
   dataTypeList.value = List;
-  console.log(dataTypeList.value)
   return List;
 }
-
-
-const [Modal, modalApi] = useVbenModal({
-  onOpenChange: async (isOpen: boolean) => {
-    if (isOpen) {
-      try {
-        modalApi.setState({ loading: true });
-        data.value = modalApi.getData<Record<string, any>>();
-        await getOptions();
-        if (data.value.isEdit) {
-          console.log(data.value.row)
-          formApi.setValues({ ...data.value.row })
-          currentDataType.value = data.value.row.dataTypeCode;
-        }
-      } finally {
-        modalApi.setState({ loading: false });
-      }
-
-    }
-  },
-  onConfirm: async () => {
-    try {
-      modalApi.setState({ loading: true, confirmLoading: true });
-        const { valid } = await formApi.validate();
-        if (!valid) return;
-        const addFormValues = await formApi.getValues();
-        if (data.value.isEdit) {
-          await postEntityModelsUpdateEntityModelProperty({
-            body: {
-              ...addFormValues,
-              id: data.value.entityModelId,
-              propertyId: data.value.row.id,
-            } as UpdateEntityModelPropertyInput,
-          });
-        } else {
-          await postEntityModelsCreateEntityModelProperty({
-            body: {
-              ...addFormValues,
-              id: data.value.entityModelId
-            } as CreateEntityModelPropertyInput,
-          });
-        }
-        message.success(data.value.isEdit ? '编辑成功' : '新增成功');
-        modalApi.close();
-        emit('reload');
-    } finally {
-      modalApi.setState({ loading: false, confirmLoading: false });
-    }
-  }
-});
-
-const currentDataType = ref<string>();
-const specialTypeList= ['decimal', 'float']
 const [Form, formApi] = useVbenForm({
   commonConfig: {
     componentProps: {
@@ -108,7 +61,7 @@ const [Form, formApi] = useVbenForm({
         'field-names': { label: 'description', value: 'id' },
         onChange: (_value: any, data: Record<string, any>) => {
           currentDataType.value = data.code;
-        }
+        },
       }),
     },
     {
@@ -124,7 +77,7 @@ const [Form, formApi] = useVbenForm({
       rules: 'required',
       dependencies: {
         triggerFields: ['dataTypeId'],
-        if: () => currentDataType.value === 'string'
+        if: () => currentDataType.value === 'string',
       },
       formItemClass: 'col-span-1',
     },
@@ -134,7 +87,7 @@ const [Form, formApi] = useVbenForm({
       label: '最小长度',
       dependencies: {
         triggerFields: ['dataTypeId'],
-        if: () => currentDataType.value === 'string'
+        if: () => currentDataType.value === 'string',
       },
       componentProps: {
         min: 1,
@@ -150,7 +103,7 @@ const [Form, formApi] = useVbenForm({
       },
       dependencies: {
         triggerFields: ['dataTypeId'],
-        if: () => specialTypeList.includes(currentDataType.value as string)
+        if: () => specialTypeList.has(currentDataType.value as string),
       },
       formItemClass: 'col-span-1',
     },
@@ -160,7 +113,7 @@ const [Form, formApi] = useVbenForm({
       label: '精度(18,6)的6',
       dependencies: {
         triggerFields: ['dataTypeId'],
-        if: () => specialTypeList.includes(currentDataType.value as string)
+        if: () => specialTypeList.has(currentDataType.value as string),
       },
       componentProps: {
         max: 18,
@@ -168,15 +121,57 @@ const [Form, formApi] = useVbenForm({
       formItemClass: 'col-span-1',
     },
   ],
-  wrapperClass: 'grid-cols-2', 
+  wrapperClass: 'grid-cols-2',
   showDefaultActions: false,
 });
 
-
+const [Modal, modalApi] = useVbenModal({
+  onOpenChange: async (isOpen: boolean) => {
+    if (isOpen) {
+      try {
+        modalApi.setState({ loading: true });
+        data.value = modalApi.getData<Record<string, any>>();
+        await getOptions();
+        if (data.value.isEdit) {
+          formApi.setValues({ ...data.value.row });
+          currentDataType.value = data.value.row.dataTypeCode;
+        }
+      } finally {
+        modalApi.setState({ loading: false });
+      }
+    }
+  },
+  onConfirm: async () => {
+    try {
+      modalApi.setState({ loading: true, confirmLoading: true });
+      const { valid } = await formApi.validate();
+      if (!valid) return;
+      const addFormValues = await formApi.getValues();
+      await (data.value.isEdit
+        ? postEntityModelsUpdateEntityModelProperty({
+            body: {
+              ...addFormValues,
+              id: data.value.entityModelId,
+              propertyId: data.value.row.id,
+            } as UpdateEntityModelPropertyInput,
+          })
+        : postEntityModelsCreateEntityModelProperty({
+            body: {
+              ...addFormValues,
+              id: data.value.entityModelId,
+            } as CreateEntityModelPropertyInput,
+          }));
+      message.success(data.value.isEdit ? '编辑成功' : '新增成功');
+      modalApi.close();
+      emit('reload');
+    } finally {
+      modalApi.setState({ loading: false, confirmLoading: false });
+    }
+  },
+});
 </script>
 <template>
-  <Modal :title="data.isEdit ? '编辑实体属性' : '新增实体属性'" "> 
-    <Form>
-    </Form>
+  <Modal :title="data.isEdit ? '编辑实体属性' : '新增实体属性'">
+    <Form />
   </Modal>
 </template>
