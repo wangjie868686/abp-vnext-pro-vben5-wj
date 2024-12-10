@@ -2,7 +2,7 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
-import { h, ref } from 'vue';
+import { h, ref, onMounted } from 'vue';
 
 import { Page, useVbenDrawer, useVbenModal } from '@vben/common-ui';
 
@@ -31,6 +31,10 @@ import {
 import { $t } from '#/locales';
 
 import { addRoleFormSchema, querySchema, tableSchema } from './schema';
+import { useLoading } from '#/components/Loading';
+const [openFullLoading, closeFullLoading] = useLoading({
+  tip: '加载中...'
+});
 
 defineOptions({
   name: 'AbpRole',
@@ -137,6 +141,13 @@ async function submit() {
   } finally {
     addModalApi.setState({ loading: false, confirmLoading: false });
   }
+}
+
+function fn() {
+  openFullLoading();
+  setTimeout(() => {
+    closeFullLoading();
+  }, 3000);
 }
 
 function onEdit(record: any) {
@@ -258,6 +269,12 @@ const updateAuth = async () => {
             @click="addModalApi.open"
           >
             {{ $t('common.add') }}
+          </Button>
+          <Button
+            type="primary"
+            @click="fn"
+          >
+          loading测试
           </Button>
         </Space>
       </template>

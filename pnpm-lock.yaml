@@ -659,9 +659,6 @@ importers:
       clipboard:
         specifier: ^2.0.11
         version: 2.0.11
-      codemirror:
-        specifier: ^5.65.18
-        version: 5.65.18
       codemirror-editor-vue3:
         specifier: ^2.8.0
         version: 2.8.0(codemirror@5.65.18)(diff-match-patch@1.0.5)(vue@3.5.13(typescript@5.7.2))
