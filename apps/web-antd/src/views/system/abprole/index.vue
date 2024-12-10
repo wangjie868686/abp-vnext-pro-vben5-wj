@@ -31,10 +31,10 @@ import {
 import { $t } from '#/locales';
 
 import { addRoleFormSchema, querySchema, tableSchema } from './schema';
-import { useLoading } from '#/components/Loading';
-const [openFullLoading, closeFullLoading] = useLoading({
-  tip: '加载中...'
-});
+// import { useLoading } from '#/components/Loading';
+// const [openFullLoading, closeFullLoading] = useLoading({
+//   tip: '加载中...'
+// });
 
 defineOptions({
   name: 'AbpRole',
@@ -143,12 +143,12 @@ async function submit() {
   }
 }
 
-function fn() {
-  openFullLoading();
-  setTimeout(() => {
-    closeFullLoading();
-  }, 3000);
-}
+// function fn() {
+//   openFullLoading();
+//   setTimeout(() => {
+//     closeFullLoading();
+//   }, 3000);
+// }
 
 function onEdit(record: any) {
   editRow.value = record;
@@ -270,12 +270,12 @@ const updateAuth = async () => {
           >
             {{ $t('common.add') }}
           </Button>
-          <Button
+          <!-- <Button
             type="primary"
             @click="fn"
           >
           loading测试
-          </Button>
+          </Button> -->
         </Space>
       </template>
 
