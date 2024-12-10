@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router';
 
 import { $t } from '@vben/locales';
 
-import { Button, Dropdown, Input, Menu, Tree } from 'ant-design-vue';
+import { Button, Dropdown, Input, Menu, Spin, Tree } from 'ant-design-vue';
 
 import { postGeneratorPreViewCode } from '#/api-client/index';
 
@@ -22,9 +22,11 @@ const gData = ref<Array<DataNode>>([]);
 const currentSelectedKey = ref('');
 const codeText = ref();
 const route = useRoute();
-
+const loading = ref<boolean>(true);
 onMounted(() => {
-  getTreeData();
+  getTreeData().then(() => {
+    loading.value = false;
+  });
 });
 
 const dataList = ref<DataNode[]>([]);
@@ -142,41 +144,43 @@ watch(searchValue, (value) => {
 </script>
 
 <template>
-  <div class="m-4 grid min-h-[calc(100vh-120px)] grid-cols-12 gap-4">
-    <div class="bg-card col-span-4 xl:col-span-3">
-      <div class="bg-card flex items-center justify-between p-3">
-        <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
-        <Dropdown class="ml-1">
-          <Button class="font-bold">......</Button>
-          <template #overlay>
-            <Menu>
-              <Menu.Item @click="expandAll">
-                {{ $t('common.expandAll') }}
-              </Menu.Item>
-              <Menu.Item @click="collapseAll">
-                {{ $t('common.collapseAll') }}
-              </Menu.Item>
-            </Menu>
-          </template>
-        </Dropdown>
+  <Spin :spinning="loading" tip="loading...">
+    <div class="m-4 grid min-h-[calc(100vh-120px)] grid-cols-12 gap-4">
+      <div class="bg-card col-span-4 xl:col-span-3">
+        <div class="bg-card flex items-center justify-between p-3">
+          <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
+          <Dropdown class="ml-1">
+            <Button class="font-bold">......</Button>
+            <template #overlay>
+              <Menu>
+                <Menu.Item @click="expandAll">
+                  {{ $t('common.expandAll') }}
+                </Menu.Item>
+                <Menu.Item @click="collapseAll">
+                  {{ $t('common.collapseAll') }}
+                </Menu.Item>
+              </Menu>
+            </template>
+          </Dropdown>
+        </div>
+        <Tree
+          :auto-expand-parent="autoExpandParent"
+          :block-node="true"
+          :expanded-keys="expandedKeys"
+          :tree-data="gData"
+          class="mt-3"
+          @expand="onExpand"
+          @select="onSelect"
+        />
       </div>
-      <Tree
-        :auto-expand-parent="autoExpandParent"
-        :block-node="true"
-        :expanded-keys="expandedKeys"
-        :tree-data="gData"
-        class="mt-3"
-        @expand="onExpand"
-        @select="onSelect"
-      />
-    </div>
 
-    <div class="bg-card col-span-8 xl:col-span-9">
-      <div class="bg-card">
-        <Codemirror v-model:value="codeText" />
+      <div class="bg-card col-span-8 xl:col-span-9">
+        <div class="bg-card">
+          <Codemirror v-model:value="codeText" />
+        </div>
       </div>
     </div>
-  </div>
+  </Spin>
 </template>
 
 <style scoped></style>

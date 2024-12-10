@@ -1,8 +1,11 @@
+import type { LoadingProps } from './typing';
+
 import type { Ref } from 'vue';
 import { unref } from 'vue';
+
 import { tryOnUnmounted } from '@vueuse/core';
+
 import { createLoading } from './createLoading';
-import type { LoadingProps } from './typing';
 
 export interface UseLoadingOptions {
   target?: any;
@@ -13,8 +16,12 @@ interface Fn {
   (): void;
 }
 
-export function useLoading(props: Partial<LoadingProps>): [Fn, Fn, (arg0: string) => void];
-export function useLoading(opt: Partial<UseLoadingOptions>): [Fn, Fn, (arg0: string) => void];
+export function useLoading(
+  props: Partial<LoadingProps>,
+): [Fn, Fn, (arg0: string) => void];
+export function useLoading(
+  opt: Partial<UseLoadingOptions>,
+): [Fn, Fn, (arg0: string) => void];
 
 export function useLoading(
   opt: Partial<LoadingProps> | Partial<UseLoadingOptions>,

@@ -15,6 +15,7 @@ import {
   message as Message,
   message,
   Modal,
+  Spin,
   Tabs,
   Tree,
 } from 'ant-design-vue';
@@ -59,9 +60,11 @@ const contextMenuOptions = [
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ];
-
+const loading = ref<boolean>(true);
 onMounted(() => {
-  getTreeData();
+  getTreeData().then(() => {
+    loading.value = false;
+  });
 });
 const [AddAggregateRootModal, addAggregateRootModalApi] = useVbenModal({
   // 连接抽离的组件
@@ -616,162 +619,179 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
 </script>
 
 <template>
-  <Page :auto-content-height="true">
-    <div class="grid grid-cols-12 gap-4">
-      <div class="bg-card col-span-4 xl:col-span-3">
-        <div class="bg-card flex items-center justify-between p-3">
-          <Button
-            class="mx-3"
-            size="small"
-            type="primary"
-            @click="addAggregateRootModalApi.open"
-          >
-            <div class="flex items-center">
-              <span class="icon-[material-symbols--add-circle-outline]"></span>
-              <span class="ml-1"> {{ $t('common.add') }}</span>
-            </div>
-          </Button>
-          <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
-          <Dropdown class="ml-1">
-            <Button class="font-bold">......</Button>
-            <template #overlay>
-              <Menu>
-                <Menu.Item @click="expandAll">
-                  {{ $t('common.expandAll') }}
-                </Menu.Item>
-                <Menu.Item @click="collapseAll">
-                  {{ $t('common.collapseAll') }}
-                </Menu.Item>
-              </Menu>
-            </template>
-          </Dropdown>
-        </div>
-        <Tree
-          :auto-expand-parent="autoExpandParent"
-          :block-node="true"
-          :expanded-keys="expandedKeys"
-          :tree-data="gData"
-          class="mt-3"
-          @expand="onExpand"
-          @select="onSelect"
-        >
-          <template #title="{ title, key: treeKey, data: nodeData }">
-            <Dropdown :trigger="['contextmenu']">
-              <span v-if="title.indexOf(searchValue) > -1" class="block w-full">
-                {{ title.substring(0, title.indexOf(searchValue)) }}
-                <span style="color: #f50">{{ searchValue }}</span>
-                {{
-                  title.substring(
-                    title.indexOf(searchValue) + searchValue.length,
-                  )
-                }}
-              </span>
-              <span v-else class="block w-full">{{ title }}</span>
+  <Spin :spinning="loading" tip="loading...">
+    <Page :auto-content-height="true">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="bg-card col-span-4 xl:col-span-3">
+          <div class="bg-card flex items-center justify-between p-3">
+            <Button
+              class="mx-3"
+              size="small"
+              type="primary"
+              @click="addAggregateRootModalApi.open"
+            >
+              <div class="flex items-center">
+                <span
+                  class="icon-[material-symbols--add-circle-outline]"
+                ></span>
+                <span class="ml-1"> {{ $t('common.add') }}</span>
+              </div>
+            </Button>
+            <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
+            <Dropdown class="ml-1">
+              <Button class="font-bold">......</Button>
               <template #overlay>
-                <Menu
-                  @click="
-                    ({ key: menuKey }) =>
-                      onContextMenuClick(treeKey, nodeData, menuKey)
-                  "
-                >
-                  <Menu.Item v-for="item in contextMenuOptions" :key="item.key">
-                    {{ item.label }}
+                <Menu>
+                  <Menu.Item @click="expandAll">
+                    {{ $t('common.expandAll') }}
+                  </Menu.Item>
+                  <Menu.Item @click="collapseAll">
+                    {{ $t('common.collapseAll') }}
                   </Menu.Item>
                 </Menu>
               </template>
             </Dropdown>
-          </template>
-        </Tree>
-      </div>
-
-      <div class="col-span-8 xl:col-span-9">
-        <div class="bg-card">
-          <Tabs v-model:active-key="activeKey" class="px-3">
-            <Tabs.TabPane key="1" :tab="$t('abp.code.property')">
-              <PropertyGrid>
-                <template #toolbar-tools>
-                  <Button
-                    :disabled="!currentSelectedKey"
-                    type="primary"
-                    @click="openAddEntityPropertyModal"
+          </div>
+          <Tree
+            :auto-expand-parent="autoExpandParent"
+            :block-node="true"
+            :expanded-keys="expandedKeys"
+            :tree-data="gData"
+            class="mt-3"
+            @expand="onExpand"
+            @select="onSelect"
+          >
+            <template #title="{ title, key: treeKey, data: nodeData }">
+              <Dropdown :trigger="['contextmenu']">
+                <span
+                  v-if="title.indexOf(searchValue) > -1"
+                  class="block w-full"
+                >
+                  {{ title.substring(0, title.indexOf(searchValue)) }}
+                  <span style="color: #f50">{{ searchValue }}</span>
+                  {{
+                    title.substring(
+                      title.indexOf(searchValue) + searchValue.length,
+                    )
+                  }}
+                </span>
+                <span v-else class="block w-full">{{ title }}</span>
+                <template #overlay>
+                  <Menu
+                    @click="
+                      ({ key: menuKey }) =>
+                        onContextMenuClick(treeKey, nodeData, menuKey)
+                    "
                   >
-                    {{ $t('common.add') }}
-                  </Button>
+                    <Menu.Item
+                      v-for="item in contextMenuOptions"
+                      :key="item.key"
+                    >
+                      {{ item.label }}
+                    </Menu.Item>
+                  </Menu>
                 </template>
-                <template #action="{ row }">
-                  <Button
-                    type="link"
-                    @click="handleEditEntityModelProperty(row)"
-                  >
-                    {{ $t('common.edit') }}
-                  </Button>
-                  <Button
-                    danger
-                    type="link"
-                    @click="handleDeleteEntityModelProperty(row)"
-                  >
-                    {{ $t('common.delete') }}
-                  </Button>
-                </template>
-              </PropertyGrid>
-            </Tabs.TabPane>
-            <Tabs.TabPane key="2" :tab="$t('abp.code.enum')">
-              <div class="grid grid-cols-12 gap-4">
-                <div class="bg-card col-span-6">
-                  <EnumGrid>
-                    <template #toolbar-tools>
-                      <Button type="primary" @click="handleAddEnum">
-                        {{ $t('common.add') }}
-                      </Button>
-                    </template>
+              </Dropdown>
+            </template>
+          </Tree>
+        </div>
 
-                    <template #action="{ row }">
-                      <Button type="link" @click="handleEditEnum(row)">
-                        {{ $t('common.edit') }}
-                      </Button>
-                      <Button danger type="link" @click="handleDeleteEnum(row)">
-                        {{ $t('common.delete') }}
-                      </Button>
-                    </template>
-                  </EnumGrid>
-                </div>
-                <div class="bg-card col-span-6">
-                  <EnumPropertyGrid>
-                    <template #toolbar-tools>
-                      <Button type="primary" @click="handleAddEnumProperty">
-                        {{ $t('common.add') }}
-                      </Button>
-                    </template>
+        <div class="col-span-8 xl:col-span-9">
+          <div class="bg-card">
+            <Tabs v-model:active-key="activeKey" class="px-3">
+              <Tabs.TabPane key="1" :tab="$t('abp.code.property')">
+                <PropertyGrid>
+                  <template #toolbar-tools>
+                    <Button
+                      :disabled="!currentSelectedKey"
+                      type="primary"
+                      @click="openAddEntityPropertyModal"
+                    >
+                      {{ $t('common.add') }}
+                    </Button>
+                  </template>
+                  <template #action="{ row }">
+                    <Button
+                      type="link"
+                      @click="handleEditEntityModelProperty(row)"
+                    >
+                      {{ $t('common.edit') }}
+                    </Button>
+                    <Button
+                      danger
+                      type="link"
+                      @click="handleDeleteEntityModelProperty(row)"
+                    >
+                      {{ $t('common.delete') }}
+                    </Button>
+                  </template>
+                </PropertyGrid>
+              </Tabs.TabPane>
+              <Tabs.TabPane key="2" :tab="$t('abp.code.enum')">
+                <div class="grid grid-cols-12 gap-4">
+                  <div class="bg-card col-span-6">
+                    <EnumGrid>
+                      <template #toolbar-tools>
+                        <Button type="primary" @click="handleAddEnum">
+                          {{ $t('common.add') }}
+                        </Button>
+                      </template>
 
-                    <template #action="{ row }">
-                      <Button type="link" @click="handleEditEnumProperty(row)">
-                        {{ $t('common.edit') }}
-                      </Button>
-                      <Button
-                        danger
-                        type="link"
-                        @click="handleDeleteEnumProperty(row)"
-                      >
-                        {{ $t('common.delete') }}
-                      </Button>
-                    </template>
-                  </EnumPropertyGrid>
+                      <template #action="{ row }">
+                        <Button type="link" @click="handleEditEnum(row)">
+                          {{ $t('common.edit') }}
+                        </Button>
+                        <Button
+                          danger
+                          type="link"
+                          @click="handleDeleteEnum(row)"
+                        >
+                          {{ $t('common.delete') }}
+                        </Button>
+                      </template>
+                    </EnumGrid>
+                  </div>
+                  <div class="bg-card col-span-6">
+                    <EnumPropertyGrid>
+                      <template #toolbar-tools>
+                        <Button type="primary" @click="handleAddEnumProperty">
+                          {{ $t('common.add') }}
+                        </Button>
+                      </template>
+
+                      <template #action="{ row }">
+                        <Button
+                          type="link"
+                          @click="handleEditEnumProperty(row)"
+                        >
+                          {{ $t('common.edit') }}
+                        </Button>
+                        <Button
+                          danger
+                          type="link"
+                          @click="handleDeleteEnumProperty(row)"
+                        >
+                          {{ $t('common.delete') }}
+                        </Button>
+                      </template>
+                    </EnumPropertyGrid>
+                  </div>
                 </div>
-              </div>
-            </Tabs.TabPane>
-          </Tabs>
+              </Tabs.TabPane>
+            </Tabs>
+          </div>
         </div>
       </div>
-    </div>
-    <AddAggregateRootModal
-      :project-id="route.query.projectId"
-      @get-tree-data="getTreeData"
-    />
-    <AddEditEntityModal @get-tree-data="getTreeData" />
-    <AddEditEntityPropertyModal @reload="propertyGridApi.reload" />
-    <AddEditEnumModal @reload="enumGridApi.reload" />
-    <AddEditEnumPropertyModal @reload="enumPropertyGridApi.reload" />
-  </Page>
+      <AddAggregateRootModal
+        :project-id="route.query.projectId"
+        @get-tree-data="getTreeData"
+      />
+      <AddEditEntityModal @get-tree-data="getTreeData" />
+      <AddEditEntityPropertyModal @reload="propertyGridApi.reload" />
+      <AddEditEnumModal @reload="enumGridApi.reload" />
+      <AddEditEnumPropertyModal @reload="enumPropertyGridApi.reload" />
+    </Page>
+  </Spin>
 </template>
 
 <style scoped></style>

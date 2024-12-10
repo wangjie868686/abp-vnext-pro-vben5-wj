@@ -15,6 +15,7 @@ import {
   message as Message,
   message,
   Modal,
+  Spin,
   Tree,
 } from 'ant-design-vue';
 
@@ -50,9 +51,11 @@ const contextMenuOptions = [
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ];
-
+const loading = ref<boolean>(true);
 onMounted(() => {
-  getTreeData();
+  getTreeData().then(() => {
+    loading.value = false;
+  });
 });
 
 // 定义一个异步函数，用于处理右键菜单的选择
@@ -338,87 +341,91 @@ const openCreateDetailModal = (key: string) => {
 </script>
 
 <template>
-  <div class="m-4 grid min-h-[calc(100vh-120px)] grid-cols-12 gap-4">
-    <div class="bg-card col-span-4 xl:col-span-3">
-      <div class="bg-card flex items-center justify-between p-3">
-        <Button class="mx-3" size="small" type="primary">
-          <div class="flex items-center">
-            <span class="icon-[material-symbols--add-circle-outline]"></span>
-            <span class="ml-1" @click="openTemplateModal">{{
-              $t('common.add')
-            }}</span>
-          </div>
-        </Button>
-        <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
-        <Dropdown class="ml-1">
-          <Button class="font-bold">......</Button>
-          <template #overlay>
-            <Menu>
-              <Menu.Item @click="expandAll">
-                {{ $t('common.expandAll') }}
-              </Menu.Item>
-              <Menu.Item @click="collapseAll">
-                {{ $t('common.collapseAll') }}
-              </Menu.Item>
-            </Menu>
-          </template>
-        </Dropdown>
-      </div>
-      <Tree
-        :auto-expand-parent="autoExpandParent"
-        :block-node="true"
-        :expanded-keys="expandedKeys"
-        :tree-data="gData"
-        class="mt-3"
-        @expand="onExpand"
-        @select="onSelect"
-      >
-        <template #title="{ title, key: treeKey, data: nodeData }">
-          <Dropdown :trigger="['contextmenu']">
-            <span v-if="title.indexOf(searchValue) > -1" class="block w-full">
-              {{ title.substring(0, title.indexOf(searchValue)) }}
-              <span style="color: #f50">{{ searchValue }}</span>
-              {{
-                title.substring(title.indexOf(searchValue) + searchValue.length)
-              }}
-            </span>
-            <span v-else class="block w-full">{{ title }}</span>
+  <Spin :spinning="loading" tip="loading...">
+    <div class="m-4 grid min-h-[calc(100vh-120px)] grid-cols-12 gap-4">
+      <div class="bg-card col-span-4 xl:col-span-3">
+        <div class="bg-card flex items-center justify-between p-3">
+          <Button class="mx-3" size="small" type="primary">
+            <div class="flex items-center">
+              <span class="icon-[material-symbols--add-circle-outline]"></span>
+              <span class="ml-1" @click="openTemplateModal">{{
+                $t('common.add')
+              }}</span>
+            </div>
+          </Button>
+          <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
+          <Dropdown class="ml-1">
+            <Button class="font-bold">......</Button>
             <template #overlay>
-              <Menu
-                @click="
-                  ({ key: menuKey }) =>
-                    onContextMenuClick(treeKey, nodeData, menuKey)
-                "
-              >
-                <Menu.Item v-for="item in contextMenuOptions" :key="item.key">
-                  {{ item.label }}
+              <Menu>
+                <Menu.Item @click="expandAll">
+                  {{ $t('common.expandAll') }}
+                </Menu.Item>
+                <Menu.Item @click="collapseAll">
+                  {{ $t('common.collapseAll') }}
                 </Menu.Item>
               </Menu>
             </template>
           </Dropdown>
-        </template>
-      </Tree>
-    </div>
-
-    <div class="bg-card col-span-8 xl:col-span-9">
-      <div class="bg-card">
-        <Button
-          v-show="showSaveContentBtn"
-          style="margin-left: 96%"
-          type="primary"
-          @click="saveContent"
+        </div>
+        <Tree
+          :auto-expand-parent="autoExpandParent"
+          :block-node="true"
+          :expanded-keys="expandedKeys"
+          :tree-data="gData"
+          class="mt-3"
+          @expand="onExpand"
+          @select="onSelect"
         >
-          {{ $t('common.save') }}
-        </Button>
-        <Codemirror v-model:value="codeText" />
+          <template #title="{ title, key: treeKey, data: nodeData }">
+            <Dropdown :trigger="['contextmenu']">
+              <span v-if="title.indexOf(searchValue) > -1" class="block w-full">
+                {{ title.substring(0, title.indexOf(searchValue)) }}
+                <span style="color: #f50">{{ searchValue }}</span>
+                {{
+                  title.substring(
+                    title.indexOf(searchValue) + searchValue.length,
+                  )
+                }}
+              </span>
+              <span v-else class="block w-full">{{ title }}</span>
+              <template #overlay>
+                <Menu
+                  @click="
+                    ({ key: menuKey }) =>
+                      onContextMenuClick(treeKey, nodeData, menuKey)
+                  "
+                >
+                  <Menu.Item v-for="item in contextMenuOptions" :key="item.key">
+                    {{ item.label }}
+                  </Menu.Item>
+                </Menu>
+              </template>
+            </Dropdown>
+          </template>
+        </Tree>
       </div>
-    </div>
 
-    <AddEditModal @get-tree-data="getTreeData" />
-    <CreateDetailModal :title="$t('common.add')">
-      <CreateDetailForm />
-    </CreateDetailModal>
-  </div>
+      <div class="bg-card col-span-8 xl:col-span-9">
+        <div class="bg-card">
+          <Button
+            v-show="showSaveContentBtn"
+            style="margin-left: 96%"
+            type="primary"
+            @click="saveContent"
+          >
+            {{ $t('common.save') }}
+          </Button>
+          <Codemirror v-model:value="codeText" />
+        </div>
+      </div>
+
+      <AddEditModal @get-tree-data="getTreeData" />
+      <CreateDetailModal :title="$t('common.add')">
+        <CreateDetailForm />
+      </CreateDetailModal>
+    </div>
+  </Spin>
 </template>
 
 <style scoped></style>

@@ -1,9 +1,14 @@
-import { createVNode, defineComponent, h, reactive, render, } from 'vue';
 import type { LoadingProps } from './typing';
+
+import { createVNode, defineComponent, h, reactive, render } from 'vue';
 
 import Loading from './Loading.vue';
 
-export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElement, wait = false) {
+export function createLoading(
+  props?: Partial<LoadingProps>,
+  target?: HTMLElement,
+  wait = false,
+) {
   let vm: any = null;
   const data = reactive({
     tip: '',
@@ -30,7 +35,7 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
 
   function close() {
     if (vm?.el && vm.el.parentNode) {
-      vm.el.parentNode.removeChild(vm.el);
+      vm.el.remove();
     }
   }
 
@@ -38,7 +43,7 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
     if (!vm || !vm.el) {
       return;
     }
-    target.appendChild(vm.el as HTMLElement);
+    target.append(vm.el as HTMLElement);
   }
 
   function destroy() {
