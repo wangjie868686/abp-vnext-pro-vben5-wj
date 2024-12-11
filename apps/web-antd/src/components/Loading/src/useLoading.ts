@@ -37,7 +37,7 @@ export function useLoading(
     props = opt as Partial<LoadingProps>;
   }
 
-  const instance = createLoading(props, undefined, true);
+  const instance = createLoading(props, undefined, false);
 
   const open = (): void => {
     const t = unref(target as Ref<any>);
