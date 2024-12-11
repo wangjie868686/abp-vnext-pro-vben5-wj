@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import type { TreeProps } from 'ant-design-vue';
-import type { DataNode } from 'ant-design-vue/es/tree';
-
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-
+import type { DropdownOption, TreeOption } from 'naive-ui'
 import {
   NButton as Button,
   NInput as Input,
   NTabPane as TabPane,
   NTabs as Tabs,
   NTree as Tree,
+  NDropdown as Dropdown,
 } from 'naive-ui';
 
 import { useVbenForm } from '#/adapter/form';
@@ -37,11 +35,10 @@ import ContextMenu from './ContextMenu.vue';
 import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
 import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
 // const { isDark } = usePreferences();
-const expandedKeys = ref<(number | string)[]>([]);
-const searchValue = ref<string>('');
-const autoExpandParent = ref<boolean>(true);
-const gData = ref<Array<TreeOutput>>([]);
 
+const isExpandAll = ref<boolean>(false);
+const searchValue = ref<string>('');
+const gData = ref<Array<TreeOption>>([]);
 const activeKey = ref('1');
 const currentSelectedKey = ref('');
 const parentDisplayName = ref('');
@@ -120,9 +117,9 @@ const closeContextMenu = () => {
   contextMenu.visible = false;
 };
 
-const dataList = ref<DataNode[]>([]);
+const dataList = ref<any[]>([]);
 
-const generateList = (data: TreeProps['treeData']) => {
+const generateList = (data) => {
   if (!data) return;
   for (const node of data) {
     const { key, title, children } = node;
@@ -135,7 +132,7 @@ const generateList = (data: TreeProps['treeData']) => {
 
 const getParentKey = (
   key: number | string,
-  tree: TreeProps['treeData'],
+  tree: any,
 ): number | string | undefined => {
   if (!tree) return undefined;
   let parentKey;
@@ -152,9 +149,9 @@ const getParentKey = (
 };
 
 // 获取所有节点的key
-const getAllKeys = (tree: TreeProps['treeData']): (number | string)[] => {
+const getAllKeys = (tree): (number | string)[] => {
   const keys: (number | string)[] = [];
-  const traverse = (nodes: TreeProps['treeData']) => {
+  const traverse = (nodes) => {
     if (!nodes) return;
     nodes.forEach((node) => {
       if (node.key) {
@@ -169,48 +166,25 @@ const getAllKeys = (tree: TreeProps['treeData']): (number | string)[] => {
   return keys;
 };
 
-// 展开所有节点
-const expandAll = () => {
-  expandedKeys.value = getAllKeys(gData.value as TreeProps['treeData']);
-  autoExpandParent.value = true;
-};
-
-// 折叠所有节点
-const collapseAll = () => {
-  expandedKeys.value = [];
-  autoExpandParent.value = true;
-};
-
-watch(searchValue, (value) => {
-  if (!value) {
-    expandedKeys.value = [];
-    return;
-  }
-
-  const expanded = dataList.value
-    .map((item) => {
-      if (
-        typeof item.title === 'string' &&
-        item.title.toLowerCase().includes(value.toLowerCase())
-      ) {
-        return getParentKey(item.key, gData.value as TreeProps['treeData']);
-      }
-      return null;
-    })
-    .filter(
-      (item, i, self): item is number | string =>
-        item !== null && item !== undefined && self.indexOf(item) === i,
-    );
-
-  expandedKeys.value = expanded;
-  autoExpandParent.value = true;
-});
+const dropdownOptions =  [
+  {
+    label: '展开全部',
+    key: 'open',
+  },
+  {
+    label: '折叠全部',
+    key: 'close'
+  },
+];
+const handleTreeDropdownSelect = (key: string | number) => {
+  isExpandAll.value = key === 'open';
+}
 
 async function getTreeData() {
   const { data = [] } = await postOrganizationUnitsTree();
   gData.value = data;
   dataList.value = [];
-  generateList(data as TreeProps['treeData']);
+  generateList(data);
 }
 
 onMounted(() => {
@@ -576,11 +550,39 @@ function removeUser(row: Record<string, any>) {
   });
 }
 
-// 添加 onExpand 方法处理节点展开/折叠
-const onExpand = (keys: (number | string)[], info: any) => {
-  expandedKeys.value = keys;
-  autoExpandParent.value = false;
-};
+const showDropdownRef = ref(false);
+const optionsRef = ref<DropdownOption[]>([
+  { label: $t('common.add'), key: 'add' },
+  { label: $t('common.edit'), key: 'edit' },
+  { label: $t('common.delete'), key: 'delete' },
+]);
+const xRef = ref(0)
+const yRef = ref(0)
+const handleSelect = () => {
+  showDropdownRef.value = false
+}
+
+const handleClickoutside = () => {
+        showDropdownRef.value = false
+      }
+
+const nodeProps = ({ option }: { option: TreeOption }) => {
+  return {
+    onClick() {
+      console.log(option)
+    },
+    onContextmenu(e: MouseEvent): void {
+      // optionsRef.value = [option]
+      showDropdownRef.value = true
+      xRef.value = e.clientX
+      yRef.value = e.clientY
+      console.log(e.clientX, e.clientY)
+      e.preventDefault()
+    }
+  }
+
+}
+
 </script>
 
 <template>
@@ -599,29 +601,21 @@ const onExpand = (keys: (number | string)[], info: any) => {
           >
             {{ $t('abp.organizationunit.add') }}
           </Button>
-          <Input.Search v-model:value="searchValue" class="ml-1 flex-1" />
-          <Dropdown class="ml-1">
+          <Input v-model:value="searchValue" class="ml-1 flex-1" />
+          <Dropdown class="ml-1" :options="dropdownOptions" @select="handleTreeDropdownSelect">
             <Button class="font-bold">......</Button>
-            <template #overlay>
-              <Menu>
-                <Menu.Item @click="expandAll">
-                  {{ $t('common.expandAll') }}
-                </Menu.Item>
-                <Menu.Item @click="collapseAll">
-                  {{ $t('common.collapseAll') }}
-                </Menu.Item>
-              </Menu>
-            </template>
           </Dropdown>
         </div>
         <Tree
-          :auto-expand-parent="autoExpandParent"
-          :block-node="true"
-          :data="gData"
-          :expanded-keys="expandedKeys"
           class="mt-3"
           label-field="title"
-          @expand="onExpand"
+          :cancelable="false"
+          :block-node="true"
+          :data="gData"
+          :default-expand-all="isExpandAll"
+          :pattern="searchValue"
+          :show-irrelevant-nodes="false"
+          :node-props="nodeProps"
           @right-click="onRightClick"
           @select="onSelect"
         >
@@ -634,8 +628,18 @@ const onExpand = (keys: (number | string)[], info: any) => {
               }}
             </span>
             <span v-else>{{ title }}</span>
+
           </template>
         </Tree>
+        <Dropdown
+          placement="bottom-start"
+          :show="showDropdownRef"
+          :options="optionsRef"
+          :x="xRef"
+          :y="yRef"
+          @select="handleSelect"
+          @clickoutside="handleClickoutside"
+        />
       </div>
 
       <div class="col-span-8 xl:col-span-9">
