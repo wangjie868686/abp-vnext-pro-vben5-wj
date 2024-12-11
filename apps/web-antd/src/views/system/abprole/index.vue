@@ -31,10 +31,18 @@ import {
 import { $t } from '#/locales';
 
 import { addRoleFormSchema, querySchema, tableSchema } from './schema';
-// import { useLoading } from '#/components/Loading';
+import { useLoading } from '#/components/Loading';
 // const [openFullLoading, closeFullLoading] = useLoading({
 //   tip: '加载中...'
 // });
+
+// onMounted(() => {
+//   openFullLoading();
+//   console.log('onMounted')
+//   setTimeout(() => {
+//     closeFullLoading();
+//   }, 3000);
+// })
 
 defineOptions({
   name: 'AbpRole',
