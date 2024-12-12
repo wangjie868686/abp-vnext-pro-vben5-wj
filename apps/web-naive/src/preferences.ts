@@ -9,5 +9,9 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     name: import.meta.env.VITE_APP_TITLE,
+    // 是否开启检查更新
+    enableCheckUpdates: false,
+    // 检查更新的时间间隔，单位为分钟
+    checkUpdatesInterval: 1,
   },
 });
