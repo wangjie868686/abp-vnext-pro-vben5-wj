@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 import { Page, useVbenModal, type VbenFormProps } from '@vben/common-ui';
-import type { DropdownOption, TreeOption } from 'naive-ui'
+import type { DropdownOption, TreeOption, } from 'naive-ui'
 import {
   NButton as Button,
   NInput as Input,
@@ -27,14 +27,12 @@ import {
   postOrganizationUnitsRemoveRoleFromOrganizationUnitAsync,
   postOrganizationUnitsRemoveUserFromOrganizationUnit,
   postOrganizationUnitsTree,
+  type PostOrganizationUnitsTreeResponse,
   type TreeOutput,
 } from '#/api-client/index';
 import { $t } from '#/locales';
-
-import ContextMenu from './ContextMenu.vue';
 import OrgTreeAddModalComponent from './OrgTreeAddModal.vue';
 import OrgTreeEditModalComponent from './OrgTreeEditModal.vue';
-// const { isDark } = usePreferences();
 
 const isExpandAll = ref<boolean>(false);
 const searchValue = ref<string>('');
@@ -44,82 +42,9 @@ const currentSelectedKey = ref('');
 const parentDisplayName = ref('');
 const selectRoles = ref();
 const selectUsers = ref();
-
-const contextMenu = reactive({
-  visible: false,
-  x: 0,
-  y: 0,
-});
-
-const contextMenuOptions = [
-  { label: $t('common.add'), key: 'add' },
-  { label: $t('common.edit'), key: 'edit' },
-  { label: $t('common.delete'), key: 'delete' },
-];
-
-function onRightClick({ event, node }) {
-  event.preventDefault();
-  event.stopPropagation();
-  if (!currentSelectedKey.value) {
-    message.warning($t('abp.organizationunit.selectNode'));
-    return;
-  }
-  contextMenu.visible = true;
-  contextMenu.x = event.clientX;
-  contextMenu.y = event.clientY;
-}
-
-const onContextMenuSelect = async (key: string) => {
-  switch (key) {
-    case 'add': {
-      orgTreeAddModalApi.setData({
-        parentDisplayName: parentDisplayName.value,
-        parentId: currentSelectedKey.value,
-      });
-      orgTreeAddModalApi.open();
-      break;
-    }
-    case 'delete': {
-      Modal.confirm({
-        title: `${$t('common.confirmDelete')}?`,
-        onOk: async () => {
-          await postOrganizationUnitsDelete({
-            body: {
-              id: currentSelectedKey.value,
-            },
-          });
-          message.success($t('common.success'));
-          currentSelectedKey.value = '';
-          getTreeData();
-        },
-      });
-      break;
-    }
-    case 'edit': {
-      orgTreeEditModalApi.setData({
-        displayName: parentDisplayName.value,
-        id: currentSelectedKey.value,
-      });
-      orgTreeEditModalApi.open();
-      break;
-    }
-  }
-  closeContextMenu();
-};
-
-const handleClickOutside = () => {
-  if (contextMenu.visible) {
-    closeContextMenu();
-  }
-};
-
-const closeContextMenu = () => {
-  contextMenu.visible = false;
-};
-
 const dataList = ref<any[]>([]);
 
-const generateList = (data) => {
+const generateList = (data: PostOrganizationUnitsTreeResponse) => {
   if (!data) return;
   for (const node of data) {
     const { key, title, children } = node;
@@ -148,24 +73,6 @@ const getParentKey = (
   return parentKey;
 };
 
-// 获取所有节点的key
-const getAllKeys = (tree): (number | string)[] => {
-  const keys: (number | string)[] = [];
-  const traverse = (nodes) => {
-    if (!nodes) return;
-    nodes.forEach((node) => {
-      if (node.key) {
-        keys.push(node.key);
-      }
-      if (node.children) {
-        traverse(node.children);
-      }
-    });
-  };
-  traverse(tree);
-  return keys;
-};
-
 const dropdownOptions =  [
   {
     label: '展开全部',
@@ -182,18 +89,13 @@ const handleTreeDropdownSelect = (key: string | number) => {
 
 async function getTreeData() {
   const { data = [] } = await postOrganizationUnitsTree();
-  gData.value = data;
+  gData.value = data as TreeOption[];
   dataList.value = [];
   generateList(data);
 }
 
 onMounted(() => {
   getTreeData();
-  document.addEventListener('click', handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
 });
 
 const [OrgTreeAddModal, orgTreeAddModalApi] = useVbenModal({
@@ -550,38 +452,78 @@ function removeUser(row: Record<string, any>) {
   });
 }
 
+const xRef = ref(0)
+const yRef = ref(0)
 const showDropdownRef = ref(false);
 const optionsRef = ref<DropdownOption[]>([
   { label: $t('common.add'), key: 'add' },
   { label: $t('common.edit'), key: 'edit' },
   { label: $t('common.delete'), key: 'delete' },
 ]);
-const xRef = ref(0)
-const yRef = ref(0)
-const handleSelect = () => {
+
+const handleSelect = (key: string) => {
   showDropdownRef.value = false
+  onContextMenuSelect(key)
 }
 
 const handleClickoutside = () => {
-        showDropdownRef.value = false
-      }
+  showDropdownRef.value = false
+}
 
 const nodeProps = ({ option }: { option: TreeOption }) => {
+  currentSelectedKey.value = String(option.key || '');
+  parentDisplayName.value = String(option.title || '');
   return {
-    onClick() {
-      console.log(option)
-    },
+    // onClick() {
+    //   currentSelectedKey.value = String(option.key || '');
+    // },
     onContextmenu(e: MouseEvent): void {
-      // optionsRef.value = [option]
       showDropdownRef.value = true
       xRef.value = e.clientX
       yRef.value = e.clientY
-      console.log(e.clientX, e.clientY)
       e.preventDefault()
     }
   }
-
 }
+
+const onContextMenuSelect = async (key: string) => {
+  switch (key) {
+    case 'add': {
+      orgTreeAddModalApi.setData({
+        parentDisplayName: parentDisplayName.value,
+        parentId: currentSelectedKey.value,
+      });
+      orgTreeAddModalApi.open();
+      break;
+    }
+    case 'delete': {
+      dialog.warning({
+        title: `${$t('common.confirmDelete')}?`,
+        positiveText: $t('common.confirm'),
+        negativeText: $t('common.cancel'),
+        onPositiveClick: async () => {
+          await postOrganizationUnitsDelete({
+            body: {
+              id: currentSelectedKey.value,
+            },
+          });
+          message.success($t('common.success'));
+          currentSelectedKey.value = '';
+          getTreeData();
+        },
+      })
+      break;
+    }
+    case 'edit': {
+      orgTreeEditModalApi.setData({
+        displayName: parentDisplayName.value,
+        id: currentSelectedKey.value,
+      });
+      orgTreeEditModalApi.open();
+      break;
+    }
+  }
+};
 
 </script>
 
@@ -616,7 +558,6 @@ const nodeProps = ({ option }: { option: TreeOption }) => {
           :pattern="searchValue"
           :show-irrelevant-nodes="false"
           :node-props="nodeProps"
-          @right-click="onRightClick"
           @select="onSelect"
         >
           <template #title="{ title }">
@@ -700,14 +641,6 @@ const nodeProps = ({ option }: { option: TreeOption }) => {
 
     <OrgTreeAddModal @get-tree-data="getTreeData" />
     <OrgTreeEditModal @get-tree-data="getTreeData" />
-    <ContextMenu
-      v-if="contextMenu.visible"
-      :options="contextMenuOptions"
-      :x="contextMenu.x"
-      :y="contextMenu.y"
-      @close="closeContextMenu"
-      @select="onContextMenuSelect"
-    />
   </Page>
 </template>
 
