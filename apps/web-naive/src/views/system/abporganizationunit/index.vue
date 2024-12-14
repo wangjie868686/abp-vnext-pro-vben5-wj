@@ -256,13 +256,6 @@ const [RolesGrid, rolesGridApi] = useVbenVxeGrid({
   gridOptions: rolesGridOptions,
 });
 
-const onSelect = (keys: string[], event: any) => {
-  currentSelectedKey.value = keys[0] ?? '';
-  parentDisplayName.value = event.node.title;
-  if (!keys[0]) return;
-  activeKey.value === '1' ? userGridApi.reload() : rolesGridApi.reload();
-};
-
 const [AddRolesModal, addRolesModalApi] = useVbenModal({
   onConfirm: async () => {
     try {
@@ -471,13 +464,15 @@ const handleClickoutside = () => {
 }
 
 const nodeProps = ({ option }: { option: TreeOption }) => {
-  currentSelectedKey.value = String(option.key || '');
-  parentDisplayName.value = String(option.title || '');
   return {
-    // onClick() {
-    //   currentSelectedKey.value = String(option.key || '');
-    // },
+    onClick() {
+      currentSelectedKey.value = String(option.key || '');
+      parentDisplayName.value = String(option.title || '');
+      activeKey.value === '1' ? userGridApi.reload() : rolesGridApi.reload();
+    },
     onContextmenu(e: MouseEvent): void {
+      currentSelectedKey.value = String(option.key || '');
+      parentDisplayName.value = String(option.title || '');
       showDropdownRef.value = true
       xRef.value = e.clientX
       yRef.value = e.clientY
@@ -558,7 +553,6 @@ const onContextMenuSelect = async (key: string) => {
           :pattern="searchValue"
           :show-irrelevant-nodes="false"
           :node-props="nodeProps"
-          @select="onSelect"
         >
           <template #title="{ title }">
             <span v-if="title.indexOf(searchValue) > -1">
