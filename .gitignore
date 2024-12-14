@@ -50,3 +50,5 @@ vite.config.ts.*
 *.sw?
 .history
 /docs
+/playground
+/apps/backend-mock

@@ -17,8 +17,6 @@
 - [国内文档地址](http://doc.china.cncore.club:81/)
 - [视频教程](https://www.bilibili.com/video/BV1pt4y1E7aZ)
 - [代码生成器仓库地址](https://github.com/WangJunZzz/abp-vnext-pro-suite)
-- [代码生成器仓库地址](https://github.com/WangJunZzz/abp-vnext-pro-suite)
-- [代码生成器仓库地址](https://github.com/WangJunZzz/abp-vnext-pro-suite)
 
 ## 📦 快速开始
 
