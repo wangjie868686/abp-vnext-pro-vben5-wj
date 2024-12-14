@@ -59,7 +59,8 @@
     "exception": "Exception",
     "applicationName": "ApplicationName",
     "loginMode": "LoginMode",
-    "loginUrl": "LoginUrl"
+    "loginUrl": "LoginUrl",
+    "detail": "Detail"
   },
   "message": {
     "title": "Title",

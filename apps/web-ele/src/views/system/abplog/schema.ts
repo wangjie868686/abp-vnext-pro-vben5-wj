@@ -1,7 +1,8 @@
+import type { VbenFormSchema } from '@vben/common-ui';
+
 import dayjs from 'dayjs';
 
 import { $t } from '#/locales';
-import type { VbenFormSchema } from '@vben/common-ui';
 
 export const logQuerySchema: any = [
   {
@@ -9,10 +10,10 @@ export const logQuerySchema: any = [
     fieldName: 'time',
     label: $t('abp.log.loginTime'),
     componentProps: {
-      type: 'datetimerange',           // 添加这个属性来启用日期范围选择
-      startPlaceholder: '开始日期',  // 添加占位符
-      endPlaceholder: '结束日期',    // 添加占位符
-      valueFormat: 'YYYY-MM-DD', 
+      type: 'datetimerange', // 添加这个属性来启用日期范围选择
+      startPlaceholder: '开始日期', // 添加占位符
+      endPlaceholder: '结束日期', // 添加占位符
+      valueFormat: 'YYYY-MM-DD',
       // 'value-format': 'YYYY-MM-DD',
     },
     // defaultValue: [
@@ -60,7 +61,7 @@ export const auditLogQuerySchema: VbenFormSchema[] = [
     fieldName: 'time',
     label: $t('abp.log.executionTime'),
     componentProps: {
-      'type': 'daterange',
+      type: 'daterange',
       'range-separator': '至',
       'value-format': 'YYYY-MM-DD',
     },

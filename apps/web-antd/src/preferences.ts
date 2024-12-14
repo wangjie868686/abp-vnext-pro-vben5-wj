@@ -14,4 +14,7 @@ export const overridesPreferences = defineOverridesPreferences({
     // 检查更新的时间间隔，单位为分钟
     checkUpdatesInterval: 1,
   },
+  copyright: {
+    companyName: 'Abp Vben5 Antd',
+  },
 });

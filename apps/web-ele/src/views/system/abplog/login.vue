@@ -15,7 +15,7 @@ defineOptions({
 
 const formOptions: VbenFormProps = {
   schema: logQuerySchema,
-  wrapperClass: 'grid-cols-4',
+  wrapperClass: 'grid-cols-3',
 };
 
 const gridOptions: VxeGridProps<any> = {

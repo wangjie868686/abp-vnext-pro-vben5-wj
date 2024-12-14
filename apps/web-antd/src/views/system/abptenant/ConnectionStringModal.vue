@@ -34,7 +34,6 @@ const formOptions: VbenFormProps = {
       componentProps: {},
       fieldName: 'name',
       label: $t('abp.tenant.connectionStringName'),
-      rules: 'required',
       formItemClass: 'col-span-3', // 表单项样式，占3列
       labelWidth: 180,
     },
@@ -43,7 +42,6 @@ const formOptions: VbenFormProps = {
       componentProps: {},
       fieldName: 'value',
       label: $t('abp.tenant.connectionString'),
-      rules: 'required',
       formItemClass: 'col-span-6', // 表单项样式，占6列
       labelWidth: 180,
     },

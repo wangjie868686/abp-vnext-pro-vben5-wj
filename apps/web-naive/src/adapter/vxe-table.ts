@@ -11,7 +11,7 @@ setupVbenVxeTable({
     vxeUI.setConfig({
       grid: {
         align: 'center',
-        border: false,
+        border: true,
         columnConfig: {
           resizable: true,
         },
@@ -24,7 +24,7 @@ setupVbenVxeTable({
           autoLoad: true,
           response: {
             result: 'items',
-            total: 'total',
+            total: 'totalCount',
             list: 'items',
           },
           showActiveMsg: true,

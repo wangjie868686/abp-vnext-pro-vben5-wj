@@ -1,14 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
 
-import {
-  VBEN_ANT_PREVIEW_URL,
-  VBEN_DOC_URL,
-  VBEN_ELE_PREVIEW_URL,
-  VBEN_GITHUB_URL,
-  VBEN_LOGO_URL,
-} from '@vben/constants';
-import { SvgAntdvLogoIcon } from '@vben/icons';
-
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
 
@@ -17,20 +8,30 @@ const routes: RouteRecordRaw[] = [
     component: BasicLayout,
     meta: {
       badgeType: 'dot',
-      icon: VBEN_LOGO_URL,
+      icon: 'ph:file-doc-light',
       order: 9999,
       title: $t('demos.vben.title'),
     },
     name: 'VbenProject',
     path: '/vben-admin',
     children: [
+      // {
+      //   name: 'VbenAbout',
+      //   path: '/vben-admin/about',
+      //   component: () => import('#/views/_core/about/index.vue'),
+      //   meta: {
+      //     icon: 'lucide:copyright',
+      //     title: $t('demos.vben.about'),
+      //   },
+      // },
       {
-        name: 'VbenAbout',
-        path: '/vben-admin/about',
-        component: () => import('#/views/_core/about/index.vue'),
+        name: 'VbenDocument',
+        path: '/vben-admin/document',
+        component: IFrameView,
         meta: {
-          icon: 'lucide:copyright',
-          title: $t('demos.vben.about'),
+          icon: 'lucide:book-open-text',
+          link: 'https://doc.cncore.club/',
+          title: 'ABPPro文档',
         },
       },
       {
@@ -39,8 +40,18 @@ const routes: RouteRecordRaw[] = [
         component: IFrameView,
         meta: {
           icon: 'lucide:book-open-text',
-          link: VBEN_DOC_URL,
-          title: $t('demos.vben.document'),
+          link: 'http://doc.china.cncore.club:81/',
+          title: 'ABPPro国内文档',
+        },
+      },
+      {
+        name: 'VbenDocument',
+        path: '/vben-admin/document',
+        component: IFrameView,
+        meta: {
+          icon: 'lucide:book-open-text',
+          link: 'https://abp.io/docs/latest/',
+          title: 'ABP官方文档',
         },
       },
       {
@@ -49,30 +60,28 @@ const routes: RouteRecordRaw[] = [
         component: IFrameView,
         meta: {
           icon: 'mdi:github',
-          link: VBEN_GITHUB_URL,
+          link: 'https://github.com/WangJunZzz/abp-vnext-pro',
           title: 'Github',
         },
       },
       {
-        name: 'VbenAntd',
-        path: '/vben-admin/antd',
+        name: 'VbenGithub',
+        path: '/vben-admin/github',
         component: IFrameView,
         meta: {
-          badgeType: 'dot',
-          icon: SvgAntdvLogoIcon,
-          link: VBEN_ANT_PREVIEW_URL,
-          title: $t('demos.vben.antdv'),
+          icon: 'ant-design:google-circle-filled',
+          link: 'https://gitee.com/WangJunZzz/abp-vnext-pro',
+          title: 'Gitee',
         },
       },
       {
-        name: 'VbenElementPlus',
-        path: '/vben-admin/ele',
+        name: 'VbenGithub',
+        path: '/vben-admin/github',
         component: IFrameView,
         meta: {
-          badgeType: 'dot',
-          icon: 'logos:element',
-          link: VBEN_ELE_PREVIEW_URL,
-          title: $t('demos.vben.element-plus'),
+          icon: 'logos:naiveui',
+          link: 'https://www.naiveui.com/zh-CN/os-theme',
+          title: 'Naive UI',
         },
       },
     ],

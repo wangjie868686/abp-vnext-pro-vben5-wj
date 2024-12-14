@@ -53,7 +53,7 @@ const gridOptions: VxeGridProps<any> = {
     labelField: 'name',
   },
   columns: [
-    { title: '序号', type: 'seq', width: 50 },
+    { title: $t('common.seq'), type: 'seq', width: 50 },
     { field: 'name', title: $t('abp.tenant.connectionStringName') },
     { field: 'value', title: $t('abp.tenant.connectionString') },
     {

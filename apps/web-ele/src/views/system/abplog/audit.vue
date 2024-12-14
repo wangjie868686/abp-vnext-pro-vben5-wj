@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
-import { Page, useVbenDrawer, } from '@vben/common-ui';
+
+import { ref } from 'vue';
+
+import { Page, useVbenDrawer } from '@vben/common-ui';
 import { IconDocDetail } from '@vben/icons';
+import { usePreferences } from '@vben/preferences';
+
+import { ElButton as Button } from 'element-plus';
+
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postAuditLogsPage } from '#/api-client';
-import { ElButton as Button } from 'element-plus';
+
 import { auditLogQuerySchema, auditLogTableSchema } from './schema';
-import { usePreferences } from '@vben/preferences';
 
 defineOptions({
   name: 'AbpAuditLog',
@@ -17,7 +22,7 @@ defineOptions({
 const { isDark } = usePreferences();
 const formOptions: VbenFormProps = {
   schema: auditLogQuerySchema,
-  wrapperClass: 'grid-cols-5',
+  wrapperClass: 'grid-cols-3',
 };
 
 const gridOptions: VxeGridProps<any> = {
@@ -60,11 +65,9 @@ const [Grid] = useVbenVxeGrid({ formOptions, gridOptions });
 const jsonData = ref();
 const [Drawer, drawerApi] = useVbenDrawer();
 const viewDetail = (row: any) => {
-  console.log(row);
   jsonData.value = row;
   drawerApi.open();
-}
-
+};
 </script>
 
 <template>
@@ -72,13 +75,21 @@ const viewDetail = (row: any) => {
     <Grid>
       <template #action="{ row }">
         <div class="flex items-center">
-          <IconDocDetail style="color: var(--el-color-primary);" />
-          <Button link type="primary" @click="viewDetail(row)">详情</Button>
+          <IconDocDetail style="color: var(--el-color-primary)" />
+          <Button link type="primary" @click="viewDetail(row)">
+            {{ $t('abp.log.detail') }}
+          </Button>
         </div>
       </template>
     </Grid>
-    <Drawer class="w-[600px]" title="详情">
-      <JsonViewer class="h-full" :value="jsonData" copyable sort :theme="isDark ? 'dark' : 'light'"/>
+    <Drawer :title="$t('abp.log.detail')" class="w-[600px]">
+      <JsonViewer
+        :theme="isDark ? 'dark' : 'light'"
+        :value="jsonData"
+        class="h-full"
+        copyable
+        sort
+      />
     </Drawer>
   </Page>
 </template>
