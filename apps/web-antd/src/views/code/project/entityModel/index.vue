@@ -22,6 +22,7 @@ import {
 
 import { useVbenVxeGrid, type VxeGridProps } from '#/adapter/vxe-table';
 import {
+  postEntityModelsDeleteAggregate,
   postEntityModelsDeleteEntityModel,
   postEntityModelsDeleteEntityModelProperty,
   postEntityModelsPageProperty,
@@ -97,11 +98,18 @@ const onContextMenuSelect = async (key: string) => {
             id: currentSelectedTreeNode.value.key,
             aggregateId: currentSelectedTreeNode.value?.parentId,
           };
+
           // 如果没有父节点，则不传aggregateId
-          !currentSelectedTreeNode.value?.parentId && delete params.aggregateId;
-          await postEntityModelsDeleteEntityModel({
-            body: params,
-          });
+          if (currentSelectedTreeNode.value?.parentId) {
+            await postEntityModelsDeleteEntityModel({
+              body: params,
+            });
+          } else {
+            delete params.aggregateId;
+            await postEntityModelsDeleteAggregate({
+              body: params,
+            });
+          }
           Message.success($t('common.success'));
           currentSelectedKey.value = '';
           currentSelectedTreeNode.value = null;
