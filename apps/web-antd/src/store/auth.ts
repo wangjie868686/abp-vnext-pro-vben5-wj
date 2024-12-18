@@ -37,7 +37,9 @@ export const useAuthStore = defineStore('auth', () => {
   ) {
     // 异步处理用户登录操作并获取 accessToken
     let userInfo: null | UserInfo = null;
+
     try {
+      loginLoading.value = true;
       //  判断是否租户登录
       if (params.tenant) {
         const tenantResult = await postTenantsFind({
@@ -45,15 +47,17 @@ export const useAuthStore = defineStore('auth', () => {
             name: params.tenant,
           },
         });
+
         if (tenantResult.data?.success) {
           userStore.setTenantInfo(tenantResult.data as any);
         } else {
           Message.error(`${params.tenant}$t('abp.tenant.notExist')`);
+          userStore.setTenantInfo(null);
+          delete params.tenant;
           return;
         }
       }
 
-      loginLoading.value = true;
       const { data = {} } = await postApiAppAccountLogin({
         body: {
           ...params,
@@ -90,6 +94,9 @@ export const useAuthStore = defineStore('auth', () => {
           });
         }
       }
+    } catch {
+      userStore.setTenantInfo(null);
+      userStore.setUserInfo(null);
     } finally {
       loginLoading.value = false;
     }

@@ -48,6 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (tenantResult.data?.success) {
           userStore.setTenantInfo(tenantResult.data as any);
         } else {
+          userStore.setTenantInfo(null);
           message.error(`${params.tenant}$t('abp.tenant.notExist')`);
           return;
         }
@@ -90,6 +91,9 @@ export const useAuthStore = defineStore('auth', () => {
           });
         }
       }
+    } catch {
+      userStore.setTenantInfo(null);
+      userStore.setUserInfo(null);
     } finally {
       loginLoading.value = false;
     }
