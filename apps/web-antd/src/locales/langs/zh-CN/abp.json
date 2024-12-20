@@ -138,6 +138,7 @@
     "addFile": "新增文件",
     "desc": "描述",
     "name": "名称",
-    "templateType": "模板类型"
+    "templateType": "模板类型",
+    "supportTenant": "支持多租户"
   }
 }

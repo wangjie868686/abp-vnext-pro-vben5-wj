@@ -22,6 +22,12 @@ export const tableSchema: any = [
   },
 
   { field: 'nameSpace', title: $t('abp.code.namespace'), minWidth: '150' },
+  {
+    field: 'supportTenant',
+    title: $t('abp.code.supportTenant'),
+    minWidth: '150',
+    slots: { default: 'supportTenant' },
+  },
   { field: 'remark', title: $t('abp.code.remark'), minWidth: '150' },
   {
     field: 'creationTime',
@@ -69,6 +75,24 @@ export const addFormSchema: any = [
   //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
   // },
   {
+    component: 'RadioGroup',
+    componentProps: {
+      options: [
+        {
+          label: $t('common.yes'),
+          value: true,
+        },
+        {
+          label: $t('common.no'),
+          value: false,
+        },
+      ],
+    },
+    defaultValue: 0,
+    fieldName: 'supportTenant',
+    label: $t('abp.code.supportTenant'),
+  },
+  {
     component: 'Input',
     componentProps: {},
     fieldName: 'remark',
@@ -114,6 +138,24 @@ export const editFormSchema: any = [
   //     .string()
   //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
   // },
+  {
+    component: 'RadioGroup',
+    componentProps: {
+      options: [
+        {
+          label: $t('common.yes'),
+          value: true,
+        },
+        {
+          label: $t('common.no'),
+          value: false,
+        },
+      ],
+    },
+    defaultValue: 0,
+    fieldName: 'supportTenant',
+    label: $t('abp.code.supportTenant'),
+  },
   {
     component: 'Input',
     componentProps: {},

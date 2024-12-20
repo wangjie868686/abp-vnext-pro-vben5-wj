@@ -2,11 +2,12 @@
 import type { VbenFormProps } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+import { h } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { Button, Modal, Space } from 'ant-design-vue';
+import { Button, Modal, Space, Tag } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { postProjectsDelete, postProjectsPage } from '#/api-client/index';
@@ -120,7 +121,17 @@ const handleViewModel = (row: Record<string, any>) => {
           </Button>
         </Space>
       </template>
-
+      <template #supportTenant="{ row }">
+        <component
+          :is="
+            h(
+              Tag,
+              { color: row.supportTenant ? 'green' : 'red' },
+              row.supportTenant ? $t('common.yes') : $t('common.no'),
+            )
+          "
+        />
+      </template>
       <template #action="{ row }">
         <Button
           type="link"

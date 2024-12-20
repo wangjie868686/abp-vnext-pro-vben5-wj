@@ -370,6 +370,15 @@ export const ApplicationSettingConfigurationDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const BookTypeSchema = {
+    enum: [10, 20, 30],
+    type: 'integer',
+    description: '类型',
+    format: 'int32',
+    'x-enumNames': ['History', 'Story', 'Other'],
+    'x-enum-varnames': ['History', 'Story', 'Other']
+} as const;
+
 export const ChangePasswordInputSchema = {
     required: ['newPassword'],
     type: 'object',
@@ -512,6 +521,38 @@ export const CreateAggregateInputSchema = {
     additionalProperties: false
 } as const;
 
+export const CreateBookInputSchema = {
+    required: ['name', 'no', 'price'],
+    type: 'object',
+    properties: {
+        no: {
+            minLength: 1,
+            type: 'string',
+            description: '编号'
+        },
+        name: {
+            minLength: 1,
+            type: 'string',
+            description: '名称'
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        }
+    },
+    additionalProperties: false,
+    description: '创建书籍'
+} as const;
+
 export const CreateDataDictinaryDetailInputSchema = {
     type: 'object',
     properties: {
@@ -629,6 +670,15 @@ export const CreateEntityModelPropertyInputSchema = {
             type: 'string',
             format: 'uuid',
             nullable: true
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -761,10 +811,6 @@ export const CreateOrganizationUnitInputSchema = {
 export const CreateProjectInputSchema = {
     type: 'object',
     properties: {
-        name: {
-            type: 'string',
-            nullable: true
-        },
         owner: {
             type: 'string',
             nullable: true
@@ -780,6 +826,9 @@ export const CreateProjectInputSchema = {
         remark: {
             type: 'string',
             nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -1035,6 +1084,19 @@ export const DeleteAggregateInputSchema = {
         }
     },
     additionalProperties: false
+} as const;
+
+export const DeleteBookInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false,
+    description: '删除书籍'
 } as const;
 
 export const DeleteConnectionStringInputSchema = {
@@ -3356,6 +3418,106 @@ export const ObjectExtensionsDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const PageBookInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        startCreationTime: {
+            type: 'string',
+            description: '开始创建时间',
+            format: 'date-time',
+            nullable: true
+        },
+        endCreationTime: {
+            type: 'string',
+            description: '结束创建时间',
+            format: 'date-time',
+            nullable: true
+        }
+    },
+    additionalProperties: false,
+    description: '分页查询书籍'
+} as const;
+
+export const PageBookOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        },
+        no: {
+            type: 'string',
+            description: '编号',
+            nullable: true
+        },
+        name: {
+            type: 'string',
+            description: '名称',
+            nullable: true
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        },
+        bookTypeDescription: {
+            type: 'string',
+            nullable: true,
+            readOnly: true
+        },
+        creationTime: {
+            type: 'string',
+            description: '创建时间',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false,
+    description: '分页查询书籍'
+} as const;
+
+export const PageBookOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageBookOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const PageEntityModelInputSchema = {
     type: 'object',
     properties: {
@@ -3444,6 +3606,15 @@ export const PageEntityModelPropertyOutputSchema = {
         dataTypeDescription: {
             type: 'string',
             nullable: true
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -5128,10 +5299,6 @@ export const ProjectDtoSchema = {
             format: 'uuid',
             nullable: true
         },
-        name: {
-            type: 'string',
-            nullable: true
-        },
         owner: {
             type: 'string',
             nullable: true
@@ -5151,6 +5318,9 @@ export const ProjectDtoSchema = {
         remark: {
             type: 'string',
             nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -5850,6 +6020,43 @@ export const UpdateAggregateInputSchema = {
     additionalProperties: false
 } as const;
 
+export const UpdateBookInputSchema = {
+    required: ['name', 'no', 'price'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        },
+        no: {
+            minLength: 1,
+            type: 'string',
+            description: '编号'
+        },
+        name: {
+            minLength: 1,
+            type: 'string',
+            description: '名称'
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        }
+    },
+    additionalProperties: false,
+    description: '更新书籍'
+} as const;
+
 export const UpdateDataDictinaryInputSchema = {
     type: 'object',
     properties: {
@@ -5979,6 +6186,15 @@ export const UpdateEntityModelPropertyInputSchema = {
         entityModelId: {
             type: 'string',
             format: 'uuid'
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
         }
     },
     additionalProperties: false
@@ -6195,10 +6411,6 @@ export const UpdateProjectInputSchema = {
             type: 'string',
             format: 'uuid'
         },
-        name: {
-            type: 'string',
-            nullable: true
-        },
         owner: {
             type: 'string',
             nullable: true
@@ -6214,6 +6426,9 @@ export const UpdateProjectInputSchema = {
         remark: {
             type: 'string',
             nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
         }
     },
     additionalProperties: false

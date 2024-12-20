@@ -131,6 +131,11 @@ export type ApplicationSettingConfigurationDto = {
     } | null;
 };
 
+/**
+ * 类型
+ */
+export type BookType = 10 | 20 | 30;
+
 export type ChangePasswordInput = {
     currentPassword?: (string) | null;
     newPassword: string;
@@ -173,6 +178,29 @@ export type CreateAggregateInput = {
     description: string;
 };
 
+/**
+ * 创建书籍
+ */
+export type CreateBookInput = {
+    /**
+     * 编号
+     */
+    no: string;
+    /**
+     * 名称
+     */
+    name: string;
+    /**
+     * 价格
+     */
+    price: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+};
+
 export type CreateDataDictinaryDetailInput = {
     id?: string;
     code?: (string) | null;
@@ -205,6 +233,9 @@ export type CreateEntityModelPropertyInput = {
     decimalScale?: (number) | null;
     enumTypeId?: (string) | null;
     dataTypeId?: (string) | null;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
 };
 
 export type CreateEnumTypeInput = {
@@ -275,11 +306,11 @@ export type CreateOrganizationUnitInput = {
 };
 
 export type CreateProjectInput = {
-    name?: (string) | null;
     owner?: (string) | null;
     companyName?: (string) | null;
     projectName?: (string) | null;
     remark?: (string) | null;
+    supportTenant?: boolean;
 };
 
 export type CreateTemplateDetailInput = {
@@ -352,6 +383,16 @@ export type DateTimeFormatDto = {
 };
 
 export type DeleteAggregateInput = {
+    id?: string;
+};
+
+/**
+ * 删除书籍
+ */
+export type DeleteBookInput = {
+    /**
+     * 书籍Id
+     */
     id?: string;
 };
 
@@ -1126,6 +1167,69 @@ export type ObjectExtensionsDto = {
     } | null;
 };
 
+/**
+ * 分页查询书籍
+ */
+export type PageBookInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    /**
+     * 开始创建时间
+     */
+    startCreationTime?: (string) | null;
+    /**
+     * 结束创建时间
+     */
+    endCreationTime?: (string) | null;
+};
+
+/**
+ * 分页查询书籍
+ */
+export type PageBookOutput = {
+    /**
+     * 书籍Id
+     */
+    id?: string;
+    /**
+     * 编号
+     */
+    no?: (string) | null;
+    /**
+     * 名称
+     */
+    name?: (string) | null;
+    /**
+     * 价格
+     */
+    price?: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+    readonly bookTypeDescription?: (string) | null;
+    /**
+     * 创建时间
+     */
+    creationTime?: string;
+};
+
+export type PageBookOutputPagedResultDto = {
+    items?: Array<PageBookOutput> | null;
+    totalCount?: number;
+};
+
 export type PageEntityModelInput = {
     /**
      * 当前页面.默认从1开始
@@ -1157,6 +1261,9 @@ export type PageEntityModelPropertyOutput = {
     isEnum?: boolean;
     dataTypeCode?: (string) | null;
     dataTypeDescription?: (string) | null;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
 };
 
 export type PageEntityModelPropertyOutputPagedResultDto = {
@@ -1985,12 +2092,12 @@ export type ProjectDto = {
     lastModificationTime?: (string) | null;
     lastModifierId?: (string) | null;
     tenantId?: (string) | null;
-    name?: (string) | null;
     owner?: (string) | null;
     nameSpace?: (string) | null;
     companyName?: (string) | null;
     projectName?: (string) | null;
     remark?: (string) | null;
+    supportTenant?: boolean;
 };
 
 export type ProjectDtoPagedResultDto = {
@@ -2232,6 +2339,33 @@ export type UpdateAggregateInput = {
     description: string;
 };
 
+/**
+ * 更新书籍
+ */
+export type UpdateBookInput = {
+    /**
+     * 书籍Id
+     */
+    id?: string;
+    /**
+     * 编号
+     */
+    no: string;
+    /**
+     * 名称
+     */
+    name: string;
+    /**
+     * 价格
+     */
+    price: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+};
+
 export type UpdateDataDictinaryInput = {
     id?: string;
     code?: (string) | null;
@@ -2267,6 +2401,9 @@ export type UpdateEntityModelPropertyInput = {
     enumTypeId?: (string) | null;
     dataTypeId?: (string) | null;
     entityModelId?: string;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
 };
 
 export type UpdateEnumTypeInput = {
@@ -2366,11 +2503,11 @@ export type UpdatePermissionsDto = {
 
 export type UpdateProjectInput = {
     id?: string;
-    name?: (string) | null;
     owner?: (string) | null;
     companyName?: (string) | null;
     projectName?: (string) | null;
     remark?: (string) | null;
+    supportTenant?: boolean;
 };
 
 export type UpdateRoleInput = {
@@ -2477,6 +2614,38 @@ export type PostAuditLogsPageData = {
 export type PostAuditLogsPageResponse = (PagingAuditLogOutputPagedResultDto);
 
 export type PostAuditLogsPageError = (RemoteServiceErrorResponse);
+
+export type PostBooksPageData = {
+    body?: PageBookInput;
+};
+
+export type PostBooksPageResponse = (PageBookOutputPagedResultDto);
+
+export type PostBooksPageError = (RemoteServiceErrorResponse);
+
+export type PostBooksCreateData = {
+    body?: CreateBookInput;
+};
+
+export type PostBooksCreateResponse = (unknown);
+
+export type PostBooksCreateError = (RemoteServiceErrorResponse);
+
+export type PostBooksUpdateData = {
+    body?: UpdateBookInput;
+};
+
+export type PostBooksUpdateResponse = (unknown);
+
+export type PostBooksUpdateError = (RemoteServiceErrorResponse);
+
+export type PostBooksDeleteData = {
+    body?: DeleteBookInput;
+};
+
+export type PostBooksDeleteResponse = (unknown);
+
+export type PostBooksDeleteError = (RemoteServiceErrorResponse);
 
 export type PostDataDictionaryPageData = {
     body?: PagingDataDictionaryInput;

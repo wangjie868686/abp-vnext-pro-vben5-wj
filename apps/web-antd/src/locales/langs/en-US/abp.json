@@ -138,6 +138,7 @@
     "addFile": "AddFile",
     "desc": "Description",
     "name": "Name",
-    "templateType": "TemplateType"
+    "templateType": "TemplateType",
+    "supportTenant": "Support Multi-Tenant"
   }
 }
