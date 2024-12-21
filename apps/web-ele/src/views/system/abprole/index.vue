@@ -177,7 +177,12 @@ const onAuth = async (row: any) => {
     });
     authTree.value = data?.permissions || [];
     authPolicy.value = data?.allGrants || [];
-    defaultCheckedKeys.value = data.grants || [];
+    
+    // 只设置实际的权限节点，父节点会自动根据子节点状态设置
+    const grants = data.grants || [];
+    defaultCheckedKeys.value = grants.filter((item: string) => 
+      item.includes('.')  // 只包含实际权限节点
+    );
   } finally {
     authDrawerApi.setState({ loading: false });
   }
@@ -193,50 +198,39 @@ const [AuthDrawer, authDrawerApi] = useVbenDrawer({
 });
 
 // 自定义级联选中
-const handleCheck = (checkedKeys, e) => {
-  // if (e.checked === true) {
-  //   // 新增权限时，向下级联选中
-  //   const filteredKeys = authTree.value.filter((key) =>
-  //     key.startsWith(e.node.key),
-  //   );
-  //   checkedKeys.checked = checkedKeys.checked.concat(
-  //     filteredKeys.filter((key) => !checkedKeys.checked.includes(key)),
-  //   );
-  // } else {
-  //   // 取消权限时，向下级联反选
-  //   checkedKeys.checked = checkedKeys.checked.filter(
-  //     (key) => !key.startsWith(e.node.key),
-  //   );
-  // }
+const handleCheck = (
+  node: any,
+  checkedStatus: { checkedKeys: string[]; checkedNodes: any[] }
+) => {
+  defaultCheckedKeys.value = checkedStatus.checkedKeys;
 };
 
 const updateAuth = async () => {
   try {
     authDrawerApi.setState({ loading: true, confirmLoading: true });
     const permissions = [] as any;
-    console.log(authTreeRef.value, authTreeRef.value?.getCheckedKeys());
+    
+    // 处理选中的权限
     const checkedKeys = authTreeRef.value?.getCheckedKeys() || [];
-    checkedKeys.forEach((item: any) => {
-      if (item.toString().includes('.')) {
+    checkedKeys.forEach((item: string) => {
+      if (item.includes('.')) {  // 只处理实际权限节点
         permissions.push({
           name: item,
           isGranted: true,
         });
       }
     });
-    authPolicy.value.forEach((item: string | string[]) => {
-      if (
-        !permissions.find(
-          (x: { name: string | string[] }) => x.name === item,
-        ) &&
-        item.includes('.')
-      ) {
+
+    // 处理未选中的权限
+    authPolicy.value.forEach((item: string) => {
+      if (!checkedKeys.includes(item) && item.includes('.')) {
         permissions.push({
           name: item,
           isGranted: false,
         });
       }
     });
+
     const resp = await postPermissionsUpdate({
       body: {
         providerKey: editRow.value.name,
@@ -246,8 +240,9 @@ const updateAuth = async () => {
         },
       },
     });
+
     if (resp.status === 200 || resp.status === 204) {
-      $t('common.editSuccess');
+      ElMessage.success($t('common.editSuccess'));
       authDrawerApi.close();
     }
   } finally {
@@ -327,10 +322,10 @@ const updateAuth = async () => {
         ref="authTreeRef"
         node-key="key"
         show-checkbox
-        :default-checked-keys="defaultCheckedKeys"
-        :check-strictly="true"
         :data="authTree"
         :props="{ label: 'title', children: 'children' }"
+        :default-checked-keys="defaultCheckedKeys"
+        :check-strictly="false" 
         @check="handleCheck"
       />
     </AuthDrawer>
