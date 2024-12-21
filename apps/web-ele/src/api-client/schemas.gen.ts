@@ -370,6 +370,15 @@ export const ApplicationSettingConfigurationDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const BookTypeSchema = {
+    enum: [10, 20, 30],
+    type: 'integer',
+    description: '类型',
+    format: 'int32',
+    'x-enumNames': ['History', 'Story', 'Other'],
+    'x-enum-varnames': ['History', 'Story', 'Other']
+} as const;
+
 export const ChangePasswordInputSchema = {
     required: ['newPassword'],
     type: 'object',
@@ -398,6 +407,14 @@ export const ClockDtoSchema = {
         }
     },
     additionalProperties: false
+} as const;
+
+export const ControlTypeSchema = {
+    enum: [10, 20, 30, 40],
+    type: 'integer',
+    format: 'int32',
+    'x-enumNames': ['Aggregate', 'Entity', 'Enum', 'Global'],
+    'x-enum-varnames': ['Aggregate', 'Entity', 'Enum', 'Global']
 } as const;
 
 export const ControllerApiDescriptionModelSchema = {
@@ -465,6 +482,77 @@ export const ControllerInterfaceApiDescriptionModelSchema = {
     additionalProperties: false
 } as const;
 
+export const CopyTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateAggregateInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        projectId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateBookInputSchema = {
+    required: ['name', 'no', 'price'],
+    type: 'object',
+    properties: {
+        no: {
+            minLength: 1,
+            type: 'string',
+            description: '编号'
+        },
+        name: {
+            minLength: 1,
+            type: 'string',
+            description: '名称'
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        }
+    },
+    additionalProperties: false,
+    description: '创建书籍'
+} as const;
+
 export const CreateDataDictinaryDetailInputSchema = {
     type: 'object',
     properties: {
@@ -506,6 +594,139 @@ export const CreateDataDictinaryInputSchema = {
         description: {
             type: 'string',
             nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateEntityModelInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        },
+        relationalType: {
+            '$ref': '#/components/schemas/RelationalType'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateEntityModelPropertyInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        },
+        isRequired: {
+            type: 'boolean'
+        },
+        maxLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        minLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalPrecision: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalScale: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        dataTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateEnumTypeInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        projectId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateEnumTypePropertyInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        value: {
+            type: 'integer',
+            format: 'int32'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
         }
     },
     additionalProperties: false
@@ -582,6 +803,105 @@ export const CreateOrganizationUnitInputSchema = {
             type: 'string',
             format: 'uuid',
             nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateProjectInputSchema = {
+    type: 'object',
+    properties: {
+        owner: {
+            type: 'string',
+            nullable: true
+        },
+        companyName: {
+            type: 'string',
+            nullable: true
+        },
+        projectName: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateTemplateDetailInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        parentId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        templateType: {
+            '$ref': '#/components/schemas/TemplateType'
+        },
+        controlType: {
+            '$ref': '#/components/schemas/ControlType'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const CreateTextTemplateInputSchema = {
+    required: ['code', 'content', 'cultureName', 'name'],
+    type: 'object',
+    properties: {
+        name: {
+            minLength: 1,
+            type: 'string'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        content: {
+            minLength: 1,
+            type: 'string'
+        },
+        cultureName: {
+            minLength: 1,
+            type: 'string'
         }
     },
     additionalProperties: false
@@ -722,6 +1042,28 @@ export const CurrentUserDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const DataTypeDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        isEnum: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const DateTimeFormatDtoSchema = {
     type: 'object',
     properties: {
@@ -757,6 +1099,30 @@ export const DateTimeFormatDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const DeleteAggregateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteBookInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false,
+    description: '删除书籍'
+} as const;
+
 export const DeleteConnectionStringInputSchema = {
     type: 'object',
     properties: {
@@ -782,6 +1148,66 @@ export const DeleteDataDictionaryDetailInputSchema = {
             format: 'uuid'
         },
         dataDictionayDetailId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteEntityModelInputSchema = {
+    type: 'object',
+    properties: {
+        aggregateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteEntityModelPropertyInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        propertyId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteEnumTypeInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteEnumTypePropertyInputSchema = {
+    type: 'object',
+    properties: {
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        id: {
             type: 'string',
             format: 'uuid'
         }
@@ -815,6 +1241,69 @@ export const DeleteLanguageInputSchema = {
     },
     additionalProperties: false,
     description: '删除语言'
+} as const;
+
+export const DeleteProjectInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteTemplateDetailInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateDetailId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteTextTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DownCodeInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        projectId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
 } as const;
 
 export const EntityChangeTypeSchema = {
@@ -1683,6 +2172,220 @@ export const FindTenantResultDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const GetDataTypeInputSchema = {
+    type: 'object',
+    properties: {
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetDataTypeOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEntityModelInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEntityModelOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        relationalType: {
+            '$ref': '#/components/schemas/RelationalType'
+        },
+        entityModelProperties: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/GetEntityModelPropertyOutput'
+            },
+            nullable: true
+        },
+        entityModelOutputs: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/GetEntityModelOutput'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEntityModelPropertyOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        isRequired: {
+            type: 'boolean'
+        },
+        maxLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        minLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalPrecision: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalScale: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        isEnum: {
+            type: 'boolean'
+        },
+        enumTypeOutput: {
+            '$ref': '#/components/schemas/GetEnumTypeOutput'
+        },
+        dataTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        dataTypeOutput: {
+            '$ref': '#/components/schemas/GetDataTypeOutput'
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEntityModelTreeInputSchema = {
+    type: 'object',
+    properties: {
+        projectId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEntityModelTreeOutputSchema = {
+    type: 'object',
+    properties: {
+        key: {
+            type: 'string',
+            format: 'uuid'
+        },
+        icon: {
+            type: 'string',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        title: {
+            type: 'string',
+            nullable: true
+        },
+        parentId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        relationalType: {
+            '$ref': '#/components/schemas/RelationalType'
+        },
+        children: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/GetEntityModelTreeOutput'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetEnumTypeOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const GetFeatureListResultDtoSchema = {
     type: 'object',
     properties: {
@@ -1850,6 +2553,61 @@ export const GetPermissionInputSchema = {
         providerKey: {
             type: 'string',
             nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetTemplateTreeOutputSchema = {
+    type: 'object',
+    properties: {
+        key: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateType: {
+            '$ref': '#/components/schemas/TemplateType'
+        },
+        controlType: {
+            '$ref': '#/components/schemas/ControlType'
+        },
+        icon: {
+            type: 'string',
+            nullable: true
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        title: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        children: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/GetTemplateTreeOutput'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const GetTemplteTreeInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
         }
     },
     additionalProperties: false
@@ -2695,6 +3453,380 @@ export const ObjectExtensionsDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const PageBookInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        startCreationTime: {
+            type: 'string',
+            description: '开始创建时间',
+            format: 'date-time',
+            nullable: true
+        },
+        endCreationTime: {
+            type: 'string',
+            description: '结束创建时间',
+            format: 'date-time',
+            nullable: true
+        }
+    },
+    additionalProperties: false,
+    description: '分页查询书籍'
+} as const;
+
+export const PageBookOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        },
+        no: {
+            type: 'string',
+            description: '编号',
+            nullable: true
+        },
+        name: {
+            type: 'string',
+            description: '名称',
+            nullable: true
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        },
+        bookTypeDescription: {
+            type: 'string',
+            nullable: true,
+            readOnly: true
+        },
+        creationTime: {
+            type: 'string',
+            description: '创建时间',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false,
+    description: '分页查询书籍'
+} as const;
+
+export const PageBookOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageBookOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEntityModelInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        filter: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEntityModelPropertyOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        isRequired: {
+            type: 'boolean'
+        },
+        maxLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        minLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalPrecision: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalScale: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        dataTypeId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        isEnum: {
+            type: 'boolean'
+        },
+        dataTypeCode: {
+            type: 'string',
+            nullable: true
+        },
+        dataTypeDescription: {
+            type: 'string',
+            nullable: true
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEntityModelPropertyOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageEntityModelPropertyOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypeInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        filter: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypeOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypeOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageEnumTypeOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypePropertyInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        filter: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypePropertyOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        value: {
+            type: 'integer',
+            format: 'int32'
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageEnumTypePropertyOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageEnumTypePropertyOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const PageLanguageInputSchema = {
     type: 'object',
     properties: {
@@ -2867,6 +3999,60 @@ export const PageLanguageTextOutputPagedResultDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const PageProjectInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        filter: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        filter: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const PageTenantConnectionStringInputSchema = {
     type: 'object',
     properties: {
@@ -2918,6 +4104,100 @@ export const PageTenantConnectionStringOutputPagedResultDtoSchema = {
             type: 'array',
             items: {
                 '$ref': '#/components/schemas/PageTenantConnectionStringOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTextTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        startCreationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        },
+        endCreationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTextTemplateOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        cultureName: {
+            type: 'string',
+            nullable: true
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTextTemplateOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageTextTemplateOutput'
             },
             nullable: true
         },
@@ -4102,6 +5382,97 @@ export const PermissionTreeDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const PreViewCodeInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        projectId: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const ProjectDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        },
+        creatorId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        lastModificationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        },
+        lastModifierId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        tenantId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        owner: {
+            type: 'string',
+            nullable: true
+        },
+        nameSpace: {
+            type: 'string',
+            nullable: true
+        },
+        companyName: {
+            type: 'string',
+            nullable: true
+        },
+        projectName: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const ProjectDtoPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/ProjectDto'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const PropertyApiDescriptionModelSchema = {
     type: 'object',
     properties: {
@@ -4148,6 +5519,14 @@ export const PropertyApiDescriptionModelSchema = {
         }
     },
     additionalProperties: false
+} as const;
+
+export const RelationalTypeSchema = {
+    enum: [10, 20],
+    type: 'integer',
+    format: 'int32',
+    'x-enumNames': ['OnoToOne', 'OneToMany'],
+    'x-enum-varnames': ['OnoToOne', 'OneToMany']
 } as const;
 
 export const RemoteServiceErrorInfoSchema = {
@@ -4399,6 +5778,21 @@ export const SettingOutputSchema = {
     additionalProperties: false
 } as const;
 
+export const StringInt32KeyValuePairSchema = {
+    type: 'object',
+    properties: {
+        key: {
+            type: 'string',
+            nullable: true
+        },
+        value: {
+            type: 'integer',
+            format: 'int32'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const StringStringFromSelectorSchema = {
     type: 'object',
     properties: {
@@ -4414,6 +5808,167 @@ export const StringStringFromSelectorSchema = {
         }
     },
     additionalProperties: false
+} as const;
+
+export const TemplateDetailDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateType: {
+            '$ref': '#/components/schemas/TemplateType'
+        },
+        controlType: {
+            '$ref': '#/components/schemas/ControlType'
+        },
+        parentId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const TemplateDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        },
+        creatorId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        lastModificationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        },
+        lastModifierId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        tenantId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        },
+        templateDetails: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/TemplateDetailDto'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const TemplateDtoPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/TemplateDto'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const TemplateTreeDtoSchema = {
+    type: 'object',
+    properties: {
+        key: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateType: {
+            '$ref': '#/components/schemas/TemplateType'
+        },
+        controlType: {
+            '$ref': '#/components/schemas/ControlType'
+        },
+        icon: {
+            type: 'string',
+            nullable: true
+        },
+        isFolder: {
+            type: 'boolean'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        title: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        children: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/TemplateTreeDto'
+            },
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const TemplateTypeSchema = {
+    enum: [10, 20],
+    type: 'integer',
+    format: 'int32',
+    'x-enumNames': ['Folder', 'File'],
+    'x-enum-varnames': ['Folder', 'File']
 } as const;
 
 export const TenantCreateDtoSchema = {
@@ -4574,6 +6129,63 @@ export const TypeApiDescriptionModelSchema = {
     additionalProperties: false
 } as const;
 
+export const UpdateAggregateInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateBookInputSchema = {
+    required: ['name', 'no', 'price'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: '书籍Id',
+            format: 'uuid'
+        },
+        no: {
+            minLength: 1,
+            type: 'string',
+            description: '编号'
+        },
+        name: {
+            minLength: 1,
+            type: 'string',
+            description: '名称'
+        },
+        price: {
+            type: 'number',
+            description: '价格',
+            format: 'double'
+        },
+        remark: {
+            type: 'string',
+            description: '备注',
+            nullable: true
+        },
+        bookType: {
+            '$ref': '#/components/schemas/BookType'
+        }
+    },
+    additionalProperties: false,
+    description: '更新书籍'
+} as const;
+
 export const UpdateDataDictinaryInputSchema = {
     type: 'object',
     properties: {
@@ -4619,6 +6231,147 @@ export const UpdateDetailInputSchema = {
         order: {
             type: 'integer',
             format: 'int32'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateEntityModelInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        },
+        relationalType: {
+            '$ref': '#/components/schemas/RelationalType'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateEntityModelPropertyInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        propertyId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        },
+        isRequired: {
+            type: 'boolean'
+        },
+        maxLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        minLength: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalPrecision: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        decimalScale: {
+            type: 'integer',
+            format: 'int32',
+            nullable: true
+        },
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        dataTypeId: {
+            type: 'string',
+            format: 'uuid',
+            nullable: true
+        },
+        entityModelId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        allowSearch: {
+            type: 'boolean'
+        },
+        allowAdd: {
+            type: 'boolean'
+        },
+        allowEdit: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateEnumTypeInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateEnumTypePropertyInputSchema = {
+    required: ['code', 'description'],
+    type: 'object',
+    properties: {
+        enumTypeId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        value: {
+            type: 'integer',
+            format: 'int32'
+        },
+        description: {
+            minLength: 1,
+            type: 'string'
         }
     },
     additionalProperties: false
@@ -4780,6 +6533,36 @@ export const UpdatePermissionsDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const UpdateProjectInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        owner: {
+            type: 'string',
+            nullable: true
+        },
+        companyName: {
+            type: 'string',
+            nullable: true
+        },
+        projectName: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        },
+        supportTenant: {
+            type: 'boolean'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const UpdateRoleInputSchema = {
     type: 'object',
     properties: {
@@ -4827,6 +6610,74 @@ export const UpdateSettingInputSchema = {
     additionalProperties: false
 } as const;
 
+export const UpdateTemplateDetailContentInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateDetailId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateTemplateDetailInputSchema = {
+    type: 'object',
+    properties: {
+        templateId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        templateDetailId: {
+            type: 'string',
+            format: 'uuid'
+        },
+        controlType: {
+            '$ref': '#/components/schemas/ControlType'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        description: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        remark: {
+            type: 'string',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const UpdateTenantInputSchema = {
     type: 'object',
     properties: {
@@ -4837,6 +6688,34 @@ export const UpdateTenantInputSchema = {
         name: {
             type: 'string',
             nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateTextTemplateInputSchema = {
+    required: ['code', 'content', 'cultureName', 'name'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            minLength: 1,
+            type: 'string'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        content: {
+            minLength: 1,
+            type: 'string'
+        },
+        cultureName: {
+            minLength: 1,
+            type: 'string'
         }
     },
     additionalProperties: false

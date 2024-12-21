@@ -328,6 +328,13 @@ export type CreateTemplateInput = {
     remark?: (string) | null;
 };
 
+export type CreateTextTemplateInput = {
+    name: string;
+    code: string;
+    content: string;
+    cultureName: string;
+};
+
 export type CurrentCultureDto = {
     displayName?: (string) | null;
     englishName?: (string) | null;
@@ -457,6 +464,10 @@ export type DeleteTemplateDetailInput = {
 };
 
 export type DeleteTemplateInput = {
+    id?: string;
+};
+
+export type DeleteTextTemplateInput = {
     id?: string;
 };
 
@@ -1513,6 +1524,40 @@ export type PageTenantConnectionStringOutputPagedResultDto = {
     totalCount?: number;
 };
 
+export type PageTextTemplateInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    name?: (string) | null;
+    code?: (string) | null;
+    content?: (string) | null;
+    startCreationTime?: (string) | null;
+    endCreationTime?: (string) | null;
+};
+
+export type PageTextTemplateOutput = {
+    id?: string;
+    name?: (string) | null;
+    code?: (string) | null;
+    content?: (string) | null;
+    cultureName?: (string) | null;
+    creationTime?: string;
+};
+
+export type PageTextTemplateOutputPagedResultDto = {
+    items?: Array<PageTextTemplateOutput> | null;
+    totalCount?: number;
+};
+
 export type PagingAuditLogActionOutput = {
     id?: string;
     tenantId?: (string) | null;
@@ -2553,6 +2598,14 @@ export type UpdateTenantInput = {
     name?: (string) | null;
 };
 
+export type UpdateTextTemplateInput = {
+    id?: string;
+    name: string;
+    code: string;
+    content: string;
+    cultureName: string;
+};
+
 export type UpdateUserInput = {
     userId?: string;
     userInfo?: IdentityUserUpdateDto;
@@ -3438,6 +3491,46 @@ export type PostTenantsDeleteConnectionStringData = {
 export type PostTenantsDeleteConnectionStringResponse = (unknown);
 
 export type PostTenantsDeleteConnectionStringError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesPageData = {
+    body?: PageTextTemplateInput;
+};
+
+export type PostTextTemplatesPageResponse = (PageTextTemplateOutputPagedResultDto);
+
+export type PostTextTemplatesPageError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesCreateData = {
+    body?: CreateTextTemplateInput;
+};
+
+export type PostTextTemplatesCreateResponse = (unknown);
+
+export type PostTextTemplatesCreateError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesUpdateData = {
+    body?: UpdateTextTemplateInput;
+};
+
+export type PostTextTemplatesUpdateResponse = (unknown);
+
+export type PostTextTemplatesUpdateError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesDeleteData = {
+    body?: DeleteTextTemplateInput;
+};
+
+export type PostTextTemplatesDeleteResponse = (unknown);
+
+export type PostTextTemplatesDeleteError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesExportData = {
+    body?: PageTextTemplateInput;
+};
+
+export type PostTextTemplatesExportResponse = ((Blob | File));
+
+export type PostTextTemplatesExportError = (RemoteServiceErrorResponse);
 
 export type PostUsersPageData = {
     body?: PagingUserListInput;
