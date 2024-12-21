@@ -131,6 +131,11 @@ export type ApplicationSettingConfigurationDto = {
     } | null;
 };
 
+/**
+ * 类型
+ */
+export type BookType = 10 | 20 | 30;
+
 export type ChangePasswordInput = {
     currentPassword?: (string) | null;
     newPassword: string;
@@ -159,6 +164,43 @@ export type ControllerInterfaceApiDescriptionModel = {
     methods?: Array<InterfaceMethodApiDescriptionModel> | null;
 };
 
+export type ControlType = 10 | 20 | 30 | 40;
+
+export type CopyTemplateInput = {
+    id?: string;
+    name?: (string) | null;
+    remark?: (string) | null;
+};
+
+export type CreateAggregateInput = {
+    projectId?: string;
+    code: string;
+    description: string;
+};
+
+/**
+ * 创建书籍
+ */
+export type CreateBookInput = {
+    /**
+     * 编号
+     */
+    no: string;
+    /**
+     * 名称
+     */
+    name: string;
+    /**
+     * 价格
+     */
+    price: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+};
+
 export type CreateDataDictinaryDetailInput = {
     id?: string;
     code?: (string) | null;
@@ -171,6 +213,43 @@ export type CreateDataDictinaryInput = {
     code?: (string) | null;
     displayText?: (string) | null;
     description?: (string) | null;
+};
+
+export type CreateEntityModelInput = {
+    id?: string;
+    code: string;
+    description: string;
+    relationalType?: RelationalType;
+};
+
+export type CreateEntityModelPropertyInput = {
+    id?: string;
+    code: string;
+    description: string;
+    isRequired?: boolean;
+    maxLength?: (number) | null;
+    minLength?: (number) | null;
+    decimalPrecision?: (number) | null;
+    decimalScale?: (number) | null;
+    enumTypeId?: (string) | null;
+    dataTypeId?: (string) | null;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
+};
+
+export type CreateEnumTypeInput = {
+    code: string;
+    description: string;
+    entityModelId?: string;
+    projectId?: string;
+};
+
+export type CreateEnumTypePropertyInput = {
+    enumTypeId?: string;
+    code: string;
+    value?: number;
+    description: string;
 };
 
 /**
@@ -226,6 +305,36 @@ export type CreateOrganizationUnitInput = {
     parentId?: (string) | null;
 };
 
+export type CreateProjectInput = {
+    owner?: (string) | null;
+    companyName?: (string) | null;
+    projectName?: (string) | null;
+    remark?: (string) | null;
+    supportTenant?: boolean;
+};
+
+export type CreateTemplateDetailInput = {
+    templateId?: string;
+    parentId?: (string) | null;
+    templateType?: TemplateType;
+    controlType?: ControlType;
+    name?: (string) | null;
+    description?: (string) | null;
+    content?: (string) | null;
+};
+
+export type CreateTemplateInput = {
+    name?: (string) | null;
+    remark?: (string) | null;
+};
+
+export type CreateTextTemplateInput = {
+    name: string;
+    code: string;
+    content: string;
+    cultureName: string;
+};
+
 export type CurrentCultureDto = {
     displayName?: (string) | null;
     englishName?: (string) | null;
@@ -263,6 +372,13 @@ export type CurrentUserDto = {
     sessionId?: (string) | null;
 };
 
+export type DataTypeDto = {
+    id?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+    isEnum?: boolean;
+};
+
 export type DateTimeFormatDto = {
     calendarAlgorithmType?: (string) | null;
     dateTimeFormatLong?: (string) | null;
@@ -271,6 +387,20 @@ export type DateTimeFormatDto = {
     dateSeparator?: (string) | null;
     shortTimePattern?: (string) | null;
     longTimePattern?: (string) | null;
+};
+
+export type DeleteAggregateInput = {
+    id?: string;
+};
+
+/**
+ * 删除书籍
+ */
+export type DeleteBookInput = {
+    /**
+     * 书籍Id
+     */
+    id?: string;
 };
 
 export type DeleteConnectionStringInput = {
@@ -289,6 +419,26 @@ export type DeleteDataDictionaryDetailInput = {
     dataDictionayDetailId?: string;
 };
 
+export type DeleteEntityModelInput = {
+    aggregateId?: string;
+    id?: string;
+};
+
+export type DeleteEntityModelPropertyInput = {
+    id?: string;
+    propertyId?: string;
+};
+
+export type DeleteEnumTypeInput = {
+    id?: string;
+    entityModelId?: string;
+};
+
+export type DeleteEnumTypePropertyInput = {
+    enumTypeId?: string;
+    id?: string;
+};
+
 export type DeleteFeatureInput = {
     providerName?: (string) | null;
     providerKey?: (string) | null;
@@ -302,6 +452,28 @@ export type DeleteLanguageInput = {
      * 语言Id
      */
     id?: string;
+};
+
+export type DeleteProjectInput = {
+    id?: string;
+};
+
+export type DeleteTemplateDetailInput = {
+    templateId?: string;
+    templateDetailId?: string;
+};
+
+export type DeleteTemplateInput = {
+    id?: string;
+};
+
+export type DeleteTextTemplateInput = {
+    id?: string;
+};
+
+export type DownCodeInput = {
+    templateId?: string;
+    projectId?: string;
 };
 
 export type EntityChangeType = 0 | 1 | 2;
@@ -575,6 +747,67 @@ export type FindTenantResultDto = {
     isActive?: boolean;
 };
 
+export type GetDataTypeInput = {
+    entityModelId?: string;
+};
+
+export type GetDataTypeOutput = {
+    id?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+};
+
+export type GetEntityModelInput = {
+    id?: string;
+};
+
+export type GetEntityModelOutput = {
+    id?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+    relationalType?: RelationalType;
+    entityModelProperties?: Array<GetEntityModelPropertyOutput> | null;
+    entityModelOutputs?: Array<GetEntityModelOutput> | null;
+};
+
+export type GetEntityModelPropertyOutput = {
+    id?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+    isRequired?: boolean;
+    maxLength?: (number) | null;
+    minLength?: (number) | null;
+    decimalPrecision?: (number) | null;
+    decimalScale?: (number) | null;
+    enumTypeId?: (string) | null;
+    isEnum?: boolean;
+    enumTypeOutput?: GetEnumTypeOutput;
+    dataTypeId?: (string) | null;
+    dataTypeOutput?: GetDataTypeOutput;
+    entityModelId?: string;
+};
+
+export type GetEntityModelTreeInput = {
+    projectId?: string;
+};
+
+export type GetEntityModelTreeOutput = {
+    key?: string;
+    icon?: (string) | null;
+    code?: (string) | null;
+    title?: (string) | null;
+    parentId?: (string) | null;
+    description?: (string) | null;
+    relationalType?: RelationalType;
+    children?: Array<GetEntityModelTreeOutput> | null;
+};
+
+export type GetEnumTypeOutput = {
+    id?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+};
+
 export type GetFeatureListResultDto = {
     groups?: Array<FeatureGroupDto> | null;
 };
@@ -641,6 +874,22 @@ export type GetOrganizationUnitUserOutputPagedResultDto = {
 export type GetPermissionInput = {
     providerName?: (string) | null;
     providerKey?: (string) | null;
+};
+
+export type GetTemplateTreeOutput = {
+    key?: string;
+    templateType?: TemplateType;
+    controlType?: ControlType;
+    icon?: (string) | null;
+    name?: (string) | null;
+    description?: (string) | null;
+    title?: (string) | null;
+    content?: (string) | null;
+    children?: Array<GetTemplateTreeOutput> | null;
+};
+
+export type GetTemplteTreeInput = {
+    templateId?: string;
 };
 
 export type GetUnAddRoleInput = {
@@ -930,6 +1179,170 @@ export type ObjectExtensionsDto = {
 };
 
 /**
+ * 分页查询书籍
+ */
+export type PageBookInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    /**
+     * 开始创建时间
+     */
+    startCreationTime?: (string) | null;
+    /**
+     * 结束创建时间
+     */
+    endCreationTime?: (string) | null;
+};
+
+/**
+ * 分页查询书籍
+ */
+export type PageBookOutput = {
+    /**
+     * 书籍Id
+     */
+    id?: string;
+    /**
+     * 编号
+     */
+    no?: (string) | null;
+    /**
+     * 名称
+     */
+    name?: (string) | null;
+    /**
+     * 价格
+     */
+    price?: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+    readonly bookTypeDescription?: (string) | null;
+    /**
+     * 创建时间
+     */
+    creationTime?: string;
+};
+
+export type PageBookOutputPagedResultDto = {
+    items?: Array<PageBookOutput> | null;
+    totalCount?: number;
+};
+
+export type PageEntityModelInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    id?: string;
+    filter?: (string) | null;
+};
+
+export type PageEntityModelPropertyOutput = {
+    id?: (string) | null;
+    entityModelId?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+    isRequired?: boolean;
+    maxLength?: (number) | null;
+    minLength?: (number) | null;
+    decimalPrecision?: (number) | null;
+    decimalScale?: (number) | null;
+    dataTypeId?: string;
+    isEnum?: boolean;
+    dataTypeCode?: (string) | null;
+    dataTypeDescription?: (string) | null;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
+};
+
+export type PageEntityModelPropertyOutputPagedResultDto = {
+    items?: Array<PageEntityModelPropertyOutput> | null;
+    totalCount?: number;
+};
+
+export type PageEnumTypeInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    id?: string;
+    filter?: (string) | null;
+};
+
+export type PageEnumTypeOutput = {
+    id?: (string) | null;
+    entityModelId?: string;
+    code?: (string) | null;
+    description?: (string) | null;
+    creationTime?: string;
+};
+
+export type PageEnumTypeOutputPagedResultDto = {
+    items?: Array<PageEnumTypeOutput> | null;
+    totalCount?: number;
+};
+
+export type PageEnumTypePropertyInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    id?: string;
+    filter?: (string) | null;
+};
+
+export type PageEnumTypePropertyOutput = {
+    id?: (string) | null;
+    code?: (string) | null;
+    value?: number;
+    description?: (string) | null;
+    creationTime?: string;
+};
+
+export type PageEnumTypePropertyOutputPagedResultDto = {
+    items?: Array<PageEnumTypePropertyOutput> | null;
+    totalCount?: number;
+};
+
+/**
  * 创建语言
  */
 export type PageLanguageInput = {
@@ -1044,6 +1457,38 @@ export type PageLanguageTextOutputPagedResultDto = {
     totalCount?: number;
 };
 
+export type PageProjectInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    filter?: (string) | null;
+};
+
+export type PageTemplateInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    filter?: (string) | null;
+};
+
 export type PageTenantConnectionStringInput = {
     /**
      * 租户id
@@ -1076,6 +1521,40 @@ export type PageTenantConnectionStringOutput = {
 
 export type PageTenantConnectionStringOutputPagedResultDto = {
     items?: Array<PageTenantConnectionStringOutput> | null;
+    totalCount?: number;
+};
+
+export type PageTextTemplateInput = {
+    /**
+     * 当前页面.默认从1开始
+     */
+    pageIndex?: number;
+    /**
+     * 每页多少条.每页显示多少记录
+     */
+    pageSize?: number;
+    /**
+     * 跳过多少条
+     */
+    readonly skipCount?: number;
+    name?: (string) | null;
+    code?: (string) | null;
+    content?: (string) | null;
+    startCreationTime?: (string) | null;
+    endCreationTime?: (string) | null;
+};
+
+export type PageTextTemplateOutput = {
+    id?: string;
+    name?: (string) | null;
+    code?: (string) | null;
+    content?: (string) | null;
+    cultureName?: (string) | null;
+    creationTime?: string;
+};
+
+export type PageTextTemplateOutputPagedResultDto = {
+    items?: Array<PageTextTemplateOutput> | null;
     totalCount?: number;
 };
 
@@ -1646,6 +2125,31 @@ export type PermissionTreeDto = {
     children?: Array<PermissionTreeDto> | null;
 };
 
+export type PreViewCodeInput = {
+    templateId?: string;
+    projectId?: string;
+};
+
+export type ProjectDto = {
+    id?: string;
+    creationTime?: string;
+    creatorId?: (string) | null;
+    lastModificationTime?: (string) | null;
+    lastModifierId?: (string) | null;
+    tenantId?: (string) | null;
+    owner?: (string) | null;
+    nameSpace?: (string) | null;
+    companyName?: (string) | null;
+    projectName?: (string) | null;
+    remark?: (string) | null;
+    supportTenant?: boolean;
+};
+
+export type ProjectDtoPagedResultDto = {
+    items?: Array<ProjectDto> | null;
+    totalCount?: number;
+};
+
 export type PropertyApiDescriptionModel = {
     name?: (string) | null;
     jsonName?: (string) | null;
@@ -1658,6 +2162,8 @@ export type PropertyApiDescriptionModel = {
     maximum?: (string) | null;
     regex?: (string) | null;
 };
+
+export type RelationalType = 10 | 20;
 
 export type RemoteServiceErrorInfo = {
     code?: (string) | null;
@@ -1772,10 +2278,58 @@ export type SettingOutput = {
     settingItemOutput?: Array<SettingItemOutput> | null;
 };
 
+export type StringInt32KeyValuePair = {
+    key?: (string) | null;
+    value?: number;
+};
+
 export type StringStringFromSelector = {
     readonly value?: (string) | null;
     readonly label?: (string) | null;
 };
+
+export type TemplateDetailDto = {
+    id?: string;
+    templateId?: string;
+    templateType?: TemplateType;
+    controlType?: ControlType;
+    parentId?: (string) | null;
+    name?: (string) | null;
+    description?: (string) | null;
+    content?: (string) | null;
+};
+
+export type TemplateDto = {
+    id?: string;
+    creationTime?: string;
+    creatorId?: (string) | null;
+    lastModificationTime?: (string) | null;
+    lastModifierId?: (string) | null;
+    tenantId?: (string) | null;
+    name?: (string) | null;
+    remark?: (string) | null;
+    templateDetails?: Array<TemplateDetailDto> | null;
+};
+
+export type TemplateDtoPagedResultDto = {
+    items?: Array<TemplateDto> | null;
+    totalCount?: number;
+};
+
+export type TemplateTreeDto = {
+    key?: string;
+    templateType?: TemplateType;
+    controlType?: ControlType;
+    icon?: (string) | null;
+    isFolder?: boolean;
+    name?: (string) | null;
+    description?: (string) | null;
+    title?: (string) | null;
+    content?: (string) | null;
+    children?: Array<TemplateTreeDto> | null;
+};
+
+export type TemplateType = 10 | 20;
 
 export type TenantCreateDto = {
     readonly extraProperties?: {
@@ -1824,6 +2378,39 @@ export type TypeApiDescriptionModel = {
     properties?: Array<PropertyApiDescriptionModel> | null;
 };
 
+export type UpdateAggregateInput = {
+    id?: string;
+    code: string;
+    description: string;
+};
+
+/**
+ * 更新书籍
+ */
+export type UpdateBookInput = {
+    /**
+     * 书籍Id
+     */
+    id?: string;
+    /**
+     * 编号
+     */
+    no: string;
+    /**
+     * 名称
+     */
+    name: string;
+    /**
+     * 价格
+     */
+    price: number;
+    /**
+     * 备注
+     */
+    remark?: (string) | null;
+    bookType?: BookType;
+};
+
 export type UpdateDataDictinaryInput = {
     id?: string;
     code?: (string) | null;
@@ -1837,6 +2424,45 @@ export type UpdateDetailInput = {
     displayText?: (string) | null;
     description?: (string) | null;
     order?: number;
+};
+
+export type UpdateEntityModelInput = {
+    id?: string;
+    code: string;
+    description: string;
+    relationalType?: RelationalType;
+};
+
+export type UpdateEntityModelPropertyInput = {
+    id?: string;
+    propertyId?: string;
+    code: string;
+    description: string;
+    isRequired?: boolean;
+    maxLength?: (number) | null;
+    minLength?: (number) | null;
+    decimalPrecision?: (number) | null;
+    decimalScale?: (number) | null;
+    enumTypeId?: (string) | null;
+    dataTypeId?: (string) | null;
+    entityModelId?: string;
+    allowSearch?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
+};
+
+export type UpdateEnumTypeInput = {
+    id?: string;
+    code: string;
+    description: string;
+};
+
+export type UpdateEnumTypePropertyInput = {
+    enumTypeId?: string;
+    id?: string;
+    code: string;
+    value?: number;
+    description: string;
 };
 
 export type UpdateFeatureDto = {
@@ -1920,6 +2546,15 @@ export type UpdatePermissionsDto = {
     permissions?: Array<UpdatePermissionDto> | null;
 };
 
+export type UpdateProjectInput = {
+    id?: string;
+    owner?: (string) | null;
+    companyName?: (string) | null;
+    projectName?: (string) | null;
+    remark?: (string) | null;
+    supportTenant?: boolean;
+};
+
 export type UpdateRoleInput = {
     roleId?: string;
     roleInfo?: IdentityRoleUpdateDto;
@@ -1937,9 +2572,38 @@ export type UpdateSettingInput = {
     } | null;
 };
 
+export type UpdateTemplateDetailContentInput = {
+    templateId?: string;
+    templateDetailId?: string;
+    content?: (string) | null;
+};
+
+export type UpdateTemplateDetailInput = {
+    templateId?: string;
+    templateDetailId?: string;
+    controlType?: ControlType;
+    name?: (string) | null;
+    description?: (string) | null;
+    content?: (string) | null;
+};
+
+export type UpdateTemplateInput = {
+    id?: string;
+    name?: (string) | null;
+    remark?: (string) | null;
+};
+
 export type UpdateTenantInput = {
     id?: string;
     name?: (string) | null;
+};
+
+export type UpdateTextTemplateInput = {
+    id?: string;
+    name: string;
+    code: string;
+    content: string;
+    cultureName: string;
 };
 
 export type UpdateUserInput = {
@@ -2003,6 +2667,38 @@ export type PostAuditLogsPageData = {
 export type PostAuditLogsPageResponse = (PagingAuditLogOutputPagedResultDto);
 
 export type PostAuditLogsPageError = (RemoteServiceErrorResponse);
+
+export type PostBooksPageData = {
+    body?: PageBookInput;
+};
+
+export type PostBooksPageResponse = (PageBookOutputPagedResultDto);
+
+export type PostBooksPageError = (RemoteServiceErrorResponse);
+
+export type PostBooksCreateData = {
+    body?: CreateBookInput;
+};
+
+export type PostBooksCreateResponse = (unknown);
+
+export type PostBooksCreateError = (RemoteServiceErrorResponse);
+
+export type PostBooksUpdateData = {
+    body?: UpdateBookInput;
+};
+
+export type PostBooksUpdateResponse = (unknown);
+
+export type PostBooksUpdateError = (RemoteServiceErrorResponse);
+
+export type PostBooksDeleteData = {
+    body?: DeleteBookInput;
+};
+
+export type PostBooksDeleteResponse = (unknown);
+
+export type PostBooksDeleteError = (RemoteServiceErrorResponse);
 
 export type PostDataDictionaryPageData = {
     body?: PagingDataDictionaryInput;
@@ -2076,6 +2772,174 @@ export type PostDataDictionaryUpdateResponse = (unknown);
 
 export type PostDataDictionaryUpdateError = (RemoteServiceErrorResponse);
 
+export type PostDataTypesListData = {
+    body?: GetDataTypeInput;
+};
+
+export type PostDataTypesListResponse = (Array<DataTypeDto>);
+
+export type PostDataTypesListError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsPagePropertyData = {
+    body?: PageEntityModelInput;
+};
+
+export type PostEntityModelsPagePropertyResponse = (PageEntityModelPropertyOutputPagedResultDto);
+
+export type PostEntityModelsPagePropertyError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsCreateAggregateData = {
+    body?: CreateAggregateInput;
+};
+
+export type PostEntityModelsCreateAggregateResponse = (unknown);
+
+export type PostEntityModelsCreateAggregateError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsUpdateAggregateData = {
+    body?: UpdateAggregateInput;
+};
+
+export type PostEntityModelsUpdateAggregateResponse = (unknown);
+
+export type PostEntityModelsUpdateAggregateError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsDeleteAggregateData = {
+    body?: DeleteAggregateInput;
+};
+
+export type PostEntityModelsDeleteAggregateResponse = (unknown);
+
+export type PostEntityModelsDeleteAggregateError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsCreateEntityModelData = {
+    body?: CreateEntityModelInput;
+};
+
+export type PostEntityModelsCreateEntityModelResponse = (unknown);
+
+export type PostEntityModelsCreateEntityModelError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsUpdateEntityModelData = {
+    body?: UpdateEntityModelInput;
+};
+
+export type PostEntityModelsUpdateEntityModelResponse = (unknown);
+
+export type PostEntityModelsUpdateEntityModelError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsDeleteEntityModelData = {
+    body?: DeleteEntityModelInput;
+};
+
+export type PostEntityModelsDeleteEntityModelResponse = (unknown);
+
+export type PostEntityModelsDeleteEntityModelError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsCreateEntityModelPropertyData = {
+    body?: CreateEntityModelPropertyInput;
+};
+
+export type PostEntityModelsCreateEntityModelPropertyResponse = (unknown);
+
+export type PostEntityModelsCreateEntityModelPropertyError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsUpdateEntityModelPropertyData = {
+    body?: UpdateEntityModelPropertyInput;
+};
+
+export type PostEntityModelsUpdateEntityModelPropertyResponse = (unknown);
+
+export type PostEntityModelsUpdateEntityModelPropertyError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsDeleteEntityModelPropertyData = {
+    body?: DeleteEntityModelPropertyInput;
+};
+
+export type PostEntityModelsDeleteEntityModelPropertyResponse = (unknown);
+
+export type PostEntityModelsDeleteEntityModelPropertyError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsTreeData = {
+    body?: GetEntityModelTreeInput;
+};
+
+export type PostEntityModelsTreeResponse = (Array<GetEntityModelTreeOutput>);
+
+export type PostEntityModelsTreeError = (RemoteServiceErrorResponse);
+
+export type PostEntityModelsGetData = {
+    body?: GetEntityModelInput;
+};
+
+export type PostEntityModelsGetResponse = (Array<GetEntityModelOutput>);
+
+export type PostEntityModelsGetError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesPageData = {
+    body?: PageEnumTypeInput;
+};
+
+export type PostEnumTypesPageResponse = (PageEnumTypeOutputPagedResultDto);
+
+export type PostEnumTypesPageError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesPagePropertyData = {
+    body?: PageEnumTypePropertyInput;
+};
+
+export type PostEnumTypesPagePropertyResponse = (PageEnumTypePropertyOutputPagedResultDto);
+
+export type PostEnumTypesPagePropertyError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesCreateEnumTypeData = {
+    body?: CreateEnumTypeInput;
+};
+
+export type PostEnumTypesCreateEnumTypeResponse = (unknown);
+
+export type PostEnumTypesCreateEnumTypeError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesUpdateEnumTypeData = {
+    body?: UpdateEnumTypeInput;
+};
+
+export type PostEnumTypesUpdateEnumTypeResponse = (unknown);
+
+export type PostEnumTypesUpdateEnumTypeError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesDeleteEnumTypeData = {
+    body?: DeleteEnumTypeInput;
+};
+
+export type PostEnumTypesDeleteEnumTypeResponse = (unknown);
+
+export type PostEnumTypesDeleteEnumTypeError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesCreateEnumTypePropertyData = {
+    body?: CreateEnumTypePropertyInput;
+};
+
+export type PostEnumTypesCreateEnumTypePropertyResponse = (unknown);
+
+export type PostEnumTypesCreateEnumTypePropertyError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesUpdateEnumTypePropertyData = {
+    body?: UpdateEnumTypePropertyInput;
+};
+
+export type PostEnumTypesUpdateEnumTypePropertyResponse = (unknown);
+
+export type PostEnumTypesUpdateEnumTypePropertyError = (RemoteServiceErrorResponse);
+
+export type PostEnumTypesDeleteEnumTypePropertyData = {
+    body?: DeleteEnumTypePropertyInput;
+};
+
+export type PostEnumTypesDeleteEnumTypePropertyResponse = (unknown);
+
+export type PostEnumTypesDeleteEnumTypePropertyError = (RemoteServiceErrorResponse);
+
 export type PostFeaturesListData = {
     body?: GetFeatureListResultInput;
 };
@@ -2099,6 +2963,22 @@ export type PostFeaturesDeleteData = {
 export type PostFeaturesDeleteResponse = (unknown);
 
 export type PostFeaturesDeleteError = (RemoteServiceErrorResponse);
+
+export type PostGeneratorPreViewCodeData = {
+    body?: PreViewCodeInput;
+};
+
+export type PostGeneratorPreViewCodeResponse = (Array<TemplateTreeDto>);
+
+export type PostGeneratorPreViewCodeError = (RemoteServiceErrorResponse);
+
+export type PostGeneratorDownData = {
+    body?: DownCodeInput;
+};
+
+export type PostGeneratorDownResponse = ((Blob | File));
+
+export type PostGeneratorDownError = (RemoteServiceErrorResponse);
 
 export type PostIdentitySecurityLogsPageData = {
     body?: PagingIdentitySecurityLogInput;
@@ -2368,6 +3248,42 @@ export type PostPermissionsUpdateResponse = (unknown);
 
 export type PostPermissionsUpdateError = (RemoteServiceErrorResponse);
 
+export type PostProjectsAllResponse = (Array<ProjectDto>);
+
+export type PostProjectsAllError = (RemoteServiceErrorResponse);
+
+export type PostProjectsPageData = {
+    body?: PageProjectInput;
+};
+
+export type PostProjectsPageResponse = (ProjectDtoPagedResultDto);
+
+export type PostProjectsPageError = (RemoteServiceErrorResponse);
+
+export type PostProjectsCreateData = {
+    body?: CreateProjectInput;
+};
+
+export type PostProjectsCreateResponse = (unknown);
+
+export type PostProjectsCreateError = (RemoteServiceErrorResponse);
+
+export type PostProjectsUpdateData = {
+    body?: UpdateProjectInput;
+};
+
+export type PostProjectsUpdateResponse = (unknown);
+
+export type PostProjectsUpdateError = (RemoteServiceErrorResponse);
+
+export type PostProjectsDeleteData = {
+    body?: DeleteProjectInput;
+};
+
+export type PostProjectsDeleteResponse = (unknown);
+
+export type PostProjectsDeleteError = (RemoteServiceErrorResponse);
+
 export type PostRolesAllResponse = (IdentityRoleDtoListResultDto);
 
 export type PostRolesAllError = (RemoteServiceErrorResponse);
@@ -2415,6 +3331,102 @@ export type PostSettingsUpdateData = {
 export type PostSettingsUpdateResponse = (unknown);
 
 export type PostSettingsUpdateError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesAllResponse = (Array<TemplateDto>);
+
+export type PostTemplatesAllError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesPageData = {
+    body?: PageTemplateInput;
+};
+
+export type PostTemplatesPageResponse = (TemplateDtoPagedResultDto);
+
+export type PostTemplatesPageError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesCreateData = {
+    body?: CreateTemplateInput;
+};
+
+export type PostTemplatesCreateResponse = (unknown);
+
+export type PostTemplatesCreateError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesUpdateData = {
+    body?: UpdateTemplateInput;
+};
+
+export type PostTemplatesUpdateResponse = (unknown);
+
+export type PostTemplatesUpdateError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesDeleteData = {
+    body?: DeleteTemplateInput;
+};
+
+export type PostTemplatesDeleteResponse = (unknown);
+
+export type PostTemplatesDeleteError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesCreateDetailData = {
+    body?: CreateTemplateDetailInput;
+};
+
+export type PostTemplatesCreateDetailResponse = (unknown);
+
+export type PostTemplatesCreateDetailError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesUpdateDetailData = {
+    body?: UpdateTemplateDetailInput;
+};
+
+export type PostTemplatesUpdateDetailResponse = (unknown);
+
+export type PostTemplatesUpdateDetailError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesUpdateDetailContentData = {
+    body?: UpdateTemplateDetailContentInput;
+};
+
+export type PostTemplatesUpdateDetailContentResponse = (unknown);
+
+export type PostTemplatesUpdateDetailContentError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesDeleteDetailData = {
+    body?: DeleteTemplateDetailInput;
+};
+
+export type PostTemplatesDeleteDetailResponse = (unknown);
+
+export type PostTemplatesDeleteDetailError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesTreeData = {
+    body?: GetTemplteTreeInput;
+};
+
+export type PostTemplatesTreeResponse = (Array<GetTemplateTreeOutput>);
+
+export type PostTemplatesTreeError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesListResponse = (Array<TemplateDto>);
+
+export type PostTemplatesListError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesControlTypeResponse = (Array<StringInt32KeyValuePair>);
+
+export type PostTemplatesControlTypeError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesTemplateTypeResponse = (Array<StringInt32KeyValuePair>);
+
+export type PostTemplatesTemplateTypeError = (RemoteServiceErrorResponse);
+
+export type PostTemplatesCopyData = {
+    body?: CopyTemplateInput;
+};
+
+export type PostTemplatesCopyResponse = (unknown);
+
+export type PostTemplatesCopyError = (RemoteServiceErrorResponse);
 
 export type PostTenantsFindData = {
     body?: FindTenantByNameInput;
@@ -2479,6 +3491,46 @@ export type PostTenantsDeleteConnectionStringData = {
 export type PostTenantsDeleteConnectionStringResponse = (unknown);
 
 export type PostTenantsDeleteConnectionStringError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesPageData = {
+    body?: PageTextTemplateInput;
+};
+
+export type PostTextTemplatesPageResponse = (PageTextTemplateOutputPagedResultDto);
+
+export type PostTextTemplatesPageError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesCreateData = {
+    body?: CreateTextTemplateInput;
+};
+
+export type PostTextTemplatesCreateResponse = (unknown);
+
+export type PostTextTemplatesCreateError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesUpdateData = {
+    body?: UpdateTextTemplateInput;
+};
+
+export type PostTextTemplatesUpdateResponse = (unknown);
+
+export type PostTextTemplatesUpdateError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesDeleteData = {
+    body?: DeleteTextTemplateInput;
+};
+
+export type PostTextTemplatesDeleteResponse = (unknown);
+
+export type PostTextTemplatesDeleteError = (RemoteServiceErrorResponse);
+
+export type PostTextTemplatesExportData = {
+    body?: PageTextTemplateInput;
+};
+
+export type PostTextTemplatesExportResponse = ((Blob | File));
+
+export type PostTextTemplatesExportError = (RemoteServiceErrorResponse);
 
 export type PostUsersPageData = {
     body?: PagingUserListInput;

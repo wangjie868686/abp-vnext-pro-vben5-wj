@@ -883,6 +883,30 @@ export const CreateTemplateInputSchema = {
     additionalProperties: false
 } as const;
 
+export const CreateTextTemplateInputSchema = {
+    required: ['code', 'content', 'cultureName', 'name'],
+    type: 'object',
+    properties: {
+        name: {
+            minLength: 1,
+            type: 'string'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        content: {
+            minLength: 1,
+            type: 'string'
+        },
+        cultureName: {
+            minLength: 1,
+            type: 'string'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const CurrentCultureDtoSchema = {
     type: 'object',
     properties: {
@@ -1246,6 +1270,17 @@ export const DeleteTemplateDetailInputSchema = {
 } as const;
 
 export const DeleteTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const DeleteTextTemplateInputSchema = {
     type: 'object',
     properties: {
         id: {
@@ -4080,6 +4115,100 @@ export const PageTenantConnectionStringOutputPagedResultDtoSchema = {
     additionalProperties: false
 } as const;
 
+export const PageTextTemplateInputSchema = {
+    type: 'object',
+    properties: {
+        pageIndex: {
+            type: 'integer',
+            description: '当前页面.默认从1开始',
+            format: 'int32'
+        },
+        pageSize: {
+            type: 'integer',
+            description: '每页多少条.每页显示多少记录',
+            format: 'int32'
+        },
+        skipCount: {
+            type: 'integer',
+            description: '跳过多少条',
+            format: 'int32',
+            readOnly: true
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        startCreationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        },
+        endCreationTime: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTextTemplateOutputSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            type: 'string',
+            nullable: true
+        },
+        code: {
+            type: 'string',
+            nullable: true
+        },
+        content: {
+            type: 'string',
+            nullable: true
+        },
+        cultureName: {
+            type: 'string',
+            nullable: true
+        },
+        creationTime: {
+            type: 'string',
+            format: 'date-time'
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const PageTextTemplateOutputPagedResultDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/PageTextTemplateOutput'
+            },
+            nullable: true
+        },
+        totalCount: {
+            type: 'integer',
+            format: 'int64'
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const PagingAuditLogActionOutputSchema = {
     type: 'object',
     properties: {
@@ -6559,6 +6688,34 @@ export const UpdateTenantInputSchema = {
         name: {
             type: 'string',
             nullable: true
+        }
+    },
+    additionalProperties: false
+} as const;
+
+export const UpdateTextTemplateInputSchema = {
+    required: ['code', 'content', 'cultureName', 'name'],
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid'
+        },
+        name: {
+            minLength: 1,
+            type: 'string'
+        },
+        code: {
+            minLength: 1,
+            type: 'string'
+        },
+        content: {
+            minLength: 1,
+            type: 'string'
+        },
+        cultureName: {
+            minLength: 1,
+            type: 'string'
         }
     },
     additionalProperties: false
