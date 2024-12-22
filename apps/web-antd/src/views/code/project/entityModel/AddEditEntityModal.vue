@@ -29,19 +29,19 @@ const [AddForm, addFormApi] = useVbenForm({
       // 组件需要在 #/adapter.ts内注册，并加上类型
       component: 'Input',
       fieldName: 'code',
-      label: '编码',
+      label: $t('code.code'),
       rules: 'required',
     },
     {
       component: 'Textarea',
       fieldName: 'description',
-      label: '描述',
+      label: $t('code.desc'),
       rules: 'required',
     },
     {
       component: 'Select',
       fieldName: 'relationalType',
-      label: '关系',
+      label: $t('code.relational'),
       rules: 'required',
       componentProps: {
         options: [
@@ -66,19 +66,19 @@ const [EditForm, editFormApi] = useVbenForm({
     {
       component: 'Input',
       fieldName: 'code',
-      label: '编码',
+      label: $t('code.code'),
       rules: 'required',
     },
     {
       component: 'Textarea',
       fieldName: 'description',
-      label: '描述',
+      label: $t('code.desc'),
       rules: 'required',
     },
     {
       component: 'Select',
       fieldName: 'relationalType',
-      label: '关系',
+      label: $t('code.relational'),
       rules: 'required',
       componentProps: {
         options: [

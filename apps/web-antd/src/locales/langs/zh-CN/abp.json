@@ -114,31 +114,5 @@
     "featureManagement": "功能管理",
     "connectionStringName": "连接名称",
     "connectionString": "连接字符串"
-  },
-  "code": {
-    "companyName": "公司名称",
-    "projectName": "项目名称",
-    "projectEnglishName": "项目英文名称",
-    "namespace": "命名空间",
-    "remark": "备注",
-    "templateName": "模板名称",
-    "model": "模型",
-    "property": "属性",
-    "enum": "枚举",
-    "isRequired": "是否必填",
-    "maxLength": "最大长度",
-    "minLength": "最小长度",
-    "decimalPrecision18": "精度(18,6)中的18",
-    "decimalPrecision6": "精度(18,6)中的6",
-    "pleaseSelectEntity": "请选择实体",
-    "pleaseSelectEnum": "请选择枚举",
-    "detail": "详情",
-    "copy": "复制",
-    "addFolder": "新增文件夹",
-    "addFile": "新增文件",
-    "desc": "描述",
-    "name": "名称",
-    "templateType": "模板类型",
-    "supportTenant": "支持多租户"
   }
 }

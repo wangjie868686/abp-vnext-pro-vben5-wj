@@ -138,7 +138,7 @@ const handleViewModel = (row: Record<string, any>) => {
           v-access:code="'AbpCode.CodeManagement.Project.Model'"
           @click="handleViewModel(row)"
         >
-          {{ $t('abp.code.model') }}
+          {{ $t('code.model') }}
         </Button>
         <Button
           type="link"

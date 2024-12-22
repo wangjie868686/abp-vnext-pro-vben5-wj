@@ -8,27 +8,27 @@ export const querySchema = [
   {
     component: 'Input',
     fieldName: 'filter',
-    label: $t('abp.code.projectName'),
+    label: $t('code.projectName'),
   },
 ];
 
 export const tableSchema: any = [
   { title: $t('common.seq'), type: 'seq', width: 50 },
-  { field: 'companyName', title: $t('abp.code.companyName'), minWidth: '150' },
+  { field: 'companyName', title: $t('code.companyName'), minWidth: '150' },
   {
     field: 'projectName',
-    title: $t('abp.code.projectName'),
+    title: $t('code.projectName'),
     minWidth: '150',
   },
 
-  { field: 'nameSpace', title: $t('abp.code.namespace'), minWidth: '150' },
+  { field: 'nameSpace', title: $t('code.namespace'), minWidth: '150' },
   {
     field: 'supportTenant',
-    title: $t('abp.code.supportTenant'),
+    title: $t('code.supportTenant'),
     minWidth: '150',
     slots: { default: 'supportTenant' },
   },
-  { field: 'remark', title: $t('abp.code.remark'), minWidth: '150' },
+  { field: 'remark', title: $t('code.remark'), minWidth: '150' },
   {
     field: 'creationTime',
     title: $t('common.createTime'),
@@ -51,28 +51,28 @@ export const addFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'companyName',
-    label: $t('abp.code.companyName'),
+    label: $t('code.companyName'),
     rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.companyName'),
+      message: $t('common.pleaseInput') + $t('code.companyName'),
     }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'projectName',
-    label: $t('abp.code.projectName'),
+    label: $t('code.projectName'),
     rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.projectEnglishName'),
+      message: $t('common.pleaseInput') + $t('code.projectEnglishName'),
     }),
   },
   // {
   //   component: 'Input',
   //   componentProps: {},
   //   fieldName: 'nameSpace',
-  //   label: $t('abp.code.namespace'),
+  //   label: $t('code.namespace'),
   //   rules: z
   //     .string()
-  //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
+  //     .min(1, { message: $t('common.pleaseInput') + $t('code.namespace') }),
   // },
   {
     component: 'RadioGroup',
@@ -90,13 +90,13 @@ export const addFormSchema: any = [
     },
     defaultValue: 0,
     fieldName: 'supportTenant',
-    label: $t('abp.code.supportTenant'),
+    label: $t('code.supportTenant'),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'remark',
-    label: $t('abp.code.remark'),
+    label: $t('code.remark'),
   },
 ];
 
@@ -115,28 +115,28 @@ export const editFormSchema: any = [
     component: 'Input',
     componentProps: {},
     fieldName: 'companyName',
-    label: $t('abp.code.companyName'),
+    label: $t('code.companyName'),
     rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.companyName'),
+      message: $t('common.pleaseInput') + $t('code.companyName'),
     }),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'projectName',
-    label: $t('abp.code.projectName'),
+    label: $t('code.projectName'),
     rules: z.string().min(1, {
-      message: $t('common.pleaseInput') + $t('abp.code.projectEnglishName'),
+      message: $t('common.pleaseInput') + $t('code.projectEnglishName'),
     }),
   },
   // {
   //   component: 'Input',
   //   componentProps: {},
   //   fieldName: 'nameSpace',
-  //   label: $t('abp.code.namespace'),
+  //   label: $t('code.namespace'),
   //   rules: z
   //     .string()
-  //     .min(1, { message: $t('common.pleaseInput') + $t('abp.code.namespace') }),
+  //     .min(1, { message: $t('common.pleaseInput') + $t('code.namespace') }),
   // },
   {
     component: 'RadioGroup',
@@ -154,12 +154,12 @@ export const editFormSchema: any = [
     },
     defaultValue: 0,
     fieldName: 'supportTenant',
-    label: $t('abp.code.supportTenant'),
+    label: $t('code.supportTenant'),
   },
   {
     component: 'Input',
     componentProps: {},
     fieldName: 'remark',
-    label: $t('abp.code.remark'),
+    label: $t('code.remark'),
   },
 ];

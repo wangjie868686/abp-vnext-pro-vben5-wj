@@ -29,7 +29,7 @@ const [Form, formApi] = useVbenForm({
         placeholder: $t('common.pleaseInput'),
       },
       fieldName: 'code',
-      label: '编码',
+      label: $t('code.code'),
       rules: 'required',
     },
     {
@@ -68,7 +68,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 </script>
 <template>
-  <Modal title="新增聚合根">
+  <Modal :title="$t('common.add')">
     <Form />
   </Modal>
 </template>
