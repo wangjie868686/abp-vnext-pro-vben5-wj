@@ -1,4 +1,3 @@
-<!--新增编辑实体属性Modal-->
 <script lang="ts" setup>
 import { ref } from 'vue';
 
@@ -14,6 +13,7 @@ import {
   postEntityModelsUpdateEntityModelProperty,
   type UpdateEntityModelPropertyInput,
 } from '#/api-client/index';
+import { $t } from '#/locales';
 
 const emit = defineEmits(['reload']);
 const data = ref<Record<string, any>>({});
@@ -40,21 +40,21 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       fieldName: 'code',
-      label: '编码',
+      label: $t('code.code'),
       rules: 'required',
       formItemClass: 'col-span-2',
     },
     {
       component: 'Textarea',
       fieldName: 'description',
-      label: '描述',
+      label: $t('code.desc'),
       rules: 'required',
       formItemClass: 'col-span-2',
     },
     {
       component: 'Select',
       fieldName: 'dataTypeId',
-      label: '数据类型',
+      label: $t('code.dataType'),
       formItemClass: 'col-span-2',
       componentProps: () => ({
         options: dataTypeList.value,
@@ -67,14 +67,14 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Switch',
       fieldName: 'isRequired',
-      label: '必填',
+      label: $t('code.isRequired'),
       defaultValue: true,
       formItemClass: 'col-span-2 w-[100px]',
     },
     {
       component: 'InputNumber',
       fieldName: 'maxLength',
-      label: '最大长度',
+      label: $t('code.maxLength'),
       rules: 'required',
       defaultValue: 128,
       dependencies: {
@@ -86,7 +86,7 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'InputNumber',
       fieldName: 'minLength',
-      label: '最小长度',
+      label: $t('code.minLength'),
       defaultValue: 0,
       dependencies: {
         triggerFields: ['dataTypeId'],
@@ -100,7 +100,7 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'InputNumber',
       fieldName: 'decimalPrecision',
-      label: '精度(18,6)的18',
+      label: $t('code.decimalPrecision18'),
       componentProps: {
         max: 18,
       },
@@ -113,7 +113,7 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'InputNumber',
       fieldName: 'decimalScale',
-      label: '精度(18,6)的6',
+      label: $t('code.decimalPrecision6'),
       dependencies: {
         triggerFields: ['dataTypeId'],
         if: () => specialTypeList.has(currentDataType.value as string),
@@ -166,7 +166,9 @@ const [Modal, modalApi] = useVbenModal({
               enumTypeId: addFormValues.dataTypeId,
             } as CreateEntityModelPropertyInput,
           }));
-      message.success(data.value.isEdit ? '编辑成功' : '新增成功');
+      message.success(
+        data.value.isEdit ? $t('common.editSuccess') : $t('common.addSuccess'),
+      );
       modalApi.close();
       emit('reload');
     } finally {
@@ -176,7 +178,7 @@ const [Modal, modalApi] = useVbenModal({
 });
 </script>
 <template>
-  <Modal :title="data.isEdit ? '编辑实体属性' : '新增实体属性'">
+  <Modal :title="data.isEdit ? $t('common.edit') : $t('common.add')">
     <Form />
   </Modal>
 </template>

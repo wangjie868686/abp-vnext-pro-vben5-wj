@@ -272,7 +272,7 @@ const propertyGridOptions: VxeGridProps<any> = {
     { type: 'seq', title: $t('common.seq'), width: '50' },
     {
       field: 'code',
-      title: $t('abp.dataDictionary.code'),
+      title: $t('code.code'),
       minWidth: '200',
     },
     {
@@ -282,32 +282,32 @@ const propertyGridOptions: VxeGridProps<any> = {
     },
     {
       field: 'dataTypeDescription',
-      title: $t('abp.message.type'),
+      title: $t('code.type'),
       minWidth: '150',
     },
     {
       field: 'isRequired',
-      title: $t('abp.code.isRequired'),
+      title: $t('code.isRequired'),
       minWidth: '150',
     },
     {
       field: 'maxLength',
-      title: $t('abp.code.maxLength'),
+      title: $t('code.maxLength'),
       minWidth: '150',
     },
     {
       field: 'minLength',
-      title: $t('abp.code.minLength'),
+      title: $t('code.minLength'),
       minWidth: '150',
     },
     {
       field: 'decimalPrecision',
-      title: $t('abp.code.decimalPrecision18'),
+      title: $t('code.decimalPrecision18'),
       minWidth: '150',
     },
     {
       field: 'decimalScale',
-      title: $t('abp.code.decimalPrecision6'),
+      title: $t('code.decimalPrecision6'),
       minWidth: '150',
     },
     {
@@ -376,7 +376,7 @@ const enumGridOptions: VxeGridProps<any> = {
     { type: 'radio', title: $t('common.seq'), width: '50' },
     {
       field: 'code',
-      title: $t('abp.dataDictionary.code'),
+      title: $t('code.code'),
       minWidth: '200',
     },
     {
@@ -457,12 +457,12 @@ const enumPropertyGridOptions: VxeGridProps<any> = {
     { type: 'seq', title: $t('common.seq'), width: '50' },
     {
       field: 'code',
-      title: $t('abp.dataDictionary.code'),
+      title: $t('code.code'),
       minWidth: '100',
     },
     {
       field: 'value',
-      title: '值',
+      title: $t('code.value'),
       minWidth: '100',
     },
     {
@@ -555,7 +555,7 @@ const [AddEditEnumModal, addEditEnumModalApi] = useVbenModal({
 
 const handleAddEnum = () => {
   if (!currentSelectedKey.value) {
-    message.error($t('abp.code.pleaseSelectEntity'));
+    message.error($t('code.pleaseSelectEntity'));
     return;
   }
   addEditEnumModalApi.setData({
@@ -593,7 +593,7 @@ const [AddEditEnumPropertyModal, addEditEnumPropertyModalApi] = useVbenModal({
 
 const handleAddEnumProperty = () => {
   if (!currentEnumTypeId.value) {
-    message.error($t('abp.code.pleaseSelectEnum'));
+    message.error($t('code.pleaseSelectEnum'));
     return;
   }
   addEditEnumPropertyModalApi.setData({
@@ -707,7 +707,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
         <div class="col-span-8 xl:col-span-9">
           <div class="bg-card">
             <Tabs v-model:active-key="activeKey" class="px-3">
-              <Tabs.TabPane key="1" :tab="$t('abp.code.property')">
+              <Tabs.TabPane key="1" :tab="$t('code.property')">
                 <PropertyGrid>
                   <template #toolbar-tools>
                     <Button
@@ -735,7 +735,7 @@ const handleDeleteEnumProperty = async (row: Record<string, any>) => {
                   </template>
                 </PropertyGrid>
               </Tabs.TabPane>
-              <Tabs.TabPane key="2" :tab="$t('abp.code.enum')">
+              <Tabs.TabPane key="2" :tab="$t('code.enum')">
                 <div class="grid grid-cols-12 gap-4">
                   <div class="bg-card col-span-6">
                     <EnumGrid>

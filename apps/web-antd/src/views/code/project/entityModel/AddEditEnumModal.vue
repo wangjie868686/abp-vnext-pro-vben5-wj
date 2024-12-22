@@ -12,6 +12,7 @@ import {
   postEnumTypesUpdateEnumType,
   type UpdateEnumTypeInput,
 } from '#/api-client/index';
+import { $t } from '#/locales';
 
 const emit = defineEmits(['reload']);
 const [Form, formApi] = useVbenForm({
@@ -25,13 +26,13 @@ const [Form, formApi] = useVbenForm({
     {
       component: 'Input',
       fieldName: 'code',
-      label: '编码',
+      label: $t('code.code'),
       rules: 'required',
     },
     {
       component: 'Textarea',
       fieldName: 'description',
-      label: '描述',
+      label: $t('code.desc'),
       rules: 'required',
     },
   ],
@@ -73,7 +74,9 @@ const [Modal, modalApi] = useVbenModal({
           } as CreateEnumTypeInput,
         });
       }
-      message.success(data.value.isEdit ? '编辑成功' : '新增成功');
+      message.success(
+        data.value.isEdit ? $t('common.editSuccess') : $t('common.addSuccess'),
+      );
       modalApi.close();
       emit('reload');
     } finally {
@@ -84,7 +87,7 @@ const [Modal, modalApi] = useVbenModal({
 </script>
 
 <template>
-  <Modal :title="data.isEdit ? '编辑枚举' : '新增枚举'">
+  <Modal :title="data.isEdit ? $t('common.edit') : $t('common.add')">
     <Form />
   </Modal>
 </template>

@@ -9,6 +9,7 @@ import { Card, message } from 'ant-design-vue';
 import { useVbenForm } from '#/adapter/form';
 import { postProjectsAll, postTemplatesAll } from '#/api-client/index';
 import fileRequest from '#/api-client-config/index-blob';
+import { $t } from '#/locales';
 
 const router = useRouter();
 const [BaseForm, baseFormApi] = useVbenForm({
@@ -22,11 +23,11 @@ const [BaseForm, baseFormApi] = useVbenForm({
   // 提交函数
   handleSubmit: onSubmit,
   submitButtonOptions: {
-    content: '下载',
+    content: $t('code.download'),
   },
   handleReset: onPreview,
   resetButtonOptions: {
-    content: '预览',
+    content: $t('code.preview'),
   },
   wrapperClass: 'grid-cols-1',
   layout: 'horizontal',
@@ -40,7 +41,7 @@ const [BaseForm, baseFormApi] = useVbenForm({
         showSearch: true,
       },
       fieldName: 'projectId',
-      label: '项目',
+      label: $t('code.project'),
       rules: 'required',
     },
     {
@@ -52,7 +53,7 @@ const [BaseForm, baseFormApi] = useVbenForm({
         showSearch: true,
       },
       fieldName: 'templateId',
-      label: '模板',
+      label: $t('code.template'),
       rules: 'required',
     },
   ],
@@ -124,9 +125,9 @@ async function onPreview() {
 
 <template>
   <Page
+    :description="$t('code.description')"
+    :title="$t('code.autoGenerate')"
     content-class="flex flex-col gap-4"
-    description="请选择要生成的目标和项目"
-    title="自动生成代码"
   >
     <Card title="">
       <BaseForm />
