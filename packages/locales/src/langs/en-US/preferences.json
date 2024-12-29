@@ -45,7 +45,11 @@
     "width": "Width",
     "visible": "Show Sidebar",
     "collapsed": "Collpase Menu",
-    "collapsedShowTitle": "Show Menu Title"
+    "collapsedShowTitle": "Show Menu Title",
+    "autoActivateChild": "Auto Activate SubMenu",
+    "autoActivateChildTip": "`Enabled` to automatically activate the submenu while click menu.",
+    "expandOnHover": "Expand On Hover",
+    "expandOnHoverTip": "When the mouse hovers over menu, \n `Enabled` to expand children menus \n `Disabled` to expand whole sidebar."
   },
   "tabbar": {
     "title": "Tabbar",
@@ -134,7 +138,11 @@
     "modeStatic": "Static",
     "modeFixed": "Fixed",
     "modeAuto": "Auto hide & Show",
-    "modeAutoScroll": "Scroll to Hide & Show"
+    "modeAutoScroll": "Scroll to Hide & Show",
+    "menuAlign": "Menu Align",
+    "menuAlignStart": "Start",
+    "menuAlignEnd": "End",
+    "menuAlignCenter": "Center"
   },
   "footer": {
     "title": "Footer",

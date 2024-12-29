@@ -103,6 +103,7 @@ const {
 
 const {
   handleMenuSelect,
+  handleMenuOpen,
   headerActive,
   headerMenus,
   sidebarActive,
@@ -151,7 +152,7 @@ watch(
 );
 
 // 语言更新后，刷新页面
-watch(() => preferences.app.locale, refresh);
+watch(() => preferences.app.locale, refresh, { flush: 'post' });
 
 const slots = useSlots();
 const headerSlots = computed(() => {
@@ -260,6 +261,7 @@ const headerSlots = computed(() => {
         :rounded="isMenuRounded"
         :theme="sidebarTheme"
         mode="vertical"
+        @open="handleMenuOpen"
         @select="handleMenuSelect"
       />
     </template>

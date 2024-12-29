@@ -46,6 +46,7 @@ const defaultPreferences: Preferences = {
   header: {
     enable: true,
     hidden: false,
+    menuAlign: 'start',
     mode: 'fixed',
   },
   logo: {
@@ -65,6 +66,7 @@ const defaultPreferences: Preferences = {
     globalSearch: true,
   },
   sidebar: {
+    autoActivateChild: false,
     collapsed: false,
     collapsedShowTitle: false,
     enable: true,

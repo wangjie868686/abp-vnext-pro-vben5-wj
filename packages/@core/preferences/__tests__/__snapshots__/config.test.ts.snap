@@ -46,6 +46,7 @@ exports[`defaultPreferences immutability test > should not modify the config obj
   "header": {
     "enable": true,
     "hidden": false,
+    "menuAlign": "start",
     "mode": "fixed",
   },
   "logo": {
@@ -65,6 +66,7 @@ exports[`defaultPreferences immutability test > should not modify the config obj
     "globalSearch": true,
   },
   "sidebar": {
+    "autoActivateChild": false,
     "collapsed": false,
     "collapsedShowTitle": false,
     "enable": true,
