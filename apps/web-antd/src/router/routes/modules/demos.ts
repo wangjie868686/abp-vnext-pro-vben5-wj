@@ -34,6 +34,16 @@ const routes: RouteRecordRaw[] = [
       //   path: '/demos/list-page',
       //   component: () => import('#/views/demos/listPage/index.vue'),
       // },
+      {
+        path: 'page',
+        name: 'BookPage',
+        component: () => import('#/views/Books/index.vue'),
+        meta: {
+          icon: 'ph:user',
+          title: '书籍列表',
+          // authority: ['这里写权限code'],
+        },
+      },
     ],
   },
 ];
