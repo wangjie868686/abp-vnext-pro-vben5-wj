@@ -28,6 +28,7 @@ import {
   postUsersDelete,
   postUsersLock,
   postUsersPage,
+  postUsersResetTwoFactor,
   postUsersRole,
   postUsersUpdate,
 } from '#/api-client';
@@ -179,6 +180,17 @@ function onDel(row: any) {
   });
 }
 
+function resetTwoFactor(row: any) {
+  Modal.confirm({
+    title: `${$t('common.comfirm')}${$t('abp.user.resetTwoFactor')} ?`,
+    onOk: async () => {
+      await postUsersResetTwoFactor({ body: { userId: row.id } });
+      gridApi.reload();
+      Message.success($t('abp.user.resetTwoFactor') + $t('common.success'));
+    },
+  });
+}
+
 const onLock = async (row: Record<string, any>) => {
   await postUsersLock({ body: { userId: row.id, locked: !row.isActive } });
   gridApi.reload();
@@ -261,6 +273,19 @@ const exportData = async () => {
           "
         />
       </template>
+      <template #twoFactorEnabled="{ row }">
+        <component
+          :is="
+            h(
+              Tag,
+              { color: row.twoFactorEnabled ? 'green' : 'red' },
+              row.twoFactorEnabled
+                ? $t('common.enabled')
+                : $t('common.disabled'),
+            )
+          "
+        />
+      </template>
       <template #action="{ row }">
         <Space>
           <Button
@@ -296,6 +321,16 @@ const exportData = async () => {
                     v-access:code="'AbpIdentity.Users.Delete'"
                   >
                     {{ $t('common.delete') }}
+                  </Button>
+                </MenuItem>
+
+                <MenuItem @click="resetTwoFactor(row)">
+                  <Button
+                    size="small"
+                    type="link"
+                    v-access:code="'AbpIdentity.Users.ResetTwoFactor'"
+                  >
+                    {{ $t('abp.user.resetTwoFactor') }}
                   </Button>
                 </MenuItem>
               </Menu>
