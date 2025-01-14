@@ -32,5 +32,7 @@
   "timeOut": "Request timed out!",
   "expandAll": "EexpandAll",
   "collapseAll": "CollapseAll",
-  "description": "description"
+  "description": "description",
+  "comfirm": "Comfirm",
+  "valid": "Valid"
 }
